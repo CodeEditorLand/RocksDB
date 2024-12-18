@@ -337,7 +337,7 @@ jobs:
     - name: compress test report
       run: tar -cvzf scan_build_report.tar.gz scan_build_report
       if: failure()
-    - uses: actions/upload-artifact@v4.0.0
+    - uses: actions/upload-artifact@v4.5.0
       with:
         name: scan-build-report
         path: scan_build_report.tar.gz
@@ -612,11 +612,11 @@ jobs:
         which javac && javac -version
     - name: PMD RocksDBJava
       run: make V=1 J=8 -j8 jpmd
-    - uses: actions/upload-artifact@v4.0.0
+    - uses: actions/upload-artifact@v4.5.0
       with:
         name: pmd-report
         path: "${{ github.workspace }}/java/target/pmd.xml"
-    - uses: actions/upload-artifact@v4.0.0
+    - uses: actions/upload-artifact@v4.5.0
       with:
         name: maven-site
         path: "${{ github.workspace }}/java/target/site"
