@@ -853,7 +853,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Add User Defined Timestamp in C API.
   * `rocksdb_comparator_with_ts_create` to create timestamp aware comparator
   * Put, Get, Delete, SingleDelete, MultiGet APIs has corresponding timestamp aware APIs with suffix `with_ts`
-  * And Add C API's for Transaction, SstFileWriter, Compaction as mentioned [here](https://github.com/facebook/rocksdb/wiki/User-defined-Timestamp-(Experimental))
+  * And Add C API's for Transaction, SstFileWriter, Compaction as mentioned [here](HTTPS://GitHub.Com/facebook/rocksdb/wiki/User-defined-Timestamp-(Experimental))
 * The contract for implementations of Comparator::IsSameLengthImmediateSuccessor has been updated to work around a design bug in `auto_prefix_mode`.
 * The API documentation for `auto_prefix_mode` now notes some corner cases in which it returns different results than `total_order_seek`, due to design bugs that are not easily fixed. Users using built-in comparators and keys at least the size of a fixed prefix length are not affected.
 * Obsoleted the NUM_DATA_BLOCKS_READ_PER_LEVEL stat and introduced the NUM_LEVEL_READ_PER_MULTIGET and MULTIGET_COROUTINE_COUNT stats
@@ -2865,8 +2865,8 @@ Because of that, Options::disable_seek_compaction is now obsolete. It is still a
 
 ### New Features
 
-* Added [BackupableDB](https://github.com/facebook/rocksdb/wiki/How-to-backup-RocksDB%3F)
-* Implemented [TailingIterator](https://github.com/facebook/rocksdb/wiki/Tailing-Iterator), a special type of iterator that
+* Added [BackupableDB](HTTPS://GitHub.Com/facebook/rocksdb/wiki/How-to-backup-RocksDB%3F)
+* Implemented [TailingIterator](HTTPS://GitHub.Com/facebook/rocksdb/wiki/Tailing-Iterator), a special type of iterator that
   doesn't create a snapshot (can be used to read newly inserted data)
   and is optimized for doing sequential reads.
 * Added property block for table, which allows (1) a table to store
@@ -2883,8 +2883,8 @@ Because of that, Options::disable_seek_compaction is now obsolete. It is still a
 
 * Huge benchmark performance improvements by multiple efforts. For example, increase in readonly QPS from about 530k in 2.6 release to 1.1 million in 2.7 [1]
 * Speeding up a way RocksDB deleted obsolete files - no longer listing the whole directory under a lock -- decrease in p99
-* Use raw pointer instead of shared pointer for statistics: [5b825d](https://github.com/facebook/rocksdb/commit/5b825d6964e26ec3b4bb6faa708ebb1787f1d7bd) -- huge increase in performance -- shared pointers are slow
-* Optimized locking for `Get()` -- [1fdb3f](https://github.com/facebook/rocksdb/commit/1fdb3f7dc60e96394e3e5b69a46ede5d67fb976c) -- 1.5x QPS increase for some workloads
-* Cache speedup - [e8d40c3](https://github.com/facebook/rocksdb/commit/e8d40c31b3cca0c3e1ae9abe9b9003b1288026a9)
-* Implemented autovector, which allocates first N elements on stack. Most of vectors in RocksDB are small. Also, we never want to allocate heap objects while holding a mutex. -- [c01676e4](https://github.com/facebook/rocksdb/commit/c01676e46d3be08c3c140361ef1f5884f47d3b3c)
+* Use raw pointer instead of shared pointer for statistics: [5b825d](HTTPS://GitHub.Com/facebook/rocksdb/commit/5b825d6964e26ec3b4bb6faa708ebb1787f1d7bd) -- huge increase in performance -- shared pointers are slow
+* Optimized locking for `Get()` -- [1fdb3f](HTTPS://GitHub.Com/facebook/rocksdb/commit/1fdb3f7dc60e96394e3e5b69a46ede5d67fb976c) -- 1.5x QPS increase for some workloads
+* Cache speedup - [e8d40c3](HTTPS://GitHub.Com/facebook/rocksdb/commit/e8d40c31b3cca0c3e1ae9abe9b9003b1288026a9)
+* Implemented autovector, which allocates first N elements on stack. Most of vectors in RocksDB are small. Also, we never want to allocate heap objects while holding a mutex. -- [c01676e4](HTTPS://GitHub.Com/facebook/rocksdb/commit/c01676e46d3be08c3c140361ef1f5884f47d3b3c)
 * Lots of efforts to move malloc, memcpy and IO outside of locks

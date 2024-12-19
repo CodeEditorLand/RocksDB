@@ -4,11 +4,11 @@
 
 RocksDB micro-benchmark is a set of tests for benchmarking a single component or simple DB operations. The test artificially generates input data and executes the same operation with it to collect and report performance metrics. As it's focusing on testing a single, well-defined operation, the result is more precise and reproducible, which also has its limitation of not representing a real production use case. The test author needs to carefully design the microbench to represent its true purpose.
 
-The tests are based on [Google Benchmark](https://github.com/google/benchmark) library, which provides a standard framework for writing benchmarks.
+The tests are based on [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) library, which provides a standard framework for writing benchmarks.
 
 ## How to Run
 ### Prerequisite
-Install the [Google Benchmark](https://github.com/google/benchmark) version `1.6.0` or above.
+Install the [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) version `1.6.0` or above.
 
 *Note: Google Benchmark `1.6.x` is incompatible with previous versions like `1.5.x`, please make sure you're using the newer version.*
 

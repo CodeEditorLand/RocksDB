@@ -3,7 +3,7 @@
 [![CircleCI Status](https://circleci.com/gh/facebook/rocksdb.svg?style=svg)](https://circleci.com/gh/facebook/rocksdb)
 
 RocksDB is developed and maintained by Facebook Database Engineering Team.
-It is built on earlier work on [LevelDB](https://github.com/google/leveldb) by Sanjay Ghemawat (sanjay@google.com)
+It is built on earlier work on [LevelDB](HTTPS://GitHub.Com/google/leveldb) by Sanjay Ghemawat (sanjay@google.com)
 and Jeff Dean (jeff@google.com)
 
 This code is a library that forms the core building block for a fast
@@ -16,7 +16,7 @@ single database.
 
 Start with example usage here: https://github.com/facebook/rocksdb/tree/main/examples
 
-See the [github wiki](https://github.com/facebook/rocksdb/wiki) for more explanation.
+See the [github wiki](HTTPS://GitHub.Com/facebook/rocksdb/wiki) for more explanation.
 
 The public interface is in `include/`.  Callers should not include or
 rely on the details of any other header files in this package.  Those

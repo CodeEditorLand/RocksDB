@@ -3,7 +3,7 @@
 ## Overview
 
 This directory contains [fuzz tests](https://en.wikipedia.org/wiki/Fuzzing) for RocksDB.
-RocksDB testing infrastructure currently includes unit tests and [stress tests](https://github.com/facebook/rocksdb/wiki/Stress-test),
+RocksDB testing infrastructure currently includes unit tests and [stress tests](HTTPS://GitHub.Com/facebook/rocksdb/wiki/Stress-test),
 we hope fuzz testing can catch more bugs.
 
 ## Prerequisite
@@ -11,15 +11,15 @@ we hope fuzz testing can catch more bugs.
 We use [LLVM libFuzzer](http://llvm.org/docs/LibFuzzer.html) as the fuzzying engine,
 so make sure you have [clang](https://clang.llvm.org/get_started.html) as your compiler.
 
-Some tests rely on [structure aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
+Some tests rely on [structure aware fuzzing](HTTPS://GitHub.Com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
 We use [protobuf](https://developers.google.com/protocol-buffers) to define structured input to the fuzzer,
-and use [libprotobuf-mutator](https://github.com/google/libprotobuf-mutator) as the custom libFuzzer mutator.
+and use [libprotobuf-mutator](HTTPS://GitHub.Com/google/libprotobuf-mutator) as the custom libFuzzer mutator.
 So make sure you have protobuf and libprotobuf-mutator installed, and make sure `pkg-config` can find them.
 On some systems, there are both protobuf2 and protobuf3 in the package management system,
 make sure protobuf3 is installed.
 
 If you do not want to install protobuf library yourself, you can rely on libprotobuf-mutator to download protobuf
-for you. For details about installation, please refer to [libprotobuf-mutator README](https://github.com/google/libprotobuf-mutator#readme)
+for you. For details about installation, please refer to [libprotobuf-mutator README](HTTPS://GitHub.Com/google/libprotobuf-mutator#readme)
 
 ## Example
 
@@ -159,7 +159,7 @@ so you can debug the crash.
 
 ## Future Work
 
-According to [OSS-Fuzz](https://github.com/google/oss-fuzz),
+According to [OSS-Fuzz](HTTPS://GitHub.Com/google/oss-fuzz),
 `as of June 2020, OSS-Fuzz has found over 20,000 bugs in 300 open source projects.`
 
 RocksDB can join OSS-Fuzz together with other open source projects such as sqlite.

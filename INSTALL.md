@@ -35,7 +35,7 @@ most processors made since roughly 2013.
 * You can link RocksDB with following compression libraries:
   - [zlib](http://www.zlib.net/) - a library for data compression.
   - [bzip2](http://www.bzip.org/) - a library for data compression.
-  - [lz4](https://github.com/lz4/lz4) - a library for extremely fast data compression.
+  - [lz4](HTTPS://GitHub.Com/lz4/lz4) - a library for extremely fast data compression.
   - [snappy](http://google.github.io/snappy/) - a library for fast
       data compression.
   - [zstandard](http://www.zstd.net) - Fast real-time compression
@@ -194,7 +194,7 @@ most processors made since roughly 2013.
 
 * **Windows** (Visual Studio 2017 to up):
   * Read and follow the instructions at CMakeLists.txt
-  * Or install via [vcpkg](https://github.com/microsoft/vcpkg)
+  * Or install via [vcpkg](HTTPS://GitHub.Com/microsoft/vcpkg)
        * run `vcpkg install rocksdb:x64-windows`
 
 * **AIX 6.1**

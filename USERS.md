@@ -26,7 +26,7 @@ TikTok, or its parent company ByteDance, uses RocksDB as the storage engine for 
 Also, TikTok uses [Alluxio](alluxio.io) to [speed up Presto queries](https://www.alluxio.io/resources/videos/improving-presto-performance-with-alluxio-at-tiktok/), and Alluxio stores the files' metadata in RocksDB.
 
 ## FoundationDB
-[FoundationDB](https://www.foundationdb.org/) [uses](https://github.com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp) RocksDB to implement a [key-value store interface](https://github.com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127) in its server backend.
+[FoundationDB](https://www.foundationdb.org/) [uses](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp) RocksDB to implement a [key-value store interface](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127) in its server backend.
 
 ## Apple
 Apple [uses](https://opensource.apple.com/projects/foundationdb/) FoundationDB, so it also uses RocksDB.
@@ -48,7 +48,7 @@ Learn more about LinkedIn's follow feed and Apache Samza in a Tech Talk by Ankit
 Yahoo is using RocksDB as a storage engine for their biggest distributed data store Sherpa. Learn more about it here: http://yahooeng.tumblr.com/post/120730204806/sherpa-scales-new-heights
 
 ## Tencent
-[PaxosStore](https://github.com/Tencent/paxosstore) is a distributed database supporting WeChat. It uses RocksDB as its storage engine.
+[PaxosStore](HTTPS://GitHub.Com/Tencent/paxosstore) is a distributed database supporting WeChat. It uses RocksDB as its storage engine.
 
 ## Baidu
 [Apache Doris](http://doris.apache.org/master/en/) is a MPP analytical database engine released by Baidu. It [uses RocksDB](http://doris.apache.org/master/en/administrator-guide/operation/tablet-meta-tool.html) to manage its tablet's metadata.
@@ -101,10 +101,10 @@ quasardb uses a heavily tuned RocksDB as its persistence layer.
 [Netflix](http://techblog.netflix.com/2016/05/application-data-caching-using-ssds.html) Netflix uses RocksDB on AWS EC2 instances with local SSD drives to cache application data.
 
 ## TiKV
-[TiKV](https://github.com/pingcap/tikv) is a GEO-replicated, high-performance, distributed, transactional key-value database. TiKV is powered by Rust and Raft. TiKV uses RocksDB as its persistence layer.
+[TiKV](HTTPS://GitHub.Com/pingcap/tikv) is a GEO-replicated, high-performance, distributed, transactional key-value database. TiKV is powered by Rust and Raft. TiKV uses RocksDB as its persistence layer.
 
 ## TiDB
-[TiDB](https://github.com/pingcap/tidb) uses the TiKV distributed key-value database, so it uses RocksDB.
+[TiDB](HTTPS://GitHub.Com/pingcap/tidb) uses the TiKV distributed key-value database, so it uses RocksDB.
 
 ## PingCAP
 [PingCAP](https://www.pingcap.com/) is the company behind TiDB, its cloud database service uses RocksDB.
@@ -119,13 +119,13 @@ quasardb uses a heavily tuned RocksDB as its persistence layer.
 [Apache Flink](https://flink.apache.org/news/2016/03/08/release-1.0.0.html) uses RocksDB to store state locally on a machine.
 
 ## Dgraph
-[Dgraph](https://github.com/dgraph-io/dgraph) is an open-source, scalable, distributed, low latency, high throughput Graph database .They use RocksDB to store state locally on a machine.
+[Dgraph](HTTPS://GitHub.Com/dgraph-io/dgraph) is an open-source, scalable, distributed, low latency, high throughput Graph database .They use RocksDB to store state locally on a machine.
 
 ## Uber
 [Uber](http://eng.uber.com/cherami/) uses RocksDB as a durable and scalable task queue.
 
 ## 360 Pika
-[360](http://www.360.cn/) [Pika](https://github.com/Qihoo360/pika) is a nosql compatible with redis. With the huge amount of data stored, redis may suffer for a capacity bottleneck, and pika was born for solving it. It has widely been used in many companies.
+[360](http://www.360.cn/) [Pika](HTTPS://GitHub.Com/Qihoo360/pika) is a nosql compatible with redis. With the huge amount of data stored, redis may suffer for a capacity bottleneck, and pika was born for solving it. It has widely been used in many companies.
 
 ## LzLabs
 LzLabs is using RocksDB as a storage engine in their multi-database distributed framework to store application configuration and user data.
@@ -134,16 +134,16 @@ LzLabs is using RocksDB as a storage engine in their multi-database distributed 
 [ProfaneDB](https://profanedb.gitlab.io/) is a database for Protocol Buffers, and uses RocksDB for storage. It is accessible via gRPC, and the schema is defined using directly `.proto` files.
 
 ## IOTA Foundation
- [IOTA Foundation](https://www.iota.org/) is using RocksDB in the [IOTA Reference Implementation (IRI)](https://github.com/iotaledger/iri) to store the local state of the Tangle. The Tangle is the first open-source distributed ledger powering the future of the Internet of Things.
+ [IOTA Foundation](https://www.iota.org/) is using RocksDB in the [IOTA Reference Implementation (IRI)](HTTPS://GitHub.Com/iotaledger/iri) to store the local state of the Tangle. The Tangle is the first open-source distributed ledger powering the future of the Internet of Things.
 
 ## Avrio Project
- [Avrio Project](http://avrio-project.github.io/avrio.network/) is using RocksDB in [Avrio ](https://github.com/avrio-project/avrio) to store blocks, account balances and data and other blockchain-releated data. Avrio is a multiblockchain decentralized cryptocurrency empowering monetary transactions.
+ [Avrio Project](http://avrio-project.github.io/avrio.network/) is using RocksDB in [Avrio ](HTTPS://GitHub.Com/avrio-project/avrio) to store blocks, account balances and data and other blockchain-releated data. Avrio is a multiblockchain decentralized cryptocurrency empowering monetary transactions.
 
 ## Crux
-[Crux](https://github.com/juxt/crux) is a document database that uses RocksDB for local [EAV](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model) index storage to enable point-in-time bitemporal Datalog queries. The "unbundled" architecture uses Kafka to provide horizontal scalability.
+[Crux](HTTPS://GitHub.Com/juxt/crux) is a document database that uses RocksDB for local [EAV](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model) index storage to enable point-in-time bitemporal Datalog queries. The "unbundled" architecture uses Kafka to provide horizontal scalability.
 
 ## Nebula Graph
-[Nebula Graph](https://github.com/vesoft-inc/nebula) is a distributed, scalable, lightning-fast, open source graph database capable of hosting super large scale graphs with dozens of billions of vertices (nodes) and trillions of edges, with milliseconds of latency.
+[Nebula Graph](HTTPS://GitHub.Com/vesoft-inc/nebula) is a distributed, scalable, lightning-fast, open source graph database capable of hosting super large scale graphs with dozens of billions of vertices (nodes) and trillions of edges, with milliseconds of latency.
 
 ## YugabyteDB
 [YugabyteDB](https://www.yugabyte.com/) is an open source, high performance, distributed SQL database that uses RocksDB as its storage layer. For more information, please see https://github.com/yugabyte/yugabyte-db/.
@@ -161,11 +161,11 @@ LzLabs is using RocksDB as a storage engine in their multi-database distributed 
 [Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform, it uses RocksDB to store state in Kafka Streams: https://www.confluent.io/blog/how-to-tune-rocksdb-kafka-streams-state-stores-performance/.
 
 ## Solana Labs
-[Solana](https://github.com/solana-labs/solana) is a fast, secure, scalable, and decentralized blockchain.  It uses RocksDB as the underlying storage for its ledger store.
+[Solana](HTTPS://GitHub.Com/solana-labs/solana) is a fast, secure, scalable, and decentralized blockchain.  It uses RocksDB as the underlying storage for its ledger store.
 
 ## Apache Kvrocks
 
-[Apache Kvrocks](https://github.com/apache/kvrocks) is an open-source distributed key-value NoSQL database built on top of RocksDB. It serves as a cost-saving and capacity-increasing alternative drop-in replacement for Redis.
+[Apache Kvrocks](HTTPS://GitHub.Com/apache/kvrocks) is an open-source distributed key-value NoSQL database built on top of RocksDB. It serves as a cost-saving and capacity-increasing alternative drop-in replacement for Redis.
 
 ## Others
 More databases using RocksDB can be found at [dbdb.io](https://dbdb.io/browse?embeds=rocksdb).
