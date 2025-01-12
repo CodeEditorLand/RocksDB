@@ -13,7 +13,7 @@ jobs:
       image: zjay437/rocksdb:0.6
       options: --shm-size=16gb
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
       with:
         fetch-depth: 0 # Need full repo history
         fetch-tags: true
@@ -35,7 +35,7 @@ jobs:
       image: zjay437/rocksdb:0.6
       options: --shm-size=16gb
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/pre-steps"
     - run: DEBUG_LEVEL=0 make -j32 run_microbench
     - uses: "./.github/actions/post-steps"
@@ -49,7 +49,7 @@ jobs:
     env:
       TEST_TMPDIR: "/tmp/rocksdb_test_tmp"
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/pre-steps"
     - run: make V=1 -j32 check
     - uses: "./.github/actions/post-steps"
@@ -64,7 +64,7 @@ jobs:
       CC: clang-13
       CXX: clang++-13
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/pre-steps"
     - uses: "./.github/actions/setup-folly"
     - uses: "./.github/actions/build-folly"
@@ -78,7 +78,7 @@ jobs:
       image: zjay437/rocksdb:0.6
       options: --shm-size=16gb
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/pre-steps"
     - run: make V=1 -j32 valgrind_test
     - uses: "./.github/actions/post-steps"
@@ -89,7 +89,7 @@ jobs:
       CMAKE_GENERATOR: Visual Studio 17 2022
       CMAKE_PORTABLE: AVX2
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/windows-build-steps"
   build-windows-vs2022:
     if: ${{ github.repository_owner == 'facebook' }}
@@ -98,14 +98,14 @@ jobs:
       CMAKE_GENERATOR: Visual Studio 17 2022
       CMAKE_PORTABLE: 1
     steps:
-    - uses: actions/checkout@v4.1.0
+    - uses:actions/checkout@v4.2.2
     - uses: "./.github/actions/windows-build-steps"
   build-linux-arm-test-full:
     if: ${{ github.repository_owner == 'facebook' }}
     runs-on:
       labels: 4-core-ubuntu-arm
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/setup-node@v4.1.0
       - uses: "./.github/actions/pre-steps"
       - run: sudo apt-get update && sudo apt-get install -y build-essential libgflags-dev
       - run: make V=1 J=4 -j4 check
