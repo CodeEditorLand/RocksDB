@@ -32,25 +32,25 @@ $ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
 
 ## Best Practices
-#### * Use the Same Test Directory Setting as Unittest
+#### Use the Same Test Directory Setting as Unittest *
 Most of the Micro-benchmark tests use the same test directory setup as unittest, so it could be overridden by:
 ```bash
 $ TEST_TMPDIR=/mydata/tmp/ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
 Please also follow that when designing new tests.
 
-#### * Avoid Using Debug API
+#### Avoid Using Debug API *
 Even though micro-benchmark is a test, avoid using internal Debug API like TEST_WaitForRun() which is designed for unittest. As benchmark tests are designed for release build, don't use any of that.
 
-#### * Pay Attention to Local Optimization
+#### Pay Attention to Local Optimization *
 As a micro-benchmark is focusing on a single component or area, make sure it is a key part for impacting the overall application performance.
 
 The compiler might be able to optimize the code that not the same way as the whole application, and if the test data input is simple and small, it may be able to all cached in CPU memory, which is leading to a wrong metric. Take these into consideration when designing the tests.
 
-#### * Names of user-defined counters/metrics has to be `[A-Za-z0-9_]`
+#### Names of user *-defined counters/metrics has to be `[A-Za-z0-9_]`
 It's a restriction of the metrics collecting and reporting system RocksDB is using internally. It will also help integrate with more systems.
 
-#### * Minimize the Metrics Variation
+#### Minimize the Metrics Variation *
 Try reducing the test result variation, one way to check that is running the test multiple times and check the CV (Coefficient of Variation) reported by gbenchmark.
 ```bash
 $ ./db_basic_bench --benchmark_filter=<TEST_NAME> --benchmark_repetitions=10

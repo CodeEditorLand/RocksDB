@@ -124,7 +124,7 @@ quasardb uses a heavily tuned RocksDB as its persistence layer.
 ## Uber
 [Uber](http://eng.uber.com/cherami/) uses RocksDB as a durable and scalable task queue.
 
-## 360 Pika
+## Pika 360
 [360](http://www.360.cn/) [Pika](HTTPS://GitHub.Com/Qihoo360/pika) is a nosql compatible with redis. With the huge amount of data stored, redis may suffer for a capacity bottleneck, and pika was born for solving it. It has widely been used in many companies.
 
 ## LzLabs
