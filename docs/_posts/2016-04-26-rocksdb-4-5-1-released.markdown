@@ -9,7 +9,7 @@ redirect_from:
 
 ## 4.5.1 (3/25/2016)
 
-### Bug Fixes
+### Fix
 
   *  Fix failures caused by the destorying order of singleton objects.
 

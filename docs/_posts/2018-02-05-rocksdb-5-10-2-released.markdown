@@ -14,7 +14,7 @@ category: blog
 * Add a DB stat, `NUMBER_ITER_SKIP`, which returns how many internal keys were skipped during iterations (e.g., due to being tombstones or duplicate versions of a key).
 * Add PerfContext counters, `key_lock_wait_count` and `key_lock_wait_time`, which measure the number of times transactions wait on key locks and total amount of time waiting.
 
-### Bug Fixes
+### Fix
 * Fix IOError on WAL write doesn't propagate to write group follower
 * Make iterator invalid on merge error.
 * Fix performance issue in `IngestExternalFile()` affecting databases with large number of SST files.

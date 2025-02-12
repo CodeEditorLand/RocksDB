@@ -17,6 +17,6 @@ category: blog
 * Support file ingestion behind with option `allow_ingest_behind`
 * New option enable_pipelined_write which may improve write throughput in case writing from multiple threads and WAL enabled.
 
-### Bug Fixes
+### Fix
 * Fix the bug that Direct I/O uses direct reads for non-SST file
 * Fix the bug that flush doesn't respond to fsync result

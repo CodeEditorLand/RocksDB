@@ -18,5 +18,5 @@ category: blog
 * Introduce WriteOptions.low_pri. If it is true, low priority writes will be throttled if the compaction is behind. See https://github.com/facebook/rocksdb/wiki/Low-Priority-Write for more details.
 * `DB::IngestExternalFile()` now supports ingesting files into a database containing range deletions.
 
-### Bug Fixes
+### Fix
 * Shouldn't ignore return value of fsync() in flush.

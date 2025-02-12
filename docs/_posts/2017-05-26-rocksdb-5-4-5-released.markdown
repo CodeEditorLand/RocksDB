@@ -22,7 +22,7 @@ category: blog
 * Added DB::CreateColumnFamilie() and DB::DropColumnFamilies() to bulk create/drop column families.
 * Facility for cross-building RocksJava using Docker.
 
-### Bug Fixes
+### Fix
 * Fix WriteBatchWithIndex address use after scope error.
 * Fix WritableFile buffer size in direct IO.
 * Add prefetch to PosixRandomAccessFile in buffered io.

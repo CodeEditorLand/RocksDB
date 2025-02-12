@@ -13,7 +13,7 @@
 ### Behavior Changes
 * `BaseDeltaIterator` now honors the read option `allow_unprepared_value`.
 
-### Bug Fixes
+### Fix
 * `BaseDeltaIterator` now calls `PrepareValue` on the base iterator in case it has been created with the `allow_unprepared_value` read option set. Earlier, such base iterators could lead to incorrect values being exposed from `BaseDeltaIterator`.
 * Fix a leak of obsolete blob files left open until DB::Close(). This bug was introduced in version 9.4.0.
 * Fix missing cases of corruption retry during DB open and read API processing.
@@ -38,7 +38,7 @@
 * Trim readahead_size during scans so data blocks containing keys that are not in the same prefix as the seek key in `Seek()` are not prefetched when `ReadOptions::auto_readahead_size=true` (default value) and `ReadOptions::prefix_same_as_start = true`
 * Assigning levels for external files are done in the same way for universal compaction and leveled compaction. The old behavior tends to assign files to L0 while the new behavior will assign the files to the lowest level possible.
 
-### Bug Fixes
+### Fix
 * Fix a longstanding race condition in SetOptions for `block_based_table_factory` options. The fix has some subtle behavior changes because of copying and replacing the TableFactory on a change with SetOptions, including requiring an Iterator::Refresh() for an existing Iterator to use the latest options.
 * Fix under counting of allocated memory in the compressed secondary cache due to looking at the compressed block size rather than the actual memory allocated, which could be larger due to internal fragmentation.
 * `GetApproximateMemTableStats()` could return disastrously bad estimates 5-25% of the time. The function has been re-engineered to return much better estimates with similar CPU cost.
@@ -61,7 +61,7 @@
 * DB::Close now untracks files in SstFileManager, making avaialble any space used
 by them. Prior to this change they would be orphaned until the DB is re-opened.
 
-### Bug Fixes
+### Fix
 * Fix a bug in CompactRange() where result files may not be compacted in any future compaction. This can only happen when users configure CompactRangeOptions::change_level to true and the change level step of manual compaction fails (#13009).
 * Fix handling of dynamic change of `prefix_extractor` with memtable prefix filter. Previously, prefix seek could mix different prefix interpretations between memtable and SST files. Now the latest `prefix_extractor` at the time of iterator creation or refresh is respected.
 * Fix a bug with manual_wal_flush and auto error recovery from WAL failure that may cause CFs to be inconsistent (#12995). The fix will set potential WAL write failure as fatal error when manual_wal_flush is true, and disables auto error recovery from these errors.
@@ -79,7 +79,7 @@ by them. Prior to this change they would be orphaned until the DB is re-opened.
 ### Behavior Changes
 * There may be less intra-L0 compaction triggered by total L0 size being too small. We now use compensated file size (tombstones are assigned some value size) when calculating L0 size and reduce the threshold for L0 size limit. This is to avoid accumulating too much data/tombstones in L0.
 
-### Bug Fixes
+### Fix
 * Make DestroyDB supports slow deletion when it's configured in `SstFileManager`. The slow deletion is subject to the configured `rate_bytes_per_sec`, but not subject to the `max_trash_db_ratio`.
 * Fixed a bug where we set unprep_seqs_ even when WriteImpl() fails. This was caught by stress test write fault injection in WriteImpl(). This may have incorrectly caused iteration creation failure for unvalidated writes or returned wrong result for WriteUnpreparedTxn::GetUnpreparedSequenceNumbers().
 * Fixed a bug where successful write right after error recovery for last failed write finishes causes duplicate WAL entries
@@ -96,7 +96,7 @@ by them. Prior to this change they would be orphaned until the DB is re-opened.
 ### Behavior Changes
 * When calculating total log size for the `log_size_for_flush` argument in `CreateCheckpoint` API, the size of the archived log will not be included to avoid unnecessary flush
 
-### Bug Fixes
+### Fix
 * Fix a major bug in which an iterator using prefix filtering and SeekForPrev might miss data when the DB is using `whole_key_filtering=false` and `partition_filters=true`.
 * Fixed a bug where `OnErrorRecoveryBegin()` is not called before auto recovery starts.
 * Fixed a bug where event listener reads ErrorHandler's `bg_error_` member without holding db mutex(#12803).
@@ -123,7 +123,7 @@ by them. Prior to this change they would be orphaned until the DB is re-opened.
 ### Behavior Changes
 * Inactive WALs are immediately closed upon being fully sync-ed rather than in a background thread. This is to ensure LinkFile() is not called on files still open for write, which might not be supported by some FileSystem implementations. This should not be a performance issue, but an opt-out is available with with new DB option `background_close_inactive_wals`.
 
-### Bug Fixes
+### Fix
 * Fix a rare case in which a hard-linked WAL in a Checkpoint is not fully synced (so might lose data on power loss).
 * Fixed the output of the `ldb dump_wal` command for `PutEntity` records so it prints the key and correctly resets the hexadecimal formatting flag after printing the wide-column entity.
 * Fixed an issue where `PutEntity` records were handled incorrectly while rebuilding transactions during recovery.
@@ -148,7 +148,7 @@ by them. Prior to this change they would be orphaned until the DB is re-opened.
 * CompactRange() with change_level=true on a CF with FIFO compaction will return Status::NotSupported().
 * External file ingestion with FIFO compaction will always ingest to L0.
 
-### Bug Fixes
+### Fix
 * Fixed a bug for databases using `DBOptions::allow_2pc == true` (all `TransactionDB`s except `OptimisticTransactionDB`) that have exactly one column family. Due to a missing WAL sync, attempting to open the DB could have returned a `Status::Corruption` with a message like "SST file is ahead of WALs".
 * Fix a bug in CreateColumnFamilyWithImport() where if multiple CFs are imported, we were not resetting files' epoch number and L0 files can have overlapping key range but the same epoch number.
 * Fixed race conditions when `ColumnFamilyOptions::inplace_update_support == true` between user overwrites and reads on the same key.
@@ -182,7 +182,7 @@ the whole DB to be dropped right after migration if the migrated data is larger 
 * `CompactRange()` with `CompactRangeOptions::change_level = true` and `CompactRangeOptions::target_level = 0` that ends up moving more than 1 file from non-L0 to L0 will return `Status::Aborted()`.
 * On distributed file systems that support file system level checksum verification and reconstruction reads, RocksDB will now retry a file read if the initial read fails RocksDB block level or record level checksum verification. This applies to MANIFEST file reads when the DB is opened, and to SST file reads at all times.
 
-### Bug Fixes
+### Fix
 * Fix a bug causing `VerifyFileChecksums()` to return false-positive corruption under `BlockBasedTableOptions::block_align=true`
 * Provide consistent view of the database across the column families for `NewIterators()` API.
 * Fixed feature interaction bug for `DeleteRange()` together with `ColumnFamilyOptions::memtable_insert_with_hint_prefix_extractor`. The impact of this bug would likely be corruption or crashing.
@@ -218,7 +218,7 @@ the whole DB to be dropped right after migration if the migrated data is larger 
 * `RateLimiter`s created by `NewGenericRateLimiter()` no longer modify the refill period when `SetSingleBurstBytes()` is called.
 * Merge writes will only keep merge operand count within `ColumnFamilyOptions::max_successive_merges` when the key's merge operands are all found in memory, unless `strict_max_successive_merges` is explicitly set.
 
-### Bug Fixes
+### Fix
 * Fixed `kBlockCacheTier` reads to return `Status::Incomplete` when I/O is needed to fetch a merge chain's base value from a blob file.
 * Fixed `kBlockCacheTier` reads to return `Status::Incomplete` on table cache miss rather than incorrectly returning an empty value.
 * Fixed a data race in WalManager that may affect how frequent PurgeObsoleteWALFiles() runs.
@@ -264,7 +264,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 * Compactions can be scheduled in parallel in an additional scenario: multiple files are marked for compaction within a single column family
 * For leveled compaction, RocksDB will try to do intra-L0 compaction if the total L0 size is small compared to Lbase (#12214). Users with atomic_flush=true are more likely to see the impact of this change.
 
-### Bug Fixes
+### Fix
 * Fixed a data race in `DBImpl::RenameTempFileToOptionsFile`.
 * Fix some perf context statistics error in write steps. which include missing write_memtable_time in unordered_write. missing write_memtable_time in PipelineWrite when Writer stat is STATE_PARALLEL_MEMTABLE_WRITER. missing write_delay_time when calling DelayWrite in WriteImplWALOnly function.
 * Fixed a bug that can, under rare circumstances, cause MultiGet to return an incorrect result for a duplicate key in a MultiGet batch.
@@ -286,7 +286,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 * Reduced the compaction debt ratio trigger for scheduling parallel compactions
 * For leveled compaction with default compaction pri (kMinOverlappingRatio), files marked for compaction will be prioritized over files not marked when picking a file from a level for compaction.
 
-### Bug Fixes
+### Fix
 * Fix bug in auto_readahead_size that combined with IndexType::kBinarySearchWithFirstKey + fails or iterator lands at a wrong key
 * Fixed some cases in which DB file corruption was detected but ignored on creating a backup with BackupEngine.
 * Fix bugs where `rocksdb.blobdb.blob.file.synced` includes blob files failed to get synced and `rocksdb.blobdb.blob.file.bytes.written` includes blob bytes failed to get written.
@@ -308,7 +308,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 * Compactions can be scheduled in parallel in an additional scenario: high compaction debt relative to the data size
 * HyperClockCache now has built-in protection against excessive CPU consumption under the extreme stress condition of no (or very few) evictable cache entries, which can slightly increase memory usage such conditions. New option `HyperClockCacheOptions::eviction_effort_cap` controls the space-time trade-off of the response. The default should be generally well-balanced, with no measurable affect on normal operation.
 
-### Bug Fixes
+### Fix
 * Fix a corner case with auto_readahead_size where Prev Operation returns NOT SUPPORTED error when scans direction is changed from forward to backward.
 * Avoid destroying the periodic task scheduler's default timer in order to prevent static destruction order issues.
 * Fix double counting of BYTES_WRITTEN ticker when doing writes with transactions.
@@ -351,7 +351,7 @@ want to continue to use force enabling, they need to explicitly pass a `true` to
 * Make RocksDB only call `TablePropertiesCollector::Finish()` once.
 * When `WAL_ttl_seconds > 0`, we now process archived WALs for deletion at least every `WAL_ttl_seconds / 2` seconds. Previously it could be less frequent in case of small `WAL_ttl_seconds` values when size-based expiration (`WAL_size_limit_MB > 0 `) was simultaneously enabled.
 
-### Bug Fixes
+### Fix
 * Fixed a crash or assertion failure bug in experimental new HyperClockCache variant, especially when running with a SecondaryCache.
 * Fix a race between flush error recovery and db destruction that can lead to db crashing.
 * Fixed some bugs in the index builder/reader path for user-defined timestamps in Memtable only feature.
@@ -370,7 +370,7 @@ want to continue to use force enabling, they need to explicitly pass a `true` to
 * For non direct IO, eliminate the file system prefetching attempt for compaction read when `Options::compaction_readahead_size` is 0
 * During a write stop, writes now block on in-progress recovery attempts
 
-### Bug Fixes
+### Fix
 * Fix a bug in auto_readahead_size where first_internal_key of index blocks wasn't copied properly resulting in corruption error when first_internal_key was used for comparison.
 * Fixed a bug where compaction read under non direct IO still falls back to RocksDB internal prefetching after file system's prefetching returns non-OK status other than `Status::NotSupported()`
 * Add bounds check in WBWIIteratorImpl and make BaseDeltaIterator, WriteUnpreparedTxn and WritePreparedTxn respect the upper bound and lower bound in ReadOption. See 11680.
@@ -405,7 +405,7 @@ want to continue to use force enabling, they need to explicitly pass a `true` to
 * Universal size amp compaction will conditionally exclude some of the newest L0 files when selecting input with a small negative impact to size amp. This is to prevent a large number of L0 files from being locked by a size amp compaction, potentially leading to write stop with a few more flushes.
 * Change ldb scan command delimiter from ':' to '==>'.
 
-### Bug Fixes
+### Fix
 * Fix a bug where if there is an error reading from offset 0 of a file from L1+ and that the file is not the first file in the sorted run, data can be lost in compaction and read/scan can return incorrect results.
 * Fix a bug where iterator may return incorrect result for DeleteRange() users if there was an error reading from a file.
 * Fix a bug with atomic_flush=true that can cause DB to stuck after a flush fails (#11872).
@@ -448,7 +448,7 @@ want to continue to use force enabling, they need to explicitly pass a `true` to
 * Statistics `rocksdb.sst.read.micros` now includes time spent on multi read and async read into the file
 * For Universal Compaction users, periodic compaction (option `periodic_compaction_seconds`) will be set to 30 days by default if block based table is used.
 
-### Bug Fixes
+### Fix
 * Fix a bug in FileTTLBooster that can cause users with a large number of levels (more than 65) to see errors like "runtime error: shift exponent .. is too large.." (#11673).
 
 ## 8.5.0 (07/21/2023)
@@ -463,7 +463,7 @@ want to continue to use force enabling, they need to explicitly pass a `true` to
 * In case of direct_io, if buffer passed by callee is already aligned, RandomAccessFileRead::Read will avoid realloacting a new buffer, reducing memcpy and use already passed aligned buffer.
 * Small efficiency improvement to HyperClockCache by reducing chance of compiler-generated heap allocations
 
-### Bug Fixes
+### Fix
 * Fix use_after_free bug in async_io MultiReads when underlying FS enabled kFSBuffer. kFSBuffer is when underlying FS pass their own buffer instead of using RocksDB scratch in FSReadRequest. Right now it's an experimental feature.
 
 ## 8.4.0 (06/26/2023)
@@ -492,7 +492,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * When a DB is openend with `allow_ingest_behind=true` (currently only Universal compaction is supported), files in the last level, i.e. the ingested files,  will not be included in any compaction. (#11489)
 * Statistics `rocksdb.sst.read.micros` scope is expanded to all SST reads except for file ingestion and column family import (some compaction reads were previously excluded).
 
-### Bug Fixes
+### Fix
 * Reduced cases of illegally using Env::Default() during static destruction by never destroying the internal PosixEnv itself (except for builds checking for memory leaks). (#11538)
 * Fix extra prefetching during seek in async_io when BlockBasedTableOptions.num_file_reads_for_auto_readahead is 1 leading to extra reads than required.
 * Fix a bug where compactions that are qualified to be run as 2 subcompactions were only run as one subcompaction.
@@ -516,7 +516,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 ### Behavior changes
 * For x86, CPU features are no longer detected at runtime nor in build scripts, but in source code using common preprocessor defines. This will likely unlock some small performance improvements on some newer hardware, but could hurt performance of the kCRC32c checksum, which is no longer the default, on some "portable" builds. See PR #11419 for details.
 
-### Bug Fixes
+### Fix
 * Delete an empty WAL file on DB open if the log number is less than the min log number to keep
 * Delete temp OPTIONS file on DB open if there is a failure to write it out or rename it
 
@@ -536,7 +536,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * For level compaction with `level_compaction_dynamic_level_bytes=true`, RocksDB now drains unnecessary levels through background compaction automatically (#11340). This together with #11321 makes it automatic to migrate other compaction settings to level compaction with `level_compaction_dynamic_level_bytes=true`. In addition, a live DB that becomes smaller will now have unnecessary levels drained which can help to reduce read and space amp.
 * If `CompactRange()` is called with `CompactRangeOptions::bottommost_level_compaction=kForce*` to compact from L0 to L1, RocksDB now will try to do trivial move from L0 to L1 and then do an intra L1 compaction, instead of a L0 to L1 compaction with trivial move disabled (#11375)).
 
-### Bug Fixes
+### Fix
 * In the DB::VerifyFileChecksums API, ensure that file system reads of SST files are equal to the readahead_size in ReadOptions, if specified. Previously, each read was 2x the readahead_size.
 * In block cache tracing, fixed some cases of bad hit/miss information (and more) with MultiGet.
 
@@ -551,7 +551,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Compaction output file cutting logic now considers range tombstone start keys. For example, SST partitioner now may receive ParitionRequest for range tombstone start keys.
 * If the async_io ReadOption is specified for MultiGet or NewIterator on a platform that doesn't support IO uring, the option is ignored and synchronous IO is used.
 
-### Bug Fixes
+### Fix
 * Fixed an issue for backward iteration when user defined timestamp is enabled in combination with BlobDB.
 * Fixed a couple of cases where a Merge operand encountered during iteration wasn't reflected in the `internal_merge_count` PerfContext counter.
 * Fixed a bug in CreateColumnFamilyWithImport()/ExportColumnFamily() which did not support range tombstones (#11252).
@@ -572,7 +572,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * `ReadOptions::verify_checksums=false` disables checksum verification for more reads of non-`CacheEntryRole::kDataBlock` blocks.
 * In case of scan with async_io enabled, if posix doesn't support IOUring, Status::NotSupported error will be returned to the users. Initially that error was swallowed and reads were switched to synchronous reads.
 
-### Bug Fixes
+### Fix
 * Fixed a data race on `ColumnFamilyData::flush_reason` caused by concurrent flushes.
 * Fixed an issue in `Get` and `MultiGet` when user-defined timestamps is enabled in combination with BlobDB.
 * Fixed some atypical behaviors for `LockWAL()` such as allowing concurrent/recursive use and not expecting `UnlockWAL()` after non-OK result. See API comments.
@@ -610,7 +610,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Make best-efforts recovery verify SST unique ID before Version construction (#10962)
 * Introduce `epoch_number` and sort L0 files by `epoch_number` instead of `largest_seqno`. `epoch_number` represents the order of a file being flushed or ingested/imported. Compaction output file will be assigned with the minimum `epoch_number` among input files'. For L0, larger `epoch_number` indicates newer L0 file.
 
-### Bug Fixes
+### Fix
 * Fixed a regression in iterator where range tombstones after `iterate_upper_bound` is processed.
 * Fixed a memory leak in MultiGet with async_io read option, caused by IO errors during table file open
 * Fixed a bug that multi-level FIFO compaction deletes one file in non-L0 even when `CompactionOptionsFIFO::max_table_files_size` is no exceeded since #10348 or 7.8.0.
@@ -639,7 +639,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 ### Performance Improvements
 * Fixed an iterator performance regression for delete range users when scanning through a consecutive sequence of range tombstones (#10877).
 
-### Bug Fixes
+### Fix
 * Fix memory corruption error in scans if async_io is enabled. Memory corruption happened if there is IOError while reading the data leading to empty buffer and other buffer already in progress of async read goes again for reading.
 * Fix failed memtable flush retry bug that could cause wrongly ordered updates, which would surface to writers as `Status::Corruption` in case of `force_consistency_checks=true` (default). It affects use cases that enable both parallel flush (`max_background_flushes > 1` or `max_background_jobs >= 8`) and non-default memtable count (`max_write_buffer_number > 2`).
 * Fixed an issue where the `READ_NUM_MERGE_OPERANDS` ticker was not updated when the base key-value or tombstone was read from an SST file.
@@ -672,7 +672,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Add a new option IOOptions.do_not_recurse that can be used by underlying file systems to skip recursing through sub directories and list only files in GetChildren API.
 * Add option `preserve_internal_time_seconds` to preserve the time information for the latest data. Which can be used to determine the age of data when `preclude_last_level_data_seconds` is enabled. The time information is attached with SST in table property `rocksdb.seqno.time.map` which can be parsed by tool ldb or sst_dump.
 
-### Bug Fixes
+### Fix
 * Fix a bug in io_uring_prep_cancel in AbortIO API for posix which expects sqe->addr to match with read request submitted and wrong paramter was being passed.
 * Fixed a regression in iterator performance when the entire DB is a single memtable introduced in #10449. The fix is in #10705 and #10716.
 * Fixed an optimistic transaction validation bug caused by DBImpl::GetLatestSequenceForKey() returning non-latest seq for merge (#10724).
@@ -698,7 +698,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Refactor the classes, APIs and data structures for block cache tracing to allow a user provided trace writer to be used. Introduced an abstract BlockCacheTraceWriter class that takes a structured BlockCacheTraceRecord. The BlockCacheTraceWriter implementation can then format and log the record in whatever way it sees fit. The default BlockCacheTraceWriterImpl does file tracing using a user provided TraceWriter. More details in rocksdb/includb/block_cache_trace_writer.h.
 
 ## 7.7.0 (09/18/2022)
-### Bug Fixes
+### Fix
 * Fixed a hang when an operation such as `GetLiveFiles` or `CreateNewBackup` is asked to trigger and wait for memtable flush on a read-only DB. Such indirect requests for memtable flush are now ignored on a read-only DB.
 * Fixed bug where `FlushWAL(true /* sync */)` (used by `GetLiveFilesStorageInfo()`, which is used by checkpoint and backup) could cause parallel writes at the tail of a WAL file to never be synced.
 * Fix periodic_task unable to re-register the same task type, which may cause `SetOptions()` fail to update periodical_task time like: `stats_dump_period_sec`, `stats_persist_period_sec`.
@@ -756,7 +756,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Tiered Storage: change `bottommost_temperture` to `last_level_temperture`. The old option name is kept only for migration, please use the new option. The behavior is changed to apply temperature for the `last_level` SST files only.
 * Added a new experimental ReadOption flag called optimize_multiget_for_io, which when set attempts to reduce MultiGet latency by spawning coroutines for keys in multiple levels.
 
-### Bug Fixes
+### Fix
 * Fix a bug starting in 7.4.0 in which some fsync operations might be skipped in a DB after any DropColumnFamily on that DB, until it is re-opened. This can lead to data loss on power loss. (For custom FileSystem implementations, this could lead to `FSDirectory::Fsync` or `FSDirectory::Close` after the first `FSDirectory::Close`; Also, valgrind could report call to `close()` with `fd=-1`.)
 * Fix a bug where `GenericRateLimiter` could revert the bandwidth set dynamically using `SetBytesPerSecond()` when a user configures a structure enclosing it, e.g., using `GetOptionsFromString()` to configure an `Options` that references an existing `RateLimiter` object.
 * Fix race conditions in `GenericRateLimiter`.
@@ -810,7 +810,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * Add `rocksdb_options_get_prepopulate_blob_cache` and `rocksdb_options_set_prepopulate_blob_cache` to C API.
 * Add `prepopulateBlobCache` and `setPrepopulateBlobCache` to Java API.
 
-### Bug Fixes
+### Fix
 * Fix a bug in which backup/checkpoint can include a WAL deleted by RocksDB.
 * Fix a bug where concurrent compactions might cause unnecessary further write stalling. In some cases, this might cause write rate to drop to minimum.
 * Fix a bug in Logger where if dbname and db_log_dir are on different filesystems, dbname creation would fail wrt to db_log_dir path returning an error and fails to open the DB.
@@ -827,7 +827,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * In leveled compaction, try to trivial move more than one files if possible, up to 4 files or max_compaction_bytes. This is to allow higher write throughput for some use cases where data is loaded in sequential order, where appying compaction results is the bottleneck.
 
 ## 7.4.0 (06/19/2022)
-### Bug Fixes
+### Fix
 * Fixed a bug in calculating key-value integrity protection for users of in-place memtable updates. In particular, the affected users would be those who configure `protection_bytes_per_key > 0` on `WriteBatch` or `WriteOptions`, and configure `inplace_callback != nullptr`.
 * Fixed a bug where a snapshot taken during SST file ingestion would be unstable.
 * Fixed a bug for non-TransactionDB with avoid_flush_during_recovery = true and TransactionDB where in case of crash, min_log_number_to_keep may not change on recovery and persisting a new MANIFEST with advanced log_numbers for some column families, results in "column family inconsistency" error on second recovery. As a solution, RocksDB will persist the new MANIFEST after successfully syncing the new WAL. If a future recovery starts from the new MANIFEST, then it means the new WAL is successfully synced. Due to the sentinel empty write batch at the beginning, kPointInTimeRecovery of WAL is guaranteed to go after this point. If future recovery starts from the old MANIFEST, it means the writing the new MANIFEST failed. We won't have the "SST ahead of WAL" error.
@@ -882,7 +882,7 @@ For Leveled Compaction users, `CompactRange()` with `bottommost_level_compaction
 * When compiled with folly (Meta-internal integration; experimental in open source build), improve the locking performance (CPU efficiency) of LRUCache by using folly DistributedMutex in place of standard mutex.
 
 ## 7.3.0 (05/20/2022)
-### Bug Fixes
+### Fix
 * Fixed a bug where manual flush would block forever even though flush options had wait=false.
 * Fixed a bug where RocksDB could corrupt DBs with `avoid_flush_during_recovery == true` by removing valid WALs, leading to `Status::Corruption` with message like "SST file is ahead of WALs" when attempting to reopen.
 * Fixed a bug in async_io path where incorrect length of data is read by FilePrefetchBuffer if data is consumed from two populated buffers and request for more data is sent.
@@ -915,7 +915,7 @@ cache at some point (i.e, causing a cache full under `LRUCacheOptions::strict_ca
 * Add new stat number_async_seek in PerfContext that indicates number of async calls made by seek to prefetch data.
 * Add support for user-defined timestamps to read only DB.
 
-### Bug Fixes
+### Fix
 * RocksDB calls FileSystem::Poll API during FilePrefetchBuffer destruction which impacts performance as it waits for read requets completion which is not needed anymore. Calling FileSystem::AbortIO to abort those requests instead fixes that performance issue.
 * Fixed unnecessary block cache contention when queries within a MultiGet batch and across parallel batches access the same data block, which previously could cause severely degraded performance in this unusual case. (In more typical MultiGet cases, this fix is expected to yield a small or negligible performance improvement.)
 
@@ -929,7 +929,7 @@ cache at some point (i.e, causing a cache full under `LRUCacheOptions::strict_ca
 * Reduce DB mutex holding time when finding obsolete files to delete. When a file is trivial moved to another level, the internal files will be referenced twice internally and sometimes opened twice too. If a deletion candidate file is not the last reference, we need to destroy the reference and close the file but not deleting the file. Right now we determine it by building a set of all live files. With the improvement, we check the file against all live LSM-tree versions instead.
 
 ## 7.2.0 (04/15/2022)
-### Bug Fixes
+### Fix
 * Fixed bug which caused rocksdb failure in the situation when rocksdb was accessible using UNC path
 * Fixed a race condition when 2PC is disabled and WAL tracking in the MANIFEST is enabled. The race condition is between two background flush threads trying to install flush results, causing a WAL deletion not tracked in the MANIFEST. A future DB open may fail.
 * Fixed a heap use-after-free race with DropColumnFamily.
@@ -973,7 +973,7 @@ cache at some point (i.e, causing a cache full under `LRUCacheOptions::strict_ca
 * Experimental support for preserving file Temperatures through backup and restore, and for updating DB metadata for outside changes to file Temperature (`UpdateManifestForFilesState` or `ldb update_manifest --update_temperatures`).
 * Experimental support for async_io in ReadOptions which is used by FilePrefetchBuffer to prefetch some of the data asynchronously,  if reads are sequential and auto readahead is enabled by rocksdb internally.
 
-### Bug Fixes
+### Fix
 * Fixed a major performance bug in which Bloom filters generated by pre-7.0 releases are not read by early 7.0.x releases (and vice-versa) due to changes to FilterPolicy::Name() in #9590. This can severely impact read performance and read I/O on upgrade or downgrade with existing DB, but not data correctness.
 * Fixed a data race on `versions_` between `DBImpl::ResumeImpl()` and threads waiting for recovery to complete (#9496)
 * Fixed a bug caused by race among flush, incoming writes and taking snapshots. Queries to snapshots created with these race condition can return incorrect result, e.g. resurfacing deleted data.
@@ -995,7 +995,7 @@ cache at some point (i.e, causing a cache full under `LRUCacheOptions::strict_ca
 * Remove BlockBasedTableOptions.hash_index_allow_collision which already takes no effect.
 
 ## 7.0.0 (02/20/2022)
-### Bug Fixes
+### Fix
 * Fixed a major bug in which batched MultiGet could return old values for keys deleted by DeleteRange when memtable Bloom filter is enabled (memtable_prefix_bloom_size_ratio > 0). (The fix includes a substantial MultiGet performance improvement in the unusual case of both memtable_whole_key_filtering and prefix_extractor.)
 * Fixed more cases of EventListener::OnTableFileCreated called with OK status, file_size==0, and no SST file kept. Now the status is Aborted.
 * Fixed a read-after-free bug in `DB::GetMergeOperands()`.
@@ -1105,7 +1105,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ### Performance Improvements
 * Improved read performance when a prefix extractor is used (Seek, Get, MultiGet), even compared to version 6.25 baseline (see bug fix below), by optimizing the common case of prefix extractor compatible with table file and unchanging.
 
-### Bug Fixes
+### Fix
 * Fix a bug that FlushMemTable may return ok even flush not succeed.
 * Fixed a bug of Sync() and Fsync() not using `fcntl(F_FULLFSYNC)` on OS X and iOS.
 * Fixed a significant performance regression in version 6.26 when a prefix extractor is used on the read path (Seek, Get, MultiGet). (Excessive time was spent in SliceTransform::AsString().)
@@ -1119,7 +1119,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Introduced 'CommitWithTimestamp' as a new tag. Currently, there is no API for user to trigger a write with this tag to the WAL. This is part of the efforts to support write-commited transactions with user-defined timestamps.
 * Introduce SimulatedHybridFileSystem which can help simulating HDD latency in db_bench. Tiered Storage latency simulation can be enabled using -simulate_hybrid_fs_file (note that it doesn't work if db_bench is interrupted in the middle). -simulate_hdd can also be used to simulate all files on HDD.
 
-### Bug Fixes
+### Fix
 * Fixed a bug in rocksdb automatic implicit prefetching which got broken because of new feature adaptive_readahead and internal prefetching got disabled when iterator moves from one file to next.
 * Fixed a bug in TableOptions.prepopulate_block_cache which causes segmentation fault when used with TableOptions.partition_filters = true and TableOptions.cache_index_and_filter_blocks = true.
 * Fixed a bug affecting custom memtable factories which are not registered with the `ObjectRegistry`. The bug could result in failure to save the OPTIONS file.
@@ -1155,7 +1155,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add a new API OnIOError in listener.h that notifies listeners when an IO error occurs during FileSystem operation along with filename, status etc.
 * Added compaction readahead support for blob files to the integrated BlobDB implementation, which can improve compaction performance when the database resides on higher-latency storage like HDDs or remote filesystems. Readahead can be configured using the column family option `blob_compaction_readahead_size`.
 
-### Bug Fixes
+### Fix
 * Prevent a `CompactRange()` with `CompactRangeOptions::change_level == true` from possibly causing corruption to the LSM state (overlapping files within a level) when run in parallel with another manual compaction. Note that setting `force_consistency_checks == true` (the default) would cause the DB to enter read-only mode in this scenario and return `Status::Corruption`, rather than committing any corruption.
 * Fixed a bug in CompactionIterator when write-prepared transaction is used. A released earliest write conflict snapshot may cause assertion failure in dbg mode and unexpected key in opt mode.
 * Fix ticker WRITE_WITH_WAL("rocksdb.write.wal"), this bug is caused by a bad extra `RecordTick(stats_, WRITE_WITH_WAL)` (at 2 place), this fix remove the extra `RecordTick`s and fix the corresponding test case.
@@ -1195,7 +1195,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * `NUM_FILES_IN_SINGLE_COMPACTION` was only counting the first input level files, now it's including all input files.
 
 ## 6.26.0 (2021-10-20)
-### Bug Fixes
+### Fix
 * Fixes a bug in directed IO mode when calling MultiGet() for blobs in the same blob file. The bug is caused by not sorting the blob read requests by file offsets.
 * Fix the incorrect disabling of SST rate limited deletion when the WAL and DB are in different directories. Only WAL rate limited deletion should be disabled if its in a different directory.
 * Fix `DisableManualCompaction()` to cancel compactions even when they are waiting on automatic compactions to drain due to `CompactRangeOptions::exclusive_manual_compactions == true`.
@@ -1236,7 +1236,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Fix multiget throwing Null Pointer Exception for num of keys > 70k (https://github.com/facebook/rocksdb/issues/8039).
 
 ## 6.25.0 (2021-09-20)
-### Bug Fixes
+### Fix
 * Allow secondary instance to refresh iterator. Assign read seq after referencing SuperVersion.
 * Fixed a bug of secondary instance's last_sequence going backward, and reads on the secondary fail to see recent updates from the primary.
 * Fixed a bug that could lead to duplicate DB ID or DB session ID in POSIX environments without /proc/sys/kernel/random/uuid.
@@ -1279,7 +1279,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add a paranoid check where in case FileSystem layer doesn't fill the buffer but returns succeed, checksum is unlikely to match even if buffer contains a previous block. The byte modified is not useful anyway, so it isn't expected to change any behavior when FileSystem is satisfying its contract.
 
 ## 6.24.0 (2021-08-20)
-### Bug Fixes
+### Fix
 * If the primary's CURRENT file is missing or inaccessible, the secondary instance should not hang repeatedly trying to switch to a new MANIFEST. It should instead return the error code encountered while accessing the file.
 * Restoring backups with BackupEngine is now a logically atomic operation, so that if a restore operation is interrupted, DB::Open on it will fail. Using BackupEngineOptions::sync (default) ensures atomicity even in case of power loss or OS crash.
 * Fixed a race related to the destruction of `ColumnFamilyData` objects. The earlier logic unlocked the DB mutex before destroying the thread-local `SuperVersion` pointers, which could result in a process crash if another thread managed to get a reference to the `ColumnFamilyData` object.
@@ -1319,7 +1319,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ## 6.23.0 (2021-07-16)
 ### Behavior Changes
 * Obsolete keys in the bottommost level that were preserved for a snapshot will now be cleaned upon snapshot release in all cases. This form of compaction (snapshot release triggered compaction) previously had an artificial limitation that multiple tombstones needed to be present.
-### Bug Fixes
+### Fix
 * Blob file checksums are now printed in hexadecimal format when using the `manifest_dump` `ldb` command.
 * `GetLiveFilesMetaData()` now populates the `temperature`, `oldest_ancester_time`, and `file_creation_time` fields of its `LiveFileMetaData` results when the information is available. Previously these fields always contained zero indicating unknown.
 * Fix mismatches of OnCompaction{Begin,Completed} in case of DisableManualCompaction().
@@ -1343,7 +1343,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ### Behavior Changes
 * Added two additional tickers, MEMTABLE_PAYLOAD_BYTES_AT_FLUSH and MEMTABLE_GARBAGE_BYTES_AT_FLUSH. These stats can be used to estimate the ratio of "garbage" (outdated) bytes in the memtable that are discarded at flush time.
 * Added API comments clarifying safe usage of Disable/EnableManualCompaction and EventListener callbacks for compaction.
-### Bug Fixes
+### Fix
 * fs_posix.cc GetFreeSpace() always report disk space available to root even when running as non-root.  Linux defaults often have disk mounts with 5 to 10 percent of total space reserved only for root.  Out of space could result for non-root users.
 * Subcompactions are now disabled when user-defined timestamps are used, since the subcompaction boundary picking logic is currently not timestamp-aware, which could lead to incorrect results when different subcompactions process keys that only differ by timestamp.
 * Fix an issue that `DeleteFilesInRange()` may cause ongoing compaction reports corruption exception, or ASSERT for debug build. There's no actual data loss or corruption that we find.
@@ -1363,7 +1363,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Added GetAllColumnFamilyMetaData API to retrieve the ColumnFamilyMetaData about all column families.
 
 ## 6.21.0 (2021-05-21)
-### Bug Fixes
+### Fix
 * Fixed a bug in handling file rename error in distributed/network file systems when the server succeeds but client returns error. The bug can cause CURRENT file to point to non-existing MANIFEST file, thus DB cannot be opened.
 * Fixed a bug where ingested files were written with incorrect boundary key metadata. In rare cases this could have led to a level's files being wrongly ordered and queries for the boundary keys returning wrong results.
 * Fixed a data race between insertion into memtables and the retrieval of the DB properties `rocksdb.cur-size-active-mem-table`, `rocksdb.cur-size-all-mem-tables`, and `rocksdb.size-all-mem-tables`.
@@ -1413,7 +1413,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Added support for WriteBatchWithIndex::NewIteratorWithBase when overwrite_key=false.  Previously, this combination was not supported and would assert or return nullptr.
 * Improve the behavior of WriteBatchWithIndex for Merge operations.  Now more operations may be stored in order to return the correct merged result.
 
-### Bug Fixes
+### Fix
 * Use thread-safe `strerror_r()` to get error messages.
 * Fixed a potential hang in shutdown for a DB whose `Env` has high-pri thread pool disabled (`Env::GetBackgroundThreads(Env::Priority::HIGH) == 0`)
 * Made BackupEngine thread-safe and added documentation comments to clarify what is safe for multiple BackupEngine objects accessing the same backup directory.
@@ -1438,7 +1438,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Made the Ribbon filter a long-term supported feature in terms of the SST schema(compatible with version >= 6.15.0) though the API for enabling it is expected to change.
 
 ## 6.19.0 (2021-03-21)
-### Bug Fixes
+### Fix
 * Fixed the truncation error found in APIs/tools when dumping block-based SST files in a human-readable format. After fix, the block-based table can be fully dumped as a readable file.
 * When hitting a write slowdown condition, no write delay (previously 1 millisecond) is imposed until `delayed_write_rate` is actually exceeded, with an initial burst allowance of 1 millisecond worth of bytes. Also, beyond the initial burst allowance, `delayed_write_rate` is now more strictly enforced, especially with multiple column families.
 
@@ -1478,7 +1478,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Added memory pre-fetching for experimental Ribbon filter, which especially optimizes performance with batched MultiGet.
 * A new, experimental version of BlobDB (key-value separation) is now available. The new implementation is integrated into the RocksDB core, i.e. it is accessible via the usual `rocksdb::DB` API, as opposed to the separate `rocksdb::blob_db::BlobDB` interface used by the earlier version, and can be configured on a per-column family basis using the configuration options `enable_blob_files`, `min_blob_size`, `blob_file_size`, `blob_compression_type`, `enable_blob_garbage_collection`, and `blob_garbage_collection_age_cutoff`. It extends RocksDB's consistency guarantees to blobs, and offers more features and better performance. Note that some features, most notably `Merge`, compaction filters, and backup/restore are not yet supported, and there is no support for migrating a database created by the old implementation.
 
-### Bug Fixes
+### Fix
 * Since 6.15.0, `TransactionDB` returns error `Status`es from calls to `DeleteRange()` and calls to `Write()` where the `WriteBatch` contains a range deletion. Previously such operations may have succeeded while not providing the expected transactional guarantees. There are certain cases where range deletion can still be used on such DBs; see the API doc on `TransactionDB::DeleteRange()` for details.
 * `OptimisticTransactionDB` now returns error `Status`es from calls to `DeleteRange()` and calls to `Write()` where the `WriteBatch` contains a range deletion. Previously such operations may have succeeded while not providing the expected transactional guarantees.
 * Fix `WRITE_PREPARED`, `WRITE_UNPREPARED` TransactionDB `MultiGet()` may return uncommitted data with snapshot.
@@ -1495,7 +1495,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * When verifying full file checksum with `DB::VerifyFileChecksums()`, we now fail with `Status::InvalidArgument` if the name of the checksum generator used for verification does not match the name of the checksum generator used for protecting the file when it was created.
 * Since RocksDB does not continue write the same file if a file write fails for any reason, the file scope write IO error is treated the same as retryable IO error. More information about error handling of file scope IO error is included in `ErrorHandler::SetBGError`.
 
-### Bug Fixes
+### Fix
 * Version older than 6.15 cannot decode VersionEdits `WalAddition` and `WalDeletion`, fixed this by changing the encoded format of them to be ignorable by older versions.
 * Fix a race condition between DB startups and shutdowns in managing the periodic background worker threads. One effect of this race condition could be the process being terminated.
 
@@ -1508,7 +1508,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ### Behavior Changes
 * Attempting to write a merge operand without explicitly configuring `merge_operator` now fails immediately, causing the DB to enter read-only mode. Previously, failure was deferred until the `merge_operator` was needed by a user read or a background operation.
 
-### Bug Fixes
+### Fix
 * Truncated WALs ending in incomplete records can no longer produce gaps in the recovered data when `WALRecoveryMode::kPointInTimeRecovery` is used. Gaps are still possible when WALs are truncated exactly on record boundaries; for complete protection, users should enable `track_and_verify_wals_in_manifest`.
 * Fix a bug where compressed blocks read by MultiGet are not inserted into the compressed block cache when use_direct_reads = true.
 * Fixed the issue of full scanning on obsolete files when there are too many outstanding compactions with ConcurrentTaskLimiter enabled.
@@ -1531,7 +1531,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * All overloads of DB::GetApproximateSizes now return Status, so that any failure to obtain the sizes is indicated to the caller.
 
 ## 6.15.0 (2020-11-13)
-### Bug Fixes
+### Fix
 * Fixed a bug in the following combination of features: indexes with user keys (`format_version >= 3`), indexes are partitioned (`index_type == kTwoLevelIndexSearch`), and some index partitions are pinned in memory (`BlockBasedTableOptions::pin_l0_filter_and_index_blocks_in_cache`). The bug could cause keys to be truncated when read from the index leading to wrong read results or other unexpected behavior.
 * Fixed a bug when indexes are partitioned (`index_type == kTwoLevelIndexSearch`), some index partitions are pinned in memory (`BlockBasedTableOptions::pin_l0_filter_and_index_blocks_in_cache`), and partitions reads could be mixed between block cache and directly from the file (e.g., with `enable_index_compression == 1` and `mmap_read == 1`, partitions that were stored uncompressed due to poor compression ratio would be read directly from the file via mmap, while partitions that were stored compressed would be read from block cache). The bug could cause index partitions to be mistakenly considered empty during reads leading to wrong read results.
 * Since 6.12, memtable lookup should report unrecognized value_type as corruption (#7121).
@@ -1663,7 +1663,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * BackupEngine avoids unnecessary repeated checksum computation for backing up a table file to the `shared_checksum` directory when using `share_files_with_checksum_naming = kUseDbSessionId` (new default), except on SST files generated before this version of RocksDB, which fall back on using `kLegacyCrc32cAndFileSize`.
 
 ## 6.11 (2020-06-12)
-### Bug Fixes
+### Fix
 * Fix consistency checking error swallowing in some cases when options.force_consistency_checks = true.
 * Fix possible false NotFound status from batched MultiGet using index type kHashSearch.
 * Fix corruption caused by enabling delete triggered compaction (NewCompactOnDeletionCollectorFactory) in universal compaction mode, along with parallel compactions. The bug can result in two parallel compactions picking the same input files, resulting in the DB resurrecting older and deleted versions of some keys.
@@ -1698,7 +1698,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Eliminate redundant key comparisons during random access in block-based tables.
 
 ## 6.10 (2020-05-02)
-### Bug Fixes
+### Fix
 * Fix wrong result being read from ingested file. May happen when a key in the file happen to be prefix of another key also in the file. The issue can further cause more data corruption. The issue exists with rocksdb >= 5.0.0 since DB::IngestExternalFile() was introduced.
 * Finish implementation of BlockBasedTableOptions::IndexType::kBinarySearchWithFirstKey. It's now ready for use. Significantly reduces read amplification in some setups, especially for iterator seeks.
 * Fix a bug by updating CURRENT file so that it points to the correct MANIFEST file after best-efforts recovery.
@@ -1720,7 +1720,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Added functionality in sst_dump tool to check the compressed file size for different compression levels and print the time spent on compressing files with each compression type. Added arguments `--compression_level_from` and `--compression_level_to` to report size of all compression levels and one compression_type must be specified with it so that it will report compressed sizes of one compression type with different levels.
 * Added statistics for redundant insertions into block cache: rocksdb.block.cache.*add.redundant. (There is currently no coordination to ensure that only one thread loads a table block when many threads are trying to access that same table block.)
 
-### Bug Fixes
+### Fix
 * Fix a bug when making options.bottommost_compression, options.compression_opts and options.bottommost_compression_opts dynamically changeable: the modified values are not written to option files or returned back to users when being queried.
 * Fix a bug where index key comparisons were unaccounted in `PerfContext::user_key_comparison_count` for lookups in files written with `format_version >= 3`.
 * Fix many bloom.filter statistics not being updated in batch MultiGet.
@@ -1739,7 +1739,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * A new parameter `CreateBackupOptions` is added to both `BackupEngine::CreateNewBackup` and `BackupEngine::CreateNewBackupWithMetadata`, you can decrease CPU priority of `BackupEngine`'s background threads by setting `decrease_background_thread_cpu_priority` and `background_thread_cpu_priority` in `CreateBackupOptions`.
 * Updated the public API of SST file checksum. Introduce the FileChecksumGenFactory to create the FileChecksumGenerator for each SST file, such that the FileChecksumGenerator is not shared and it can be more general for checksum implementations. Changed the FileChecksumGenerator interface from Value, Extend, and GetChecksum to Update, Finalize, and GetChecksum. Finalize should be only called once after all data is processed to generate the final checksum. Temproal data should be maintained by the FileChecksumGenerator object itself and finally it can return the checksum string.
 
-### Bug Fixes
+### Fix
 * Fix a bug where range tombstone blocks in ingested files were cached incorrectly during ingestion. If range tombstones were read from those incorrectly cached blocks, the keys they covered would be exposed.
 * Fix a data race that might cause crash when calling DB::GetCreationTimeOfOldestFile() by a small chance. The bug was introduced in 6.6 Release.
 * Fix a bug where a boolean value optimize_filters_for_hits was for max threads when calling load table handles after a flush or compaction. The value is correct to 1. The bug should not cause user visible problems.
@@ -1761,7 +1761,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Major breaking changes to Java comparators, toward standardizing on ByteBuffer for performant, locale-neutral operations on keys (#6252).
 * Added overloads of common API methods using direct ByteBuffers for keys and values (#2283).
 
-### Bug Fixes
+### Fix
 * Fix incorrect results while block-based table uses kHashSearch, together with Prev()/SeekForPrev().
 * Fix a bug that prevents opening a DB after two consecutive crash with TransactionDB, where the first crash recovers from a corrupted WAL with kPointInTimeRecovery but the second cannot.
 * Fixed issue #6316 that can cause a corruption of the MANIFEST file in the middle when writing to it fails due to no disk space.
@@ -1790,7 +1790,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Changed Java API for RocksDB.keyMayExist functions to use Holder<byte[]> instead of StringBuilder, so that retrieved values need not decode to Strings.
 * A new `OptimisticTransactionDBOptions` Option that allows users to configure occ validation policy. The default policy changes from kValidateSerial to kValidateParallel to reduce mutex contention.
 
-### Bug Fixes
+### Fix
 * Fix a bug that can cause unnecessary bg thread to be scheduled(#6104).
 * Fix crash caused by concurrent CF iterations and drops(#6147).
 * Fix a race condition for cfd->log_number_ between manifest switch and memtable switch (PR 6249) when number of column families is greater than 1.
@@ -1809,11 +1809,11 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * MultiGet() can use IO Uring to parallelize read from the same SST file. This featuer is by default disabled. It can be enabled with environment variable ROCKSDB_USE_IO_URING.
 
 ## 6.6.2 (2020-01-13)
-### Bug Fixes
+### Fix
 * Fixed a bug where non-L0 compaction input files were not considered to compute the `creation_time` of new compaction outputs.
 
 ## 6.6.1 (2020-01-02)
-### Bug Fixes
+### Fix
 * Fix a bug in WriteBatchWithIndex::MultiGetFromBatchAndDB, which is called by Transaction::MultiGet, that causes due to stale pointer access when the number of keys is > 32
 * Fixed two performance issues related to memtable history trimming. First, a new SuperVersion is now created only if some memtables were actually trimmed. Second, trimming is only scheduled if there is at least one flushed memtable that is kept in memory for the purposes of transaction conflict checking.
 * BlobDB no longer updates the SST to blob file mapping upon failed compactions.
@@ -1823,7 +1823,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Fix use-after-free and double-deleting files in BackgroundCallPurge().
 
 ## 6.6.0 (2019-11-25)
-### Bug Fixes
+### Fix
 * Fix data corruption caused by output of intra-L0 compaction on ingested file not being placed in correct order in L0.
 * Fix a data race between Version::GetColumnFamilyMetaData() and Compaction::MarkFilesBeingCompacted() for access to being_compacted (#6056). The current fix acquires the db mutex during Version::GetColumnFamilyMetaData(), which may cause regression.
 * Fix a bug in DBIter that is_blob_ state isn't updated when iterating backward using seek.
@@ -1876,19 +1876,19 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Level iterator to invlidate the iterator more often in prefix seek and the level is filtered out by prefix bloom.
 
 ## 6.5.2 (2019-11-15)
-### Bug Fixes
+### Fix
 * Fix a assertion failure in MultiGet() when BlockBasedTableOptions::no_block_cache is true and there is no compressed block cache
 * Fix a buffer overrun problem in BlockBasedTable::MultiGet() when compression is enabled and no compressed block cache is configured.
 * If a call to BackupEngine::PurgeOldBackups or BackupEngine::DeleteBackup suffered a crash, power failure, or I/O error, files could be left over from old backups that could only be purged with a call to GarbageCollect. Any call to PurgeOldBackups, DeleteBackup, or GarbageCollect should now suffice to purge such files.
 
 ## 6.5.1 (2019-10-16)
-### Bug Fixes
+### Fix
 * Revert the feature "Merging iterator to avoid child iterator reseek for some cases (#5286)" since it might cause strange results when reseek happens with a different iterator upper bound.
 * Fix a bug in BlockBasedTableIterator that might return incorrect results when reseek happens with a different iterator upper bound.
 * Fix a bug when partitioned filters and prefix search are used in conjunction, ::SeekForPrev could return invalid for an existing prefix. ::SeekForPrev might be called by the user, or internally on ::Prev, or within ::Seek if the return value involves Delete or a Merge operand.
 
 ## 6.5.0 (2019-09-13)
-### Bug Fixes
+### Fix
 * Fixed a number of data races in BlobDB.
 * Fix a bug where the compaction snapshot refresh feature is not disabled as advertised when `snap_refresh_nanos` is set to 0..
 * Fix bloom filter lookups by the MultiGet batching API when BlockBasedTableOptions::whole_key_filtering is false, by checking that a key is in the perfix_extractor domain and extracting the prefix before looking up.
@@ -1938,7 +1938,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Improve performance of row_cache: make reads with newer snapshots than data in an SST file share the same cache key, except in some transaction cases.
 * The compression dictionary is no longer copied to a new object upon retrieval.
 
-### Bug Fixes
+### Fix
 * Fix ingested file and directory not being fsync.
 * Return TryAgain status in place of Corruption when new tail is not visible to TransactionLogIterator.
 * Fixed a regression where the fill_cache read option also affected index blocks.
@@ -1948,12 +1948,12 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ### Public API Change
 * The semantics of the per-block-type block read counts in the performance context now match those of the generic block_read_count.
 
-### Bug Fixes
+### Fix
 * Fixed a regression where the fill_cache read option also affected index blocks.
 * Fixed an issue where using cache_index_and_filter_blocks==false affected partitions of partitioned indexes as well.
 
 ## 6.3.1 (2019-07-24)
-### Bug Fixes
+### Fix
 * Fix auto rolling bug introduced in 6.3.0, which causes segfault if log file creation fails.
 
 ## 6.3.0 (2019-06-18)
@@ -1986,7 +1986,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Added new status code kColumnFamilyDropped to distinguish between Column Family Dropped and DB Shutdown in progress.
 * Improve ColumnFamilyOptions validation when creating a new column family.
 
-### Bug Fixes
+### Fix
 * Fix a bug in WAL replay of secondary instance by skipping write batches with older sequence numbers than the current last sequence number.
 * Fix flush's/compaction's merge processing logic which allowed `Put`s covered by range tombstones to reappear. Note `Put`s may exist even if the user only ever called `Merge()` due to an internal conversion during compaction to the bottommost level.
 * Fix/improve memtable earliest sequence assignment and WAL replay so that WAL entries of unflushed column families will not be skipped after replaying the MANIFEST and increasing db sequence due to another flushed/compacted column family.
@@ -2008,7 +2008,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Change the behavior of OptimizeForSmallDb(): use a 16MB block cache, put index and filter blocks into it, and cost the memtable size to it. DBOptions.OptimizeForSmallDb() and ColumnFamilyOptions.OptimizeForSmallDb() start to take an optional cache object.
 * Added BottommostLevelCompaction::kForceOptimized to avoid double compacting newly compacted files in the bottommost level compaction of manual compaction. Note this option may prohibit the manual compaction to produce a single file in the bottommost level.
 
-### Bug Fixes
+### Fix
 * Adjust WriteBufferManager's dummy entry size to block cache from 1MB to 256KB.
 * Fix a race condition between WritePrepared::Get and ::Put with duplicate keys.
 * Fix crash when memtable prefix bloom is enabled and read/write a key out of domain of prefix extractor.
@@ -2021,7 +2021,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 
 ### Public API Change
 
-### Bug Fixes
+### Fix
 * Fix a bug in 2PC where a sequence of txn prepare, memtable flush, and crash could result in losing the prepared transaction.
 * Fix a bug in Encryption Env which could cause encrypted files to be read beyond file boundaries.
 
@@ -2039,7 +2039,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add initial support for multiple db instances sharing the same data in single-writer, multi-reader mode.
 * Removed some "using std::xxx" from public headers.
 
-### Bug Fixes
+### Fix
 * Fix JEMALLOC_CXX_THROW macro missing from older Jemalloc versions, causing build failures on some platforms.
 * Fix SstFileReader not able to open file ingested with write_glbal_seqno=true.
 
@@ -2074,7 +2074,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Support SST file ingestion across multiple column families via DB::IngestExternalFiles. See the function's comment about atomicity.
 * Remove Lua compaction filter.
 
-### Bug Fixes
+### Fix
 * Fix a deadlock caused by compaction and file ingestion waiting for each other in the event of write stalls.
 * Fix a memory leak when files with range tombstones are read in mmap mode and block cache is enabled
 * Fix handling of corrupt range tombstone blocks such that corruptions cannot cause deleted keys to reappear
@@ -2101,7 +2101,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * `DBOptions::use_direct_reads` now affects reads issued by `BackupEngine` on the database's SSTs.
 * `NO_ITERATORS` is divided into two counters `NO_ITERATOR_CREATED` and `NO_ITERATOR_DELETE`. Both of them are only increasing now, just as other counters.
 
-### Bug Fixes
+### Fix
 * Fix corner case where a write group leader blocked due to write stall blocks other writers in queue with WriteOptions::no_slowdown set.
 * Fix in-memory range tombstone truncation to avoid erroneously covering newer keys at a lower level, and include range tombstones in compacted files whose largest key is the range tombstone's start key.
 * Properly set the stop key for a truncated manual CompactRange
@@ -2123,20 +2123,20 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 ### New Features
 * TransactionOptions::skip_concurrency_control allows pessimistic transactions to skip the overhead of concurrency control. Could be used for optimizing certain transactions or during recovery.
 
-### Bug Fixes
+### Fix
 * Avoid creating empty SSTs and subsequently deleting them in certain cases during compaction.
 * Sync CURRENT file contents during checkpoint.
 
 ## 5.16.3 (2018-10-01)
-### Bug Fixes
+### Fix
 * Fix crash caused when `CompactFiles` run with `CompactionOptions::compression == CompressionType::kDisableCompressionOption`. Now that setting causes the compression type to be chosen according to the column family-wide compression options.
 
 ## 5.16.2 (2018-09-21)
-### Bug Fixes
+### Fix
 * Fix bug in partition filters with format_version=4.
 
 ## 5.16.1 (2018-09-17)
-### Bug Fixes
+### Fix
 * Remove trace_analyzer_tool from rocksdb_lib target in TARGETS file.
 * Fix RocksDB Java build and tests.
 * Remove sync point in Block destructor.
@@ -2152,7 +2152,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add a new tool: trace_analyzer. Trace_analyzer analyzes the trace file generated by using trace_replay API. It can convert the binary format trace file to a human readable txt file, output the statistics of the analyzed query types such as access statistics and size statistics, combining the dumped whole key space file to analyze, support query correlation analyzing, and etc. Current supported query types are: Get, Put, Delete, SingleDelete, DeleteRange, Merge, Iterator (Seek, SeekForPrev only).
 * Add hash index support to data blocks, which helps reducing the cpu utilization of point-lookup operations. This feature is backward compatible with the data block created without the hash index. It is disabled by default unless BlockBasedTableOptions::data_block_index_type is set to data_block_index_type = kDataBlockBinaryAndHash.
 
-### Bug Fixes
+### Fix
 * Fix a bug in misreporting the estimated partition index size in properties block.
 
 ## 5.15.0 (2018-07-17)
@@ -2172,7 +2172,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * pin_top_level_index_and_filter (default true) in BlockBasedTableOptions can be used in combination with cache_index_and_filter_blocks to prefetch and pin the top-level index of partitioned index and filter blocks in cache. It has no impact when cache_index_and_filter_blocks is false.
 * Write properties meta-block at the end of block-based table to save read-ahead IO.
 
-### Bug Fixes
+### Fix
 * Fix deadlock with enable_pipelined_write=true and max_successive_merges > 0
 * Check conflict at output level in CompactFiles.
 * Fix corruption in non-iterator reads when mmap is used for file reads
@@ -2202,7 +2202,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * In level-based compaction, if bottom-pri thread pool was setup via `Env::SetBackgroundThreads()`, compactions to the bottom level will be delegated to that thread pool.
 * `prefix_extractor` has been moved from ImmutableCFOptions to MutableCFOptions, meaning it can be dynamically changed without a DB restart.
 
-### Bug Fixes
+### Fix
 * Fsync after writing global seq number to the ingestion file in ExternalSstFileIngestionJob.
 * Fix WAL corruption caused by race condition between user write thread and FlushWAL when two_write_queue is not set.
 * Fix `BackupableDBOptions::max_valid_backups_to_open` to not delete backup files when refcount cannot be accurately determined.
@@ -2226,7 +2226,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add "rocksdb.live-sst-files-size" DB property to return total bytes of all SST files belong to the latest LSM tree.
 * NewSstFileManager to add an argument bytes_max_delete_chunk with default 64MB. With this argument, a file larger than 64MB will be ftruncated multiple times based on this size.
 
-### Bug Fixes
+### Fix
 * Fix a leak in prepared_section_completed_ where the zeroed entries would not removed from the map.
 * Fix WAL corruption caused by race condition between user write thread and backup/checkpoint thread.
 
@@ -2246,7 +2246,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Improved performance of long range scans with readahead.
 * Updated to and now continuously tested in Visual Studio 2017.
 
-### Bug Fixes
+### Fix
 * Fix `DisableFileDeletions()` followed by `GetSortedWalFiles()` to not return obsolete WAL files that `PurgeObsoleteFiles()` is going to delete.
 * Fix Handle error return from WriteBuffer() during WAL file close and DB close.
 * Fix advance reservation of arena block addresses.
@@ -2262,7 +2262,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Disable onboard cache for compaction output in Windows platform.
 * Improve the performance of iterators doing long range scans by using readahead.
 
-### Bug Fixes
+### Fix
 * Fix a stack-use-after-scope bug in ForwardIterator.
 * Fix builds on platforms including Linux, Windows, and PowerPC.
 * Fix buffer overrun in backup engine for DBs with huge number of files.
@@ -2278,7 +2278,7 @@ Note: The next release will be major release 7.0. See https://github.com/faceboo
 * Add a DB stat, `NUMBER_ITER_SKIP`, which returns how many internal keys were skipped during iterations (e.g., due to being tombstones or duplicate versions of a key).
 * Add PerfContext counters, `key_lock_wait_count` and `key_lock_wait_time`, which measure the number of times transactions wait on key locks and total amount of time waiting.
 
-### Bug Fixes
+### Fix
 * Fix IOError on WAL write doesn't propagate to write group follower
 * Make iterator invalid on merge error.
 * Fix performance issue in `IngestExternalFile()` affecting databases with large number of SST files.
@@ -2307,7 +2307,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Support lower bound on iterators specified via `ReadOptions::iterate_lower_bound`.
 * Support for differential snapshots (via iterator emitting the sequence of key-values representing the difference between DB state at two different sequence numbers). Supports preserving and emitting puts and regular deletes, doesn't support SingleDeletes, MergeOperator, Blobs and Range Deletes.
 
-### Bug Fixes
+### Fix
 * Fix a potential data inconsistency issue during point-in-time recovery. `DB:Open()` will abort if column family inconsistency is found during PIT recovery.
 * Fix possible metadata corruption in databases using `DeleteRange()`.
 
@@ -2325,7 +2325,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Add `DB::VerifyChecksum()`, which verifies the checksums in all SST files in a running DB.
 * Block-based table support for disabling checksums by setting `BlockBasedTableOptions::checksum = kNoChecksum`.
 
-### Bug Fixes
+### Fix
 * Fix wrong latencies in `rocksdb.db.get.micros`, `rocksdb.db.write.micros`, and `rocksdb.sst.read.micros`.
 * Fix incorrect dropping of deletions during intra-L0 compaction.
 * Fix transient reappearance of keys covered by range deletions when memtable prefix bloom filter is enabled.
@@ -2343,7 +2343,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Partitioned Index/Filters exiting the experimental mode. To enable partitioned indexes set index_type to kTwoLevelIndexSearch and to further enable partitioned filters set partition_filters to true. To configure the partition size set metadata_block_size.
 
 
-### Bug Fixes
+### Fix
 * Fix discarding empty compaction output files when `DeleteRange()` is used together with subcompactions.
 
 ## 5.6.0 (2017-06-06)
@@ -2360,7 +2360,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Introduce WriteOptions.low_pri. If it is true, low priority writes will be throttled if the compaction is behind.
 * `DB::IngestExternalFile()` now supports ingesting files into a database containing range deletions.
 
-### Bug Fixes
+### Fix
 * Shouldn't ignore return value of fsync() in flush.
 
 ## 5.5.0 (2017-05-17)
@@ -2377,7 +2377,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Support file ingestion behind with option `allow_ingest_behind`
 * New option enable_pipelined_write which may improve write throughput in case writing from multiple threads and WAL enabled.
 
-### Bug Fixes
+### Fix
 * Fix the bug that Direct I/O uses direct reads for non-SST file
 
 ## 5.4.0 (2017-04-11)
@@ -2404,7 +2404,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Remove option min_partial_merge_operands. Partial merge operands will always be merged in flush or compaction if there are more than one.
 * Remove option verify_checksums_in_compaction. Compaction will always verify checksum.
 
-### Bug Fixes
+### Fix
 * Fix the bug that iterator may skip keys
 
 ## 5.2.0 (2017-02-08)
@@ -2419,7 +2419,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Added new function GetApproximateMemTableStats that approximates both number of records and size of memtables.
 * Add Direct I/O mode for SST file I/O
 
-### Bug Fixes
+### Fix
 * RangeSync() should work if ROCKSDB_FALLOCATE_PRESENT is not set
 * Fix wrong results in a data race case in Get()
 * Some fixes related to 2PC.
@@ -2430,7 +2430,7 @@ if set to something > 0 user will see 2 changes in iterators behavior 1) only ke
 * Added EventListener::OnExternalFileIngested which will be called when IngestExternalFile() add a file successfully.
 * BackupEngine::Open and BackupEngineReadOnly::Open now always return error statuses matching those of the backup Env.
 
-### Bug Fixes
+### Fix
 * Fix the bug that if 2PC is enabled, checkpoints may loss some recent transactions.
 * When file copying is needed when creating checkpoints or bulk loading files, fsync the file after the file copying.
 

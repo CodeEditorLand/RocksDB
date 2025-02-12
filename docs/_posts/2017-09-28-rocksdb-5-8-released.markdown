@@ -18,7 +18,7 @@ category: blog
 * Add `DB::VerifyChecksum()`, which verifies the checksums in all SST files in a running DB.
 * Block-based table support for disabling checksums by setting `BlockBasedTableOptions::checksum = kNoChecksum`.
 
-### Bug Fixes
+### Fix
 * Fix wrong latencies in `rocksdb.db.get.micros`, `rocksdb.db.write.micros`, and `rocksdb.sst.read.micros`.
 * Fix incorrect dropping of deletions during intra-L0 compaction.
 * Fix transient reappearance of keys covered by range deletions when memtable prefix bloom filter is enabled.
