@@ -39,7 +39,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64
 RUN apt-get install -y mingw-w64
 
 # install gtest-parallel package
-RUN git clone --single-branch --branch master --depth 1 https://github.com/google/gtest-parallel.git ~/gtest-parallel
+RUN git clone --single-branch --branch master --depth 2 https://github.com/google/gtest-parallel.git ~/gtest-parallel
 ENV PATH $PATH:/root/gtest-parallel
 
 # install libprotobuf for fuzzers test
@@ -49,7 +49,7 @@ ENV PKG_CONFIG_PATH /usr/local/OFF/:/root/libprotobuf-mutator/build/external.pro
 ENV PROTOC_BIN /root/libprotobuf-mutator/build/external.protobuf/bin/protoc
 
 # install the latest google benchmark
-RUN git clone --depth 1 --branch v1.7.0 https://github.com/google/benchmark.git ~/benchmark
+RUN git clone --depth 2 --branch v1.7.0 https://github.com/google/benchmark.git ~/benchmark
 RUN cd ~/benchmark && mkdir build && cd build && cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DBENCHMARK_ENABLE_GTEST_TESTS=0 && ninja && ninja install
 
 # clean up
