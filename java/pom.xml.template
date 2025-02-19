@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.rocksdb</groupId>
@@ -81,8 +83,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
                 <configuration>
-                    <argLine>${argLine} -ea -Xcheck:jni -Djava.library.path=${project.build.directory}</argLine>
-                    <useManifestOnlyJar>false</useManifestOnlyJar>  
+                    <argLine>${argLine} -ea -Xcheck:jni
+                        -Djava.library.path=${project.build.directory}</argLine>
+                    <useManifestOnlyJar>false</useManifestOnlyJar>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <additionalClasspathElements>
                         <additionalClasspathElement>${project.build.directory}/*</additionalClasspathElement>
@@ -123,14 +126,16 @@
                                 <name>Xenu</name>
                             </defaults>
                             <source>
-                                String fileContents = new File(project.basedir.absolutePath + '/../include/rocksdb/version.h').getText('UTF-8')
+                                String fileContents = new File(project.basedir.absolutePath +
+                                '/../include/rocksdb/version.h').getText('UTF-8')
                                 matcher = (fileContents =~ /(?s).*ROCKSDB_MAJOR ([0-9]+).*?/)
                                 String major_version = matcher.getAt(0).getAt(1)
                                 matcher = (fileContents =~ /(?s).*ROCKSDB_MINOR ([0-9]+).*?/)
                                 String minor_version = matcher.getAt(0).getAt(1)
                                 matcher = (fileContents =~ /(?s).*ROCKSDB_PATCH ([0-9]+).*?/)
                                 String patch_version = matcher.getAt(0).getAt(1)
-                                String version = String.format('%s.%s.%s', major_version, minor_version, patch_version)
+                                String version = String.format('%s.%s.%s', major_version,
+                                minor_version, patch_version)
                                 // Set version to be used in pom.properties
                                 project.version = version
                                 // Set version to be set as jar name
@@ -146,38 +151,39 @@
                 <version>4.7.2.1</version>
                 <configuration>
                     <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
-                </configuration>          
+                </configuration>
                 <dependencies>
-                  <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
-                  <dependency>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs</artifactId>
-                    <version>4.7.3</version>
-                  </dependency>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of
+                    spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>4.7.3</version>
+                    </dependency>
                 </dependencies>
-              </plugin>
-              <plugin>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.20.0</version>
                 <executions>
-                  <execution>
-                    <goals>
-                      <goal>check</goal>
-                      <goal>cpd-check</goal>
-                    </goals>
-                  </execution>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
                 </executions>
                 <configuration>
                     <rulesets>
-                      <!-- A rule set, that comes bundled with PMD -->
-                      <ruleset>/pmd-rules.xml</ruleset>
-                      <!-- A rule set, that comes bundled with PMD -->
-                      <!-- <ruleset>/category/java/errorprone.xml</ruleset> -->
+                        <!-- A rule set, that comes bundled with PMD -->
+                        <ruleset>/pmd-rules.xml</ruleset>
+                        <!-- A rule set, that comes bundled with PMD -->
+                        <!-- <ruleset>/category/java/errorprone.xml</ruleset> -->
                     </rulesets>
-                  </configuration>          
-              </plugin>
-      </plugins>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -211,15 +217,15 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-   </dependencies>
+    </dependencies>
 
-   <reporting>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>3.3.0</version>
-        </plugin>
-    </plugins>
-  </reporting>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

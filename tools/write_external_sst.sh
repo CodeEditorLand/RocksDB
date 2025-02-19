@@ -18,9 +18,8 @@ set -e
 
 n=0
 
-for f in `find $input_data_dir -name sorted_data*`
-do
+for f in $(find $input_data_dir -name sorted_data*); do
   echo == Writing external SST file $f to $extern_sst_dir/extern_sst${n}
-  ./ldb --db=$db_dir --create_if_missing write_extern_sst $extern_sst_dir/extern_sst${n} < $f
+  ./ldb --db=$db_dir --create_if_missing write_extern_sst $extern_sst_dir/extern_sst${n} <$f
   let "n = n + 1"
 done

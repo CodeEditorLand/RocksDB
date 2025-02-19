@@ -3,7 +3,7 @@
 # If clang_format_diff.py command is not specfied, we assume we are able to
 # access directly without any path.
 
-print_usage () {
+print_usage() {
   echo "Usage:"
   echo "format-diff.sh [OPTIONS]"
   echo "-c: check only."
@@ -12,17 +12,17 @@ print_usage () {
 
 while getopts ':ch' OPTION; do
   case "$OPTION" in
-    c)
-      CHECK_ONLY=1
-      ;;
-    h)
-      print_usage
-      exit 1
-      ;;
-    ?)
-      print_usage
-      exit 1
-      ;;
+  c)
+    CHECK_ONLY=1
+    ;;
+  h)
+    print_usage
+    exit 1
+    ;;
+  ?)
+    print_usage
+    exit 1
+    ;;
   esac
 done
 
@@ -31,25 +31,25 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 if [ "$CLANG_FORMAT_DIFF" ]; then
   echo "Note: CLANG_FORMAT_DIFF='$CLANG_FORMAT_DIFF'"
   # Dry run to confirm dependencies like argparse
-  if $CLANG_FORMAT_DIFF --help >/dev/null < /dev/null; then
+  if $CLANG_FORMAT_DIFF --help >/dev/null </dev/null; then
     true #Good
   else
     exit 128
   fi
 else
   # First try directly executing the possibilities
-  if clang-format-diff --help &> /dev/null < /dev/null; then
+  if clang-format-diff --help &>/dev/null </dev/null; then
     CLANG_FORMAT_DIFF=clang-format-diff
-  elif clang-format-diff.py --help &> /dev/null < /dev/null; then
+  elif clang-format-diff.py --help &>/dev/null </dev/null; then
     CLANG_FORMAT_DIFF=clang-format-diff.py
-  elif $REPO_ROOT/clang-format-diff.py --help &> /dev/null < /dev/null; then
+  elif $REPO_ROOT/clang-format-diff.py --help &>/dev/null </dev/null; then
     CLANG_FORMAT_DIFF=$REPO_ROOT/clang-format-diff.py
   else
     # This probably means we need to directly invoke the interpreter.
     # But first find clang-format-diff.py
     if [ -f "$REPO_ROOT/clang-format-diff.py" ]; then
       CFD_PATH="$REPO_ROOT/clang-format-diff.py"
-    elif which clang-format-diff.py &> /dev/null; then
+    elif which clang-format-diff.py &>/dev/null; then
       CFD_PATH="$(which clang-format-diff.py)"
     else
       echo "You didn't have clang-format-diff.py and/or clang-format available in your computer!"
@@ -80,8 +80,8 @@ else
     # Unfortunately, some machines have a Python2 clang-format-diff.py
     # installed but only a Python3 interpreter installed. Unfortunately,
     # automatic 2to3 migration is insufficient, so suggest downloading latest.
-    if grep -q "print '" "$CFD_PATH" && \
-       ${PYTHON:-python3} --version | grep -q 'ython 3'; then
+    if grep -q "print '" "$CFD_PATH" &&
+      ${PYTHON:-python3} --version | grep -q 'ython 3'; then
       echo "You have clang-format-diff.py for Python 2 but are using a Python 3"
       echo "interpreter (${PYTHON:-python3})."
       echo "You can download clang-format-diff.py for Python 3 by running: "
@@ -91,7 +91,7 @@ else
     fi
     CLANG_FORMAT_DIFF="${PYTHON:-python3} $CFD_PATH"
     # This had better work after all those checks
-    if $CLANG_FORMAT_DIFF --help >/dev/null < /dev/null; then
+    if $CLANG_FORMAT_DIFF --help >/dev/null </dev/null; then
       true #Good
     else
       exit 128
@@ -118,14 +118,13 @@ fi
 # fi
 set -e
 
-uncommitted_code=`git diff HEAD`
+uncommitted_code=$(git diff HEAD)
 
 # If there's no uncommitted changes, we assume user are doing post-commit
 # format check, in which case we'll try to check the modified lines vs. the
 # facebook/rocksdb.git main branch. Otherwise, we'll check format of the
 # uncommitted code only.
-if [ -z "$uncommitted_code" ]
-then
+if [ -z "$uncommitted_code" ]; then
   # Attempt to get name of facebook/rocksdb.git remote.
   [ "$FORMAT_REMOTE" ] || FORMAT_REMOTE="$(LC_ALL=POSIX LANG=POSIX git remote -v | grep 'facebook/rocksdb.git' | head -n 1 | cut -f 1)"
   # Fall back on 'origin' if that fails
@@ -145,15 +144,13 @@ else
   echo "Checking format of uncommitted changes..."
 fi
 
-if [ -z "$diffs" ]
-then
+if [ -z "$diffs" ]; then
   echo "Nothing needs to be reformatted!"
   exit 0
 elif [ $? -ne 1 ]; then
   # CLANG_FORMAT_DIFF will exit on 1 while there is suggested changes.
   exit $?
-elif [ $CHECK_ONLY ]
-then
+elif [ $CHECK_ONLY ]; then
   echo "Your change has unformatted code. Please run make format!"
   if [ $VERBOSE_CHECK ]; then
     clang-format --version
@@ -170,23 +167,21 @@ COLOR_GREEN="\033[0;32m"
 echo -e "Detect lines that doesn't follow the format rules:\r"
 # Add the color to the diff. lines added will be green; lines removed will be red.
 echo "$diffs" |
-  sed -e "s/\(^-.*$\)/`echo -e \"$COLOR_RED\1$COLOR_END\"`/" |
-  sed -e "s/\(^+.*$\)/`echo -e \"$COLOR_GREEN\1$COLOR_END\"`/"
+  sed -e "s/\(^-.*$\)/$(echo -e \"$COLOR_RED\1$COLOR_END\")/" |
+  sed -e "s/\(^+.*$\)/$(echo -e \"$COLOR_GREEN\1$COLOR_END\")/"
 
 echo -e "Would you like to fix the format automatically (y/n): \c"
 
 # Make sure under any mode, we can read user input.
-exec < /dev/tty
+exec </dev/tty
 read to_fix
 
-if [ "$to_fix" != "y" ]
-then
+if [ "$to_fix" != "y" ]; then
   exit 1
 fi
 
 # Do in-place format adjustment.
-if [ -z "$uncommitted_code" ]
-then
+if [ -z "$uncommitted_code" ]; then
   git diff -U0 "$FORMAT_UPSTREAM_MERGE_BASE" | $CLANG_FORMAT_DIFF -i -p 1
 else
   git diff -U0 HEAD | $CLANG_FORMAT_DIFF -i -p 1
@@ -195,11 +190,10 @@ echo "Files reformatted!"
 
 # Amend to last commit if user do the post-commit format check
 if [ -z "$uncommitted_code" ]; then
-  echo -e "Would you like to amend the changes to last commit (`git log HEAD --oneline | head -1`)? (y/n): \c"
+  echo -e "Would you like to amend the changes to last commit ($(git log HEAD --oneline | head -1))? (y/n): \c"
   read to_amend
 
-  if [ "$to_amend" == "y" ]
-  then
+  if [ "$to_amend" == "y" ]; then
     git commit -a --amend --reuse-message HEAD
     echo "Amended to last commit"
   fi

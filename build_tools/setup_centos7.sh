@@ -42,4 +42,3 @@ sudo -u vagrant make static_lib
 cd examples/
 sudo -u vagrant LD_LIBRARY_PATH=/usr/local/lib/ make all
 sudo -u vagrant LD_LIBRARY_PATH=/usr/local/lib/ ./c_simple_example
-

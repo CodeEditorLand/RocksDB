@@ -618,8 +618,8 @@ class TimestampStrippingIterator : public InternalIterator {
       const SliceTransform* cf_prefix_extractor, size_t ts_sz)
       : arena_mode_(arena != nullptr), kind_(kind), ts_sz_(ts_sz) {
     assert(ts_sz_ != 0);
-    void* mem = arena ? arena->AllocateAligned(sizeof(MemTableIterator)) :
-                      operator new(sizeof(MemTableIterator));
+    void* mem = arena ? arena->AllocateAligned(sizeof(MemTableIterator))
+                      : operator new(sizeof(MemTableIterator));
     iter_ = new (mem)
         MemTableIterator(kind, memtable, read_options, seqno_to_time_mapping,
                          arena, cf_prefix_extractor);
@@ -1360,7 +1360,10 @@ static bool SaveValue(void* arg, const char* entry) {
         if (merge_context->get_merge_operands_options != nullptr &&
             merge_context->get_merge_operands_options->continue_cb != nullptr &&
             !merge_context->get_merge_operands_options->continue_cb(v)) {
-          // We were told not to continue.
+          // We were told not to continue. `status` may be MergeInProress(),
+          // overwrite to signal the end of successful get. This status
+          // will be checked at the end of GetImpl().
+          *(s->status) = Status::OK();
           *(s->found_final_value) = true;
           return false;
         }

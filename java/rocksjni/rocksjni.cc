@@ -67,11 +67,11 @@ jlong rocksdb_open_helper(JNIEnv* env, jlong jopt_handle, jstring jdb_path,
 jlong Java_org_rocksdb_RocksDB_open__JLjava_lang_String_2(JNIEnv* env, jclass,
                                                           jlong jopt_handle,
                                                           jstring jdb_path) {
-  return rocksdb_open_helper(env, jopt_handle, jdb_path,
-                             (ROCKSDB_NAMESPACE::Status(*)(
-                                 const ROCKSDB_NAMESPACE::Options&,
-                                 const std::string&, ROCKSDB_NAMESPACE::DB**)) &
-                                 ROCKSDB_NAMESPACE::DB::Open);
+  return rocksdb_open_helper(
+      env, jopt_handle, jdb_path,
+      (ROCKSDB_NAMESPACE::Status(*)(
+          const ROCKSDB_NAMESPACE::Options&, const std::string&,
+          ROCKSDB_NAMESPACE::DB**))&ROCKSDB_NAMESPACE::DB::Open);
 }
 
 /*
@@ -217,8 +217,7 @@ jlongArray Java_org_rocksdb_RocksDB_open__JLjava_lang_String_2_3_3B_3J(
           const ROCKSDB_NAMESPACE::DBOptions&, const std::string&,
           const std::vector<ROCKSDB_NAMESPACE::ColumnFamilyDescriptor>&,
           std::vector<ROCKSDB_NAMESPACE::ColumnFamilyHandle*>*,
-          ROCKSDB_NAMESPACE::DB**)) &
-          ROCKSDB_NAMESPACE::DB::Open);
+          ROCKSDB_NAMESPACE::DB**))&ROCKSDB_NAMESPACE::DB::Open);
 }
 
 /*
@@ -3238,24 +3237,6 @@ jlong Java_org_rocksdb_RocksDB_getUpdatesSince(JNIEnv* env, jclass,
 
   ROCKSDB_NAMESPACE::RocksDBExceptionJni::ThrowNew(env, s);
   return 0;
-}
-
-/*
- * Class:     org_rocksdb_RocksDB
- * Method:    deleteFile
- * Signature: (JLjava/lang/String;)V
- */
-void Java_org_rocksdb_RocksDB_deleteFile(JNIEnv* env, jclass, jlong jdb_handle,
-                                         jstring jname) {
-  auto* db = reinterpret_cast<ROCKSDB_NAMESPACE::DB*>(jdb_handle);
-  jboolean has_exception = JNI_FALSE;
-  std::string name =
-      ROCKSDB_NAMESPACE::JniUtil::copyStdString(env, jname, &has_exception);
-  if (has_exception == JNI_TRUE) {
-    // exception occurred
-    return;
-  }
-  db->DeleteFile(name);
 }
 
 /*

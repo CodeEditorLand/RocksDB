@@ -1420,8 +1420,12 @@ TEST_F(DBBasicTestWithTimestamp, ReseekToNextUserKey) {
   {
     std::string ts_str = Timestamp(static_cast<uint64_t>(kNumKeys + 1), 0);
     WriteBatch batch(0, 0, 0, kTimestampSize);
-    { ASSERT_OK(batch.Put("a", "new_value")); }
-    { ASSERT_OK(batch.Put("b", "new_value")); }
+    {
+      ASSERT_OK(batch.Put("a", "new_value"));
+    }
+    {
+      ASSERT_OK(batch.Put("b", "new_value"));
+    }
     s = batch.UpdateTimestamps(
         ts_str, [kTimestampSize](uint32_t) { return kTimestampSize; });
     ASSERT_OK(s);
@@ -1477,6 +1481,55 @@ TEST_F(DBBasicTestWithTimestamp, ReseekToUserKeyBeforeSavedKey) {
     ASSERT_EQ(
         1, options.statistics->getTickerCount(NUMBER_OF_RESEEKS_IN_ITERATION));
   }
+  Close();
+}
+
+TEST_F(DBBasicTestWithTimestamp,
+       FIXME_ReverseIterationWithBlobAndUnpreparedValue) {
+  Options options = CurrentOptions();
+  options.create_if_missing = true;
+  options.env = env_;
+  options.enable_blob_files = true;
+  options.max_sequential_skip_in_iterations = 0;
+
+  const size_t kTimestampSize = Timestamp(0, 0).size();
+  TestComparator test_cmp(kTimestampSize);
+  options.comparator = &test_cmp;
+
+  DestroyAndReopen(options);
+
+  constexpr uint64_t kMaxKey = 1024;
+
+  const std::vector<std::string> write_timestamps = {Timestamp(1, 0),
+                                                     Timestamp(3, 0)};
+  for (uint64_t key = 0; key <= kMaxKey; ++key) {
+    for (size_t i = 0; i < write_timestamps.size(); ++i) {
+      ASSERT_OK(db_->Put(WriteOptions(), Key1(key), write_timestamps[i],
+                         "value" + std::to_string(i)));
+    }
+  }
+
+  ASSERT_OK(Flush());
+
+  {
+    const std::string read_timestamp_str = Timestamp(4, 0);
+    const Slice read_timestamp(read_timestamp_str);
+
+    ReadOptions read_opts;
+    read_opts.timestamp = &read_timestamp;
+    read_opts.allow_unprepared_value = true;
+
+    std::unique_ptr<Iterator> it(db_->NewIterator(read_opts));
+
+    it->SeekForPrev(Key1(kMaxKey));
+    ASSERT_TRUE(it->Valid());
+    ASSERT_OK(it->status());
+
+    // FIXME: PrepareValue() should succeed and status() should remain OK
+    ASSERT_FALSE(it->PrepareValue());
+    ASSERT_TRUE(it->status().IsCorruption());
+  }
+
   Close();
 }
 
@@ -3256,7 +3309,6 @@ TEST_F(DBBasicTestWithTimestamp, MultiGetNoReturnTs) {
   }
   Close();
 }
-
 
 INSTANTIATE_TEST_CASE_P(
     Timestamp, DBBasicTestWithTimestampCompressionSettings,

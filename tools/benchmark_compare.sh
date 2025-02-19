@@ -32,7 +32,7 @@ max_background_jobs=${MAX_BACKGROUND_JOBS:-8}
 stats_interval_seconds=${STATS_INTERVAL_SECONDS:-20}
 cache_index_and_filter_blocks=${CACHE_INDEX_AND_FILTER_BLOCKS:-0}
 # USE_O_DIRECT doesn't need a default
-bytes_per_sync=${BYTES_PER_SYNC:-$(( 1 * M ))}
+bytes_per_sync=${BYTES_PER_SYNC:-$((1 * M))}
 # CACHE_SIZE_MB doesn't need a default
 min_level_to_compress=${MIN_LEVEL_TO_COMPRESS:-"-1"}
 
@@ -64,72 +64,72 @@ universal_compression_size_percent=${UNIVERSAL_COMPRESSION_SIZE_PERCENT:-"-1"}
 # Integrated BlobDB configuration
 
 min_blob_size=${MIN_BLOB_SIZE:-0}
-blob_file_size=${BLOB_FILE_SIZE:-$(( 256 * M ))}
+blob_file_size=${BLOB_FILE_SIZE:-$((256 * M))}
 blob_compression_type=${BLOB_COMPRESSION_TYPE:-${compression_type}}
 blob_gc_age_cutoff=${BLOB_GC_AGE_CUTOFF:-"0.25"}
 blob_gc_force_threshold=${BLOB_GC_FORCE_THRESHOLD:-1}
 
 # Arguments for dynamic loading
-base_args=( LD_LIBRARY_PATH="$ld_library_path" )
+base_args=(LD_LIBRARY_PATH="$ld_library_path")
 
 # Arguments used for all tests
-base_args+=( NUM_KEYS="$num_keys" )
-base_args+=( NUM_THREADS="$num_threads" )
-base_args+=( KEY_SIZE="$key_size" )
-base_args+=( VALUE_SIZE="$value_size" )
+base_args+=(NUM_KEYS="$num_keys")
+base_args+=(NUM_THREADS="$num_threads")
+base_args+=(KEY_SIZE="$key_size")
+base_args+=(VALUE_SIZE="$value_size")
 
-base_args+=( SUBCOMPACTIONS="$subcompactions" )
-base_args+=( COMPRESSION_TYPE="$compression_type" )
-base_args+=( WRITE_BUFFER_SIZE_MB="$write_buffer_size_mb" )
-base_args+=( TARGET_FILE_SIZE_BASE_MB="$target_file_size_base_mb" )
-base_args+=( MAX_BYTES_FOR_LEVEL_BASE_MB="$max_bytes_for_level_base_mb" )
-base_args+=( MAX_BACKGROUND_JOBS="$max_background_jobs" )
-base_args+=( STATS_INTERVAL_SECONDS="$stats_interval_seconds" )
-base_args+=( CACHE_INDEX_AND_FILTER_BLOCKS="$cache_index_and_filter_blocks" )
-base_args+=( COMPACTION_STYLE="$compaction_style" )
-base_args+=( BYTES_PER_SYNC="$bytes_per_sync" )
+base_args+=(SUBCOMPACTIONS="$subcompactions")
+base_args+=(COMPRESSION_TYPE="$compression_type")
+base_args+=(WRITE_BUFFER_SIZE_MB="$write_buffer_size_mb")
+base_args+=(TARGET_FILE_SIZE_BASE_MB="$target_file_size_base_mb")
+base_args+=(MAX_BYTES_FOR_LEVEL_BASE_MB="$max_bytes_for_level_base_mb")
+base_args+=(MAX_BACKGROUND_JOBS="$max_background_jobs")
+base_args+=(STATS_INTERVAL_SECONDS="$stats_interval_seconds")
+base_args+=(CACHE_INDEX_AND_FILTER_BLOCKS="$cache_index_and_filter_blocks")
+base_args+=(COMPACTION_STYLE="$compaction_style")
+base_args+=(BYTES_PER_SYNC="$bytes_per_sync")
 
 if [ -n "$USE_O_DIRECT" ]; then
-  base_args+=( USE_O_DIRECT=1 )
+  base_args+=(USE_O_DIRECT=1)
 fi
 
 if [ -n "$NUMA" ]; then
-  base_args+=( NUMACTL=1 )
+  base_args+=(NUMACTL=1)
 fi
 
 if [ -n "$CACHE_SIZE_MB" ]; then
-  cacheb=$(( CACHE_SIZE_MB * M ))
-  base_args+=( CACHE_SIZE="$cacheb" )
+  cacheb=$((CACHE_SIZE_MB * M))
+  base_args+=(CACHE_SIZE="$cacheb")
 fi
 
 if [ "$compaction_style" == "leveled" ]; then
-  base_args+=( LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger" )
-  base_args+=( LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger" )
-  base_args+=( LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger" )
-  base_args+=( PER_LEVEL_FANOUT="$per_level_fanout" )
+  base_args+=(LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger")
+  base_args+=(LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger")
+  base_args+=(LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger")
+  base_args+=(PER_LEVEL_FANOUT="$per_level_fanout")
 elif [ "$compaction_style" == "universal" ]; then
-  base_args+=( LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger" )
-  base_args+=( LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger" )
-  base_args+=( LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger" )
-  base_args+=( UNIVERSAL_MIN_MERGE_WIDTH="$universal_min_merge_width" )
-  base_args+=( UNIVERSAL_MAX_MERGE_WIDTH="$universal_max_merge_width" )
-  base_args+=( UNIVERSAL_SIZE_RATIO="$universal_size_ratio" )
-  base_args+=( UNIVERSAL_MAX_SIZE_AMP="$universal_max_size_amp" )
+  base_args+=(LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger")
+  base_args+=(LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger")
+  base_args+=(LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger")
+  base_args+=(UNIVERSAL_MIN_MERGE_WIDTH="$universal_min_merge_width")
+  base_args+=(UNIVERSAL_MAX_MERGE_WIDTH="$universal_max_merge_width")
+  base_args+=(UNIVERSAL_SIZE_RATIO="$universal_size_ratio")
+  base_args+=(UNIVERSAL_MAX_SIZE_AMP="$universal_max_size_amp")
   if [ -n "$UNIVERSAL_ALLOW_TRIVIAL_MOVE" ]; then
-    base_args+=( UNIVERSAL_ALLOW_TRIVIAL_MOVE=1 )
+    base_args+=(UNIVERSAL_ALLOW_TRIVIAL_MOVE=1)
   fi
 else
   # Inherit settings for leveled because index uses leveled LSM
-  base_args+=( LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger" )
-  base_args+=( LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger" )
-  base_args+=( LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger" )
-  base_args+=( PER_LEVEL_FANOUT="$per_level_fanout" )
+  base_args+=(LEVEL0_FILE_NUM_COMPACTION_TRIGGER="$level0_file_num_compaction_trigger")
+  base_args+=(LEVEL0_SLOWDOWN_WRITES_TRIGGER="$level0_slowdown_writes_trigger")
+  base_args+=(LEVEL0_STOP_WRITES_TRIGGER="$level0_stop_writes_trigger")
+  base_args+=(PER_LEVEL_FANOUT="$per_level_fanout")
   # Then add BlobDB specific settings
-  base_args+=( MIN_BLOB_SIZE="$min_blob_size" )
-  base_args+=( BLOB_FILE_SIZE="$blob_file_size" )
-  base_args+=( BLOB_COMPRESSION_TYPE="$blob_compression_type" )
-  base_args+=( BLOB_GC_AGE_CUTOFF="$blob_gc_age_cutoff" )
-  base_args+=( BLOB_GC_FORCE_THRESHOLD="$blob_gc_force_threshold" )
+  base_args+=(MIN_BLOB_SIZE="$min_blob_size")
+  base_args+=(BLOB_FILE_SIZE="$blob_file_size")
+  base_args+=(BLOB_COMPRESSION_TYPE="$blob_compression_type")
+  base_args+=(BLOB_GC_AGE_CUTOFF="$blob_gc_age_cutoff")
+  base_args+=(BLOB_GC_FORCE_THRESHOLD="$blob_gc_force_threshold")
 fi
 
 function usage {
@@ -187,21 +187,21 @@ function usage {
 }
 
 function dump_env {
-  echo "Base args" > "$odir"/args
-  echo "${base_args[@]}" | tr ' ' '\n' >> "$odir"/args
+  echo "Base args" >"$odir"/args
+  echo "${base_args[@]}" | tr ' ' '\n' >>"$odir"/args
 
-  echo -e "\nOther args" >> "$odir"/args
-  echo -e "dbdir\t$dbdir" >> "$odir"/args
-  echo -e "duration_rw\t$duration_rw" >> "$odir"/args
-  echo -e "duration_ro\t$duration_ro" >> "$odir"/args
-  echo -e "per_level_fanout\t$per_level_fanout" >> "$odir"/args
+  echo -e "\nOther args" >>"$odir"/args
+  echo -e "dbdir\t$dbdir" >>"$odir"/args
+  echo -e "duration_rw\t$duration_rw" >>"$odir"/args
+  echo -e "duration_ro\t$duration_ro" >>"$odir"/args
+  echo -e "per_level_fanout\t$per_level_fanout" >>"$odir"/args
 
-  echo -e "\nargs_load:" >> "$odir"/args
-  echo "${args_load[@]}" | tr ' ' '\n' >> "$odir"/args
-  echo -e "\nargs_nolim:" >> "$odir"/args
-  echo "${args_nolim[@]}" | tr ' ' '\n' >> "$odir"/args
-  echo -e "\nargs_lim:" >> "$odir"/args
-  echo "${args_lim[@]}" | tr ' ' '\n' >> "$odir"/args
+  echo -e "\nargs_load:" >>"$odir"/args
+  echo "${args_load[@]}" | tr ' ' '\n' >>"$odir"/args
+  echo -e "\nargs_nolim:" >>"$odir"/args
+  echo "${args_nolim[@]}" | tr ' ' '\n' >>"$odir"/args
+  echo -e "\nargs_lim:" >>"$odir"/args
+  echo "${args_lim[@]}" | tr ' ' '\n' >>"$odir"/args
 }
 
 if [ $# -lt 3 ]; then
@@ -216,9 +216,9 @@ shift 2
 mkdir -p "$odir"
 
 echo Test versions: "$@"
-echo Test versions: "$@" >> "$odir"/args
+echo Test versions: "$@" >>"$odir"/args
 
-for v in "$@" ; do
+for v in "$@"; do
   my_odir="$odir"/"$v"
 
   if [ -d "$my_odir" ]; then
@@ -228,14 +228,14 @@ for v in "$@" ; do
 
   args_common=("${base_args[@]}")
 
-  args_common+=( OUTPUT_DIR="$my_odir" DB_DIR="$dbdir" WAL_DIR="$dbdir" DB_BENCH_NO_SYNC=1 )
+  args_common+=(OUTPUT_DIR="$my_odir" DB_DIR="$dbdir" WAL_DIR="$dbdir" DB_BENCH_NO_SYNC=1)
 
   if [ "$compaction_style" == "leveled" ]; then
-    args_common+=( MIN_LEVEL_TO_COMPRESS="$min_level_to_compress" )
+    args_common+=(MIN_LEVEL_TO_COMPRESS="$min_level_to_compress")
   elif [ "$compaction_style" == "universal" ]; then
-    args_common+=( UNIVERSAL=1 COMPRESSION_SIZE_PERCENT="$universal_compression_size_percent" )
+    args_common+=(UNIVERSAL=1 COMPRESSION_SIZE_PERCENT="$universal_compression_size_percent")
   else
-    args_common+=( MIN_LEVEL_TO_COMPRESS="$min_level_to_compress" )
+    args_common+=(MIN_LEVEL_TO_COMPRESS="$min_level_to_compress")
   fi
 
   args_load=("${args_common[@]}")
@@ -243,11 +243,11 @@ for v in "$@" ; do
   args_nolim=("${args_common[@]}")
 
   args_lim=("${args_nolim[@]}")
-  args_lim+=( MB_WRITE_PER_SEC="$mb_write_per_sec" )
+  args_lim+=(MB_WRITE_PER_SEC="$mb_write_per_sec")
 
   dump_env
 
-  echo Run benchmark for "$v" at "$( date )" with results at "$my_odir"
+  echo Run benchmark for "$v" at "$(date)" with results at "$my_odir"
   rm -f db_bench
   echo ln -s db_bench."$v" db_bench
   ln -s db_bench."$v" db_bench
@@ -270,19 +270,19 @@ for v in "$@" ; do
   # Skipped for CI - a single essentail readrandom is enough to set up for other tests
   if [ "$ci_tests_only" != "true" ]; then
     env -i "${args_nolim[@]}" DURATION="$duration_ro" bash ./benchmark.sh fwdrange
-    env -i "${args_lim[@]}"   DURATION="$duration_ro" bash ./benchmark.sh multireadrandom --multiread_batched
+    env -i "${args_lim[@]}" DURATION="$duration_ro" bash ./benchmark.sh multireadrandom --multiread_batched
   else
     echo "CI_TESTS_ONLY is set, skipping optional read steps."
   fi
 
   # Write 10% of the keys. The goal is to randomize keys prior to Lmax
-  p10=$( echo "$num_keys" "$num_threads" | awk '{ printf "%.0f", $1 / $2 / 10.0 }' )
-  env -i "${args_nolim[@]}" WRITES="$p10"        bash ./benchmark.sh overwritesome
+  p10=$(echo "$num_keys" "$num_threads" | awk '{ printf "%.0f", $1 / $2 / 10.0 }')
+  env -i "${args_nolim[@]}" WRITES="$p10" bash ./benchmark.sh overwritesome
 
   if [ "$compaction_style" == "leveled" ]; then
     # These are not supported by older versions
     # Flush memtable & L0 to get LSM tree into deterministic state
-    env -i "${args_nolim[@]}"                  bash ./benchmark.sh flush_mt_l0
+    env -i "${args_nolim[@]}" bash ./benchmark.sh flush_mt_l0
   elif [ "$compaction_style" == "universal" ]; then
     # For universal don't compact L0 as can have too many sorted runs
     # waitforcompaction can hang, see https://github.com/facebook/rocksdb/issues/9275
@@ -292,7 +292,7 @@ for v in "$@" ; do
   else
     # These are not supported by older versions
     # Flush memtable & L0 to get LSM tree into deterministic state
-    env -i "${args_nolim[@]}"                  bash ./benchmark.sh flush_mt_l0
+    env -i "${args_nolim[@]}" bash ./benchmark.sh flush_mt_l0
   fi
 
   # Read-mostly tests with a rate-limited writer
@@ -305,7 +305,7 @@ for v in "$@" ; do
   # This creates much compaction debt which will be a problem for tests added after it.
   # Also, the compaction stats measured at test end can underestimate write-amp depending
   # on how much compaction debt is allowed.
-  if [ "$compaction_style" == "leveled" ] && ./db_bench --benchmarks=waitforcompaction ; then
+  if [ "$compaction_style" == "leveled" ] && ./db_bench --benchmarks=waitforcompaction; then
     # Use waitforcompaction to get more accurate write-amp measurement
     env -i "${args_nolim[@]}" DURATION="$duration_rw" bash ./benchmark.sh overwriteandwait
   else
@@ -320,23 +320,23 @@ done
 
 # Generate a file that groups lines from the same test for all versions
 basev=$1
-nlines=$( awk '/^ops_sec/,/END/' "$odir"/"$basev"/report.tsv | grep -v ops_sec | wc -l )
-hline=$( awk '/^ops_sec/ { print NR }' "$odir"/"$basev"/report.tsv )
-sline=$(( hline + 1 ))
-eline=$(( sline + nlines - 1 ))
+nlines=$(awk '/^ops_sec/,/END/' "$odir"/"$basev"/report.tsv | grep -v ops_sec | wc -l)
+hline=$(awk '/^ops_sec/ { print NR }' "$odir"/"$basev"/report.tsv)
+sline=$((hline + 1))
+eline=$((sline + nlines - 1))
 
 sum_file="$odir"/summary.tsv
 
-for v in "$@" ; do
+for v in "$@"; do
   echo "$odir"/"$v"/report.tsv
-done >> "$sum_file"
-echo >> "$sum_file"
+done >>"$sum_file"
+echo >>"$sum_file"
 
-for x in $( seq "$sline" "$eline" ); do
-  awk '{ if (NR == lno) { print $0 } }' lno="$hline" "$odir"/"$basev"/report.tsv >> "$sum_file"
-  for v in "$@" ; do
+for x in $(seq "$sline" "$eline"); do
+  awk '{ if (NR == lno) { print $0 } }' lno="$hline" "$odir"/"$basev"/report.tsv >>"$sum_file"
+  for v in "$@"; do
     r="$odir"/"$v"/report.tsv
-    awk '{ if (NR == lno) { print $0 } }' lno="$x" "$r" >> "$sum_file"
+    awk '{ if (NR == lno) { print $0 } }' lno="$x" "$r" >>"$sum_file"
   done
-echo >> "$sum_file"
+  echo >>"$sum_file"
 done

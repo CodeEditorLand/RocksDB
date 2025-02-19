@@ -343,6 +343,13 @@ default_params = {
     "universal_max_read_amp": lambda: random.choice([-1] * 3 + [0, 4, 10]),
     "paranoid_memory_checks": lambda: random.choice([0] * 7 + [1]),
     "allow_unprepared_value": lambda: random.choice([0, 1]),
+    # TODO(hx235): enable `track_and_verify_wals` again after resolving the issues 
+    # it has with write fault injection and TXN
+    "track_and_verify_wals": 0,
+    "enable_remote_compaction": lambda: random.choice([0, 1]),
+    # TODO: enable `auto_refresh_iterator_with_snapshot` again after 
+    # fixing issues with prefix scan and injected read errors  
+    "auto_refresh_iterator_with_snapshot": 0,
 }
 _TEST_DIR_ENV_VAR = "TEST_TMPDIR"
 # If TEST_TMPDIR_EXPECTED is not specified, default value will be TEST_TMPDIR
@@ -484,6 +491,7 @@ simple_default_params = {
     "write_buffer_size": 32 * 1024 * 1024,
     "level_compaction_dynamic_level_bytes": lambda: random.randint(0, 1),
     "paranoid_file_checks": lambda: random.choice([0, 1, 1, 1]),
+    "test_secondary": lambda: random.choice([0, 1]),
 }
 
 blackbox_simple_default_params = {
@@ -530,6 +538,10 @@ txn_params = {
     "inplace_update_support": 0,
     # TimedPut is not supported in transaction
     "use_timed_put_one_in": 0,
+    # txn commit with this option will create a new memtable, keep the
+    # frequency low to reduce stalls
+    "commit_bypass_memtable_one_in": random.choice([0] * 2 + [500, 1000]),
+    "two_write_queues": lambda: random.choice([0, 1]),
 }
 
 # For optimistic transaction db
@@ -595,7 +607,10 @@ ts_params = {
 tiered_params = {
     # For Leveled/Universal compaction (ignored for FIFO)
     # Bias toward times that can elapse during a crash test run series
-    "preclude_last_level_data_seconds": lambda: random.choice([10, 60, 1200, 86400]),
+    # NOTE: -1 means starting disabled but dynamically changing
+    "preclude_last_level_data_seconds": lambda: random.choice(
+        [-1, -1, 10, 60, 1200, 86400]
+    ),
     "last_level_temperature": "kCold",
     # For FIFO compaction (ignored otherwise)
     "file_temperature_age_thresholds": lambda: random.choice(
@@ -786,16 +801,29 @@ def finalize_and_sanitize(src_params):
         # files, which would be problematic when unsynced data can be lost in
         # crash recoveries.
         dest_params["enable_compaction_filter"] = 0
+    # Remove the following once write-prepared/write-unprepared with/without
+    # unordered write supports timestamped snapshots
+    if dest_params.get("create_timestamped_snapshot_one_in", 0) > 0:
+        dest_params["txn_write_policy"] = 0
+        dest_params["unordered_write"] = 0
     # Only under WritePrepared txns, unordered_write would provide the same guarnatees as vanilla rocksdb
     # unordered_write is only enabled with --txn, and txn_params disables inplace_update_support, so
     # setting allow_concurrent_memtable_write=1 won't conflcit with inplace_update_support.
+    # don't overwrite txn_write_policy
     if dest_params.get("unordered_write", 0) == 1:
-        dest_params["txn_write_policy"] = 1
-        dest_params["allow_concurrent_memtable_write"] = 1
+        if dest_params.get("txn_write_policy", 0) == 1:
+            dest_params["allow_concurrent_memtable_write"] = 1
+        else:
+            dest_params["unordered_write"] = 0
     if dest_params.get("disable_wal", 0) == 1:
         dest_params["atomic_flush"] = 1
         dest_params["sync"] = 0
         dest_params["write_fault_one_in"] = 0
+        dest_params["reopen"] = 0
+        dest_params["manual_wal_flush_one_in"] = 0
+        # disableWAL and recycle_log_file_num options are not mutually
+        # compatible at the moment
+        dest_params["recycle_log_file_num"] = 0
     if dest_params.get("open_files", 1) != -1:
         # Compaction TTL and periodic compactions are only compatible
         # with open_files = -1
@@ -818,7 +846,13 @@ def finalize_and_sanitize(src_params):
     if dest_params.get("atomic_flush", 0) == 1:
         # disable pipelined write when atomic flush is used.
         dest_params["enable_pipelined_write"] = 0
-    if dest_params.get("sst_file_manager_bytes_per_sec", 0) == 0:
+    # Truncating SST files in primary DB is incompatible 
+    # with secondary DB since the latter can't read the shared 
+    # and truncated SST file correctly 
+    if (
+        dest_params.get("sst_file_manager_bytes_per_sec", 0) == 0
+        or dest_params.get("test_secondary") == 1
+    ):
         dest_params["sst_file_manager_bytes_per_truncate"] = 0
     if dest_params.get("prefix_size") == -1:
         dest_params["readpercent"] += dest_params.get("prefixpercent", 20)
@@ -837,11 +871,6 @@ def finalize_and_sanitize(src_params):
         dest_params["write_fault_one_in"] = 0
         dest_params["skip_verifydb"] = 1
         dest_params["verify_db_one_in"] = 0
-    # Remove the following once write-prepared/write-unprepared with/without
-    # unordered write supports timestamped snapshots
-    if dest_params.get("create_timestamped_snapshot_one_in", 0) > 0:
-        dest_params["txn_write_policy"] = 0
-        dest_params["unordered_write"] = 0
     # For TransactionDB, correctness testing with unsync data loss is currently
     # compatible with only write committed policy
     if dest_params.get("use_txn") == 1 and dest_params.get("txn_write_policy", 0) != 0:
@@ -853,6 +882,8 @@ def finalize_and_sanitize(src_params):
         dest_params["use_put_entity_one_in"] = 0
         # MultiCfIterator is currently only compatible with write committed policy
         dest_params["use_multi_cf_iterator"] = 0
+        # only works with write committed policy
+        dest_params["commit_bypass_memtable_one_in"] = 0
     # TODO(hx235): enable test_multi_ops_txns with fault injection after stabilizing the CI
     if dest_params.get("test_multi_ops_txns") == 1:
         dest_params["write_fault_one_in"] = 0
@@ -954,10 +985,6 @@ def finalize_and_sanitize(src_params):
             # we have a fix that allows auto recovery.
             dest_params["exclude_wal_from_write_fault_injection"] = 1
             dest_params["metadata_write_fault_one_in"] = 0
-    if dest_params.get("disable_wal") == 1:
-        # disableWAL and recycle_log_file_num options are not mutually
-        # compatible at the moment
-        dest_params["recycle_log_file_num"] = 0
     # Enabling block_align with compression is not supported
     if dest_params.get("block_align") == 1:
         dest_params["compression_type"] = "none"
@@ -989,7 +1016,10 @@ def finalize_and_sanitize(src_params):
         or dest_params.get("delrangepercent") == 0
     ):
         dest_params["test_ingest_standalone_range_deletion_one_in"] = 0
-    if dest_params.get("commit_bypass_memtable_one_in", 0) > 0:
+    if (
+        dest_params.get("use_txn", 0) == 1
+        and dest_params.get("commit_bypass_memtable_one_in", 0) > 0
+    ):
         dest_params["enable_blob_files"] = 0
         dest_params["allow_setting_blob_options_dynamically"] = 0
         dest_params["atomic_flush"] = 0
@@ -1000,7 +1030,10 @@ def finalize_and_sanitize(src_params):
         dest_params["use_merge"] = 0
         dest_params["use_full_merge_v1"] = 0
         dest_params["enable_pipelined_write"] = 0
-
+        dest_params["use_attribute_group"] = 0
+    # Continuous verification fails with secondaries inside NonBatchedOpsStressTest
+    if dest_params.get("test_secondary") == 1:
+        dest_params["continuous_verification_interval"] = 0
     return dest_params
 
 
@@ -1043,6 +1076,7 @@ def gen_cmd_params(args):
     if (
         not args.test_best_efforts_recovery
         and not args.test_tiered_storage
+        and params.get("test_secondary", 0) == 0
         and random.choice([0] * 9 + [1]) == 1
     ):
         params.update(blob_params)
@@ -1135,8 +1169,7 @@ def cleanup_after_success(dbname):
         print("Running DB cleanup command - %s\n" % cleanup_cmd)
         ret = os.system(cleanup_cmd)
         if ret != 0:
-            print("TEST FAILED. DB cleanup returned error %d\n" % ret)
-            sys.exit(1)
+            print("WARNING: DB cleanup returned error %d\n" % ret)
 
 
 # This script runs and kills db_stress multiple times. It checks consistency

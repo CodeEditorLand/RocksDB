@@ -3,7 +3,6 @@
 //  COPYING file in the root directory) and Apache 2.0 License
 //  (found in the LICENSE.Apache file in the root directory).
 
-
 #include <algorithm>
 #include <atomic>
 #include <cinttypes>
@@ -357,7 +356,7 @@ class WritePreparedTransactionTestBase : public TransactionTestBase {
                                    TxnDBWritePolicy write_policy,
                                    WriteOrdering write_ordering)
       : TransactionTestBase(use_stackable_db, two_write_queue, write_policy,
-                            write_ordering){};
+                            write_ordering) {};
 
  protected:
   void UpdateTransactionDBOptions(size_t snapshot_cache_bits,
@@ -535,7 +534,7 @@ class WritePreparedTransactionTest
   WritePreparedTransactionTest()
       : WritePreparedTransactionTestBase(
             std::get<0>(GetParam()), std::get<1>(GetParam()),
-            std::get<2>(GetParam()), std::get<3>(GetParam())){};
+            std::get<2>(GetParam()), std::get<3>(GetParam())) {};
 };
 
 #if !defined(ROCKSDB_VALGRIND_RUN) || defined(ROCKSDB_FULL_VALGRIND_RUN)
@@ -549,7 +548,7 @@ class SnapshotConcurrentAccessTest
             std::get<0>(GetParam()), std::get<1>(GetParam()),
             std::get<2>(GetParam()), std::get<3>(GetParam())),
         split_id_(std::get<4>(GetParam())),
-        split_cnt_(std::get<5>(GetParam())){};
+        split_cnt_(std::get<5>(GetParam())) {};
 
  protected:
   // A test is split into split_cnt_ tests, each identified with split_id_ where
@@ -3596,7 +3595,7 @@ TEST_P(WritePreparedTransactionTest, NonAtomicCommitOfDelayedPrepared) {
       ROCKSDB_NAMESPACE::SyncPoint::GetInstance()->DisableProcessing();
       ROCKSDB_NAMESPACE::SyncPoint::GetInstance()->ClearAllCallBacks();
     }  // for split_before_mutex
-  }    // for split_read
+  }  // for split_read
 }
 
 // When max evicted seq advances a prepared seq, it involves two updates: i)

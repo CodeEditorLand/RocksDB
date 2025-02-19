@@ -1,5 +1,5 @@
 name: pre-steps-macos
 runs:
-  using: composite
-  steps:
-  - uses: "./.github/actions/pre-steps"
+    using: composite
+    steps:
+        - uses: "./.github/actions/pre-steps"

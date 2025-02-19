@@ -22,7 +22,11 @@ sudo yum -y install devtoolset-2-binutils devtoolset-2-gcc devtoolset-2-gcc-c++
 
 # install gflags
 wget https://github.com/gflags/gflags/archive/v2.0.tar.gz -O gflags-2.0.tar.gz
-tar xvfz gflags-2.0.tar.gz; cd gflags-2.0; scl enable devtoolset-2 ./configure; scl enable devtoolset-2 make; sudo make install
+tar xvfz gflags-2.0.tar.gz
+cd gflags-2.0
+scl enable devtoolset-2 ./configure
+scl enable devtoolset-2 make
+sudo make install
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # set java home so we can build rocksdb jars

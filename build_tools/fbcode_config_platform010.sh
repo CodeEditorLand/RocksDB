@@ -7,8 +7,7 @@
 # Environment variables that change the behavior of this script:
 # PIC_BUILD -- if true, it will only take pic versions of libraries from fbcode. libraries that don't have pic variant will not be included
 
-
-BASEDIR=`dirname $BASH_SOURCE`
+BASEDIR=$(dirname $BASH_SOURCE)
 source "$BASEDIR/dependencies_platform010.sh"
 
 # Disallow using libraries from default locations as they might not be compatible with platform010 libraries.
@@ -59,7 +58,7 @@ fi
 if ! test $ROCKSDB_DISABLE_ZSTD; then
   ZSTD_INCLUDE=" -I $ZSTD_BASE/include/"
   ZSTD_LIBS=" $ZSTD_BASE/lib/libzstd${MAYBE_PIC}.a"
-  CFLAGS+=" -DZSTD"
+  CFLAGS+=" -DZSTD -DZSTD_STATIC_LINKING_ONLY"
 fi
 
 # location of gflags headers and libraries

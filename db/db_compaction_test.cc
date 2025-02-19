@@ -5856,6 +5856,26 @@ TEST_F(DBCompactionTest, CompactionStatsTest) {
   options.listeners.emplace_back(collector);
   DestroyAndReopen(options);
 
+  // Verify that the internal statistics for num_running_compactions and
+  // num_running_compaction_sorted_runs start and end at valid states
+  uint64_t num_running_compactions = 0;
+  ASSERT_TRUE(db_->GetIntProperty(DB::Properties::kNumRunningCompactions,
+                                  &num_running_compactions));
+  ASSERT_EQ(num_running_compactions, 0);
+  uint64_t num_running_compaction_sorted_runs = 0;
+  ASSERT_TRUE(
+      db_->GetIntProperty(DB::Properties::kNumRunningCompactionSortedRuns,
+                          &num_running_compaction_sorted_runs));
+  ASSERT_EQ(num_running_compaction_sorted_runs, 0);
+  // Check that the stat actually gets changed some time between the start and
+  // end of compaction
+  std::atomic<bool> sorted_runs_count_incremented = false;
+  ROCKSDB_NAMESPACE::SyncPoint::GetInstance()->SetCallBack(
+      "CompactionMergingIterator::UpdateInternalStats",
+      [&](void*) { sorted_runs_count_incremented = true; });
+
+  ROCKSDB_NAMESPACE::SyncPoint::GetInstance()->EnableProcessing();
+
   for (int i = 0; i < 32; i++) {
     for (int j = 0; j < 5000; j++) {
       ASSERT_OK(Put(std::to_string(j), std::string(1, 'A')));
@@ -5869,6 +5889,19 @@ TEST_F(DBCompactionTest, CompactionStatsTest) {
   ColumnFamilyData* cfd = cfh->cfd();
 
   VerifyCompactionStats(*cfd, *collector);
+  // There should be no more running compactions, and thus no more sorted runs
+  // to process
+  ASSERT_TRUE(db_->GetIntProperty(DB::Properties::kNumRunningCompactions,
+                                  &num_running_compactions));
+  ASSERT_EQ(num_running_compactions, 0);
+  ASSERT_TRUE(
+      db_->GetIntProperty(DB::Properties::kNumRunningCompactionSortedRuns,
+                          &num_running_compaction_sorted_runs));
+  ASSERT_EQ(num_running_compaction_sorted_runs, 0);
+  ASSERT_TRUE(sorted_runs_count_incremented);
+
+  SyncPoint::GetInstance()->DisableProcessing();
+  SyncPoint::GetInstance()->ClearAllCallBacks();
 }
 
 TEST_F(DBCompactionTest, SubcompactionEvent) {
@@ -6411,16 +6444,32 @@ TEST_P(RoundRobinSubcompactionsAgainstPressureToken, PressureTokenTest) {
   const int kKeysPerBuffer = 100;
   const int kNumSubcompactions = 2;
   const int kFilesPerLevel = 50;
+  SyncPoint::GetInstance()->LoadDependency({
+      // SetBackgroundThreads() only starts the bg threads. Background
+      // threads may not be immediately available after SetBackgroundThreads
+      // returns. There are some initialization before they start waiting for
+      // new jobs, see ThreadPoolImpl::Impl::BGThread(). Here is a hacky way
+      // to wait until there are at least two background threads (thread id
+      // starts from 0) start waiting to accept jobs.
+      {"ThreadPoolImpl::BGThread::Start:th1", "WaitForThreadAvailable"},
+  });
+  SyncPoint::GetInstance()->EnableProcessing();
+  env_->SetBackgroundThreads(kNumSubcompactions, Env::LOW);
+  TEST_SYNC_POINT("WaitForThreadAvailable");
+  SyncPoint::GetInstance()->DisableProcessing();
   Options options = CurrentOptions();
   options.num_levels = 3;
   options.max_bytes_for_level_multiplier = 2;
   options.level0_file_num_compaction_trigger = 4;
   options.target_file_size_base = kKeysPerBuffer * 1024;
   options.compaction_pri = CompactionPri::kRoundRobin;
-  // Target size is chosen so that filling the level with `kFilesPerLevel` files
-  // will make it oversized by `kNumSubcompactions` files.
+  // Pick a small target level size so that round-robin compaction will pick
+  // more files to compact and trigger subcompactions. Actual number of
+  // subcompactions will be limited by number of bg threads available.
+  // Cannot be too small to cause compaction pressure. See
+  // GetPendingCompactionBytesForCompactionSpeedup().
   options.max_bytes_for_level_base =
-      (kFilesPerLevel - kNumSubcompactions) * kKeysPerBuffer * 1024;
+      (kFilesPerLevel - 10) * kKeysPerBuffer * 1024;
   options.disable_auto_compactions = true;
   // Setup `kNumSubcompactions` threads but limited subcompactions so
   // that RoundRobin requires extra compactions from reserved threads
@@ -6428,7 +6477,6 @@ TEST_P(RoundRobinSubcompactionsAgainstPressureToken, PressureTokenTest) {
   options.max_background_compactions = kNumSubcompactions;
   options.max_compaction_bytes = 100000000;
   DestroyAndReopen(options);
-  env_->SetBackgroundThreads(kNumSubcompactions, Env::LOW);
 
   Random rnd(301);
   for (int lvl = 2; lvl > 0; lvl--) {
@@ -6446,21 +6494,34 @@ TEST_P(RoundRobinSubcompactionsAgainstPressureToken, PressureTokenTest) {
     ASSERT_EQ(kFilesPerLevel, NumTableFilesAtLevel(lvl, 0));
   }
 
+  bool compaction_num_input_file_verified = false;
+  SyncPoint::GetInstance()->SetCallBack(
+      "LevelCompactionPicker::PickCompaction:Return", [&](void* arg) {
+        if (!compaction_num_input_file_verified) {
+          Compaction* compaction = static_cast<Compaction*>(arg);
+          // In Round-Robin, # of subcompactions needed is the # of input files
+          ASSERT_GT(compaction->num_input_files(0), 1);
+          compaction_num_input_file_verified = true;
+        }
+      });
+
   // This is a variable for making sure the following callback is called
   // and the assertions in it are indeed excuted.
   bool num_planned_subcompactions_verified = false;
   ROCKSDB_NAMESPACE::SyncPoint::GetInstance()->SetCallBack(
       "CompactionJob::GenSubcompactionBoundaries:0", [&](void* arg) {
-        uint64_t num_planned_subcompactions = *(static_cast<uint64_t*>(arg));
-        if (grab_pressure_token_) {
-          // `kNumSubcompactions` files are selected for round-robin under auto
-          // compaction. The number of planned subcompaction is restricted by
-          // the limited number of max_background_compactions
-          ASSERT_EQ(num_planned_subcompactions, kNumSubcompactions);
-        } else {
-          ASSERT_EQ(num_planned_subcompactions, 1);
+        if (!num_planned_subcompactions_verified) {
+          uint64_t num_planned_subcompactions = *(static_cast<uint64_t*>(arg));
+          if (grab_pressure_token_) {
+            // `kNumSubcompactions` files are selected for round-robin under
+            // auto compaction. The number of planned subcompaction is
+            // restricted by the limited number of max_background_compactions
+            ASSERT_EQ(num_planned_subcompactions, kNumSubcompactions);
+          } else {
+            ASSERT_EQ(num_planned_subcompactions, 1);
+          }
+          num_planned_subcompactions_verified = true;
         }
-        num_planned_subcompactions_verified = true;
       });
 
   // The following 3 dependencies have to be added to ensure the auto
@@ -6911,7 +6972,8 @@ TEST_F(DBCompactionTest, ManualCompactionMax) {
   DestroyAndReopen(opts);
   generate_sst_func();
   uint64_t total_size = (l1_avg_size * 10) + (l2_avg_size * 100);
-  opts.max_compaction_bytes = total_size / num_split;
+  // Slightly inflate max_compaction_bytes since it's usually a strict bound.
+  opts.max_compaction_bytes = total_size / num_split + l2_avg_size * 10;
   opts.target_file_size_base = total_size / num_split;
   Reopen(opts);
   num_compactions.store(0);
@@ -6933,8 +6995,10 @@ TEST_F(DBCompactionTest, ManualCompactionMax) {
   DestroyAndReopen(opts);
   generate_sst_func();
   total_size = (l1_avg_size * 10) + (l2_avg_size * 100);
+  // Slightly inflate max_compaction_bytes since it's usually a strict bound.
   Status s = db_->SetOptions(
-      {{"max_compaction_bytes", std::to_string(total_size / num_split)},
+      {{"max_compaction_bytes",
+        std::to_string(total_size / num_split + 10 * l2_avg_size)},
        {"target_file_size_base", std::to_string(total_size / num_split)}});
   ASSERT_OK(s);
 

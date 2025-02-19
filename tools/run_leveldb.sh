@@ -17,7 +17,7 @@
 #   step 2) read-only for each number of threads
 #   step 3) read-write for each number of threads
 #
-# The list of threads is optional and when not set is equivalent to "24". 
+# The list of threads is optional and when not set is equivalent to "24".
 # Were list-of-threads specified as "1 2 4" then the tests in steps 2, 3 and
 # 4 above would be repeated for 1, 2 and 4 threads. The tests in step 1 are
 # only run for 1 thread.
@@ -52,17 +52,17 @@ G=$((1024 * M))
 num_keys=${NKEYS:-$((1 * G))}
 wps=${NWRITESPERSEC:-$((10 * K))}
 vs=${VAL_SIZE:-400}
-cs=${CACHE_BYTES:-$(( 1 * G ))}
+cs=${CACHE_BYTES:-$((1 * G))}
 bs=${BLOCK_LENGTH:-4096}
 
 # If no command line arguments then run for 24 threads.
 if [[ $# -eq 0 ]]; then
-  nthreads=( 24 )
+  nthreads=(24)
 else
-  nthreads=( "$@" )
+  nthreads=("$@")
 fi
 
-for num_thr in "${nthreads[@]}" ; do
+for num_thr in "${nthreads[@]}"; do
   echo Will run for $num_thr threads
 done
 
@@ -84,7 +84,7 @@ CACHE_SIZE=$cs"
 
 mkdir -p $output_dir
 echo -e "ops/sec\tmb/sec\tusec/op\tavg\tp50\tTest" \
-  > $output_dir/report.txt
+  >$output_dir/report.txt
 
 # Notes on test sequence:
 #   step 1) Setup database via sequential fill followed by overwrite to fragment it.
@@ -99,8 +99,8 @@ if [[ $do_setup != 0 ]]; then
 
   # Test 2a: sequential fill with large values to get peak ingest
   #          adjust NUM_KEYS given the use of larger values
-  env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$(( num_keys / 64 )) \
-       ./tools/benchmark_leveldb.sh fillseq
+  env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
+    ./tools/benchmark_leveldb.sh fillseq
 
   # Test 2b: sequential fill with the configured value size
   env $ARGS ./tools/benchmark_leveldb.sh fillseq
@@ -129,7 +129,7 @@ fi
 
 ###### Read-only tests
 
-for num_thr in "${nthreads[@]}" ; do
+for num_thr in "${nthreads[@]}"; do
   # Test 4: random read
   env $ARGS NUM_THREADS=$num_thr ./tools/benchmark_leveldb.sh readrandom
 
@@ -137,7 +137,7 @@ done
 
 ###### Non read-only tests
 
-for num_thr in "${nthreads[@]}" ; do
+for num_thr in "${nthreads[@]}"; do
   # Test 7: overwrite with sync=0
   env $ARGS NUM_THREADS=$num_thr DB_BENCH_NO_SYNC=1 \
     ./tools/benchmark_leveldb.sh overwrite
@@ -153,23 +153,23 @@ for num_thr in "${nthreads[@]}" ; do
 
 done
 
-echo bulkload > $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep bulkload $output_dir/report.txt >> $output_dir/report2.txt
-echo fillseq >> $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep fillseq $output_dir/report.txt >> $output_dir/report2.txt
-echo overwrite sync=0 >> $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep overwrite $output_dir/report.txt | grep \.s0  >> $output_dir/report2.txt
-echo overwrite sync=1 >> $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep overwrite $output_dir/report.txt | grep \.s1  >> $output_dir/report2.txt
-echo readrandom >> $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep readrandom $output_dir/report.txt  >> $output_dir/report2.txt
-echo readwhile >> $output_dir/report2.txt >> $output_dir/report2.txt
-head -1 $output_dir/report.txt >> $output_dir/report2.txt
-grep readwhilewriting $output_dir/report.txt >> $output_dir/report2.txt
+echo bulkload >$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep bulkload $output_dir/report.txt >>$output_dir/report2.txt
+echo fillseq >>$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep fillseq $output_dir/report.txt >>$output_dir/report2.txt
+echo overwrite sync=0 >>$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep overwrite $output_dir/report.txt | grep \.s0 >>$output_dir/report2.txt
+echo overwrite sync=1 >>$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep overwrite $output_dir/report.txt | grep \.s1 >>$output_dir/report2.txt
+echo readrandom >>$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep readrandom $output_dir/report.txt >>$output_dir/report2.txt
+echo readwhile >>$output_dir/report2.txt >>$output_dir/report2.txt
+head -1 $output_dir/report.txt >>$output_dir/report2.txt
+grep readwhilewriting $output_dir/report.txt >>$output_dir/report2.txt
 
 cat $output_dir/report2.txt

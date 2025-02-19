@@ -21,19 +21,19 @@ if [ ! "$DRY_RUN" ]; then
 fi
 
 # Add first part of existing HISTORY file to new version
-awk '{ print } /NOTE/ { exit(0) }' < HISTORY.md > HISTORY.new
+awk '{ print } /NOTE/ { exit(0) }' <HISTORY.md >HISTORY.new
 
 # And a blank line separator
-echo >> HISTORY.new
+echo >>HISTORY.new
 
 # Add new version header
 awk '/#define ROCKSDB_MAJOR/ { major = $3 }
      /#define ROCKSDB_MINOR/ { minor = $3 }
      /#define ROCKSDB_PATCH/ { patch = $3 }
-     END { printf "## " major "." minor "." patch }' < include/rocksdb/version.h >> HISTORY.new
-echo " (`git log -n1 --date=format:"%m/%d/%Y" --format="%ad"`)" >> HISTORY.new
+     END { printf "## " major "." minor "." patch }' <include/rocksdb/version.h >>HISTORY.new
+echo " ($(git log -n1 --date=format:"%m/%d/%Y" --format="%ad"))" >>HISTORY.new
 
-function process_file () {
+function process_file() {
   # use awk to correct
   # * extra or missing newlines
   # * leading or trailing whitespace
@@ -41,7 +41,7 @@ function process_file () {
   awk '/./ { gsub(/^[ \t]+/, ""); gsub(/[ \t]+$/, "");
              if (notfirstline || $1 == "*") print;
              else print "* " $0;
-             notfirstline=1; }' < $1 >> HISTORY.new
+             notfirstline=1; }' <$1 >>HISTORY.new
   echo git rm $1
   if [ ! "$DRY_RUN" ]; then
     git rm $1
@@ -50,16 +50,16 @@ function process_file () {
 
 PROCESSED_DIRECTORIES=""
 
-function process_dir () {
+function process_dir() {
   PROCESSED_DIRECTORIES="$PROCESSED_DIRECTORIES $1"
   # ls will sort the files, including the permanent header file
   FILES="$(ls unreleased_history/$1/)"
   if [ "$FILES" ]; then
-    echo "### $2" >> HISTORY.new
+    echo "### $2" >>HISTORY.new
     for FILE in $FILES; do
       process_file "unreleased_history/$1/$FILE"
     done
-    echo >> HISTORY.new
+    echo >>HISTORY.new
     echo "Saved entries from $1"
   else
     echo "Nothing new in $1"
@@ -76,7 +76,7 @@ process_dir performance_improvements "Performance Improvements"
 # Check for unexpected files or dirs at top level. process_dir/process_file
 # will deal with contents of these directories
 EXPECTED_REGEX="[^/]*[.]sh|README[.]txt|$(echo $PROCESSED_DIRECTORIES | tr ' ' '|')"
-platform=`uname`
+platform=$(uname)
 if [ $platform = 'Darwin' ]; then
   UNEXPECTED="$(find -E unreleased_history -mindepth 1 -maxdepth 1 -not -regex "[^/]*/($EXPECTED_REGEX)")"
 else
@@ -92,7 +92,7 @@ fi
 # Add rest of existing HISTORY file to new version (collapsing newlines)
 awk '/./ { if (note) pr=1 }
      /NOTE/ { note=1 }
-     { if (pr) print }' < HISTORY.md >> HISTORY.new
+     { if (pr) print }' <HISTORY.md >>HISTORY.new
 
 if [ "$DRY_RUN" ]; then
   echo '==========================================='

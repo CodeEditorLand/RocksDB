@@ -2,6 +2,7 @@ name: facebook/rocksdb/nightly
 on: workflow_dispatch
 permissions: {}
 jobs:
+<<<<<<< HEAD
   # These jobs would be in nightly but are failing or otherwise broken for
   # some reason.
   build-linux-arm-test-full:
@@ -17,3 +18,20 @@ jobs:
     - uses: "./.github/actions/install-gflags"
     - run: make V=1 J=4 -j4 check
     - uses: "./.github/actions/post-steps"
+=======
+    # These jobs would be in nightly but are failing or otherwise broken for
+    # some reason.
+    build-linux-arm-test-full:
+        if: ${{ github.repository_owner == 'facebook' }}
+        runs-on:
+            labels: arm64large
+        container:
+            image: ubuntu-2004:202111-02
+            options: --shm-size=16gb
+        steps:
+            - uses: actions/checkout@v4.1.0
+            - uses: "./.github/actions/pre-steps"
+            - uses: "./.github/actions/install-gflags"
+            - run: make V=1 J=4 -j4 check
+            - uses: "./.github/actions/post-steps"
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25

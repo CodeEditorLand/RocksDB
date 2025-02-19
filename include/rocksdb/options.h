@@ -527,6 +527,9 @@ class CompactionService : public Customizable {
     return CompactionServiceJobStatus::kUseLocal;
   }
 
+  // Cancel awaiting jobs. Called by CancelAllBackgroundWork()
+  virtual void CancelAwaitingJobs() {}
+
   // Optional callback function upon Installation.
   virtual void OnInstallation(const std::string& /*scheduled_job_id*/,
                               CompactionServiceJobStatus /*status*/) {}
@@ -571,11 +574,19 @@ struct DBOptions {
   // Default: false
   bool error_if_exists = false;
 
-  // If true, RocksDB will aggressively check consistency of the data.
-  // Also, if any of the  writes to the database fails (Put, Delete, Merge,
-  // Write), the database will switch to read-only mode and fail all other
-  // Write operations.
-  // In most cases you want this to be set to true.
+  // If true, RocksDB does some pro-active and generally inexpensive checks
+  // for DB or data corruption, on top of usual protections such as block
+  // checksums. True also enters a read-only mode when a DB write fails;
+  // see DB::Resume().
+  //
+  // As most workloads value data correctness over availability, this option
+  // is on by default. Note that the name of this old option is potentially
+  // misleading, and other options and operations go further in proactive
+  // checking for corruption, including
+  // * paranoid_file_checks
+  // * paranoid_memory_checks
+  // * DB::VerifyChecksum()
+  //
   // Default: true
   bool paranoid_checks = true;
 
@@ -623,6 +634,26 @@ struct DBOptions {
   //
   // Default: false
   bool track_and_verify_wals_in_manifest = false;
+
+  // EXPERIMENTAL
+  //
+  // If true, each new WAL will record various information about its predecessor
+  // WAL for verification on the predecessor WAL during WAL recovery.
+  //
+  // It verifies the following:
+  // 1. There exists at least some WAL in the DB
+  // - It's not compatible with `RepairDB()` since this option imposes a
+  // stricter requirement on WAL than the DB went through `RepariDB()` can
+  // normally meet
+  // 2. There exists no WAL hole where new WAL data presents while some old WAL
+  // data not yet obsolete is missing. The DB manifest indicates which WALs are
+  // obsolete.
+  //
+  // This is intended to be a better replacement to
+  // `track_and_verify_wals_in_manifest`.
+  //
+  // Default: false
+  bool track_and_verify_wals = false;
 
   // If true, verifies the SST unique id between MANIFEST and actual file
   // each time an SST file is opened. This check ensures an SST file is not
@@ -1036,23 +1067,6 @@ struct DBOptions {
   //
   // Dynamically changeable through SetDBOptions() API.
   size_t compaction_readahead_size = 2 * 1024 * 1024;
-
-  // This is a maximum buffer size that is used by WinMmapReadableFile in
-  // unbuffered disk I/O mode. We need to maintain an aligned buffer for
-  // reads. We allow the buffer to grow until the specified value and then
-  // for bigger requests allocate one shot buffers. In unbuffered mode we
-  // always bypass read-ahead buffer at ReadaheadRandomAccessFile
-  // When read-ahead is required we then make use of compaction_readahead_size
-  // value and always try to read ahead. With read-ahead we always
-  // pre-allocate buffer to the size instead of growing it up to a limit.
-  //
-  // This option is currently honored only on Windows
-  //
-  // Default: 1 Mb
-  //
-  // Special value: 0 - means do not maintain per instance buffer. Allocate
-  //                per request buffer and avoid locking.
-  size_t random_access_max_buffer_size = 1024 * 1024;
 
   // This is the maximum buffer size that is used by WritableFileWriter.
   // With direct IO, we need to maintain an aligned buffer for writes.
@@ -1931,6 +1945,28 @@ struct ReadOptions {
   //
   // Default: false
   bool allow_unprepared_value = false;
+
+  // EXPERIMENTAL
+  //
+  // Long-running iterators are holding onto memory and storage resources long
+  // after they are obsolete. This setting (when enabled) will fix that problem
+  // for as long as iterator periodically makes some progress and its supplied
+  // `read_options` was configured with non-nullptr `snapshot` value.
+  // The feature is engineered so that the performance impact should be
+  // negligible. We expect the default value to be true some time in the future.
+  //
+  // NOTE 1: Does not have effect on TransactionDB with WRITE_PREPARED or
+  //         WRITE_UNPREPARED policies (currently incompatible).
+  //
+  // NOTE 2: True is not recommended if using user-defined timestamp with
+  //         persist_user_defined_timestamps=false and non-nullptr
+  //         ReadOptions::timestamp or ReadOptions::iter_start_ts, because
+  //         auto-refreshing iterator will not prevent user timestamp
+  //         information from being dropped during iteration. Auto-refresh might
+  //         be disabled for this combination in the future.
+  //
+  // Default: false
+  bool auto_refresh_iterator_with_snapshot = false;
 
   // *** END options only relevant to iterators or scans ***
 
