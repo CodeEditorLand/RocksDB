@@ -127,26 +127,26 @@ function main {
 
   setup_test_directory
   if [ $TEST_MODE -le 1 ]; then
-      test_remote "test -d $ORIGIN_PATH"
-      if [[ $? -ne 0 ]]; then
-          echo "Building DB..."
-          # compactall alone will not print ops or threads, which will fail update_report
-          run_db_bench "fillseq,compactall" $NUM_KEYS 1 0 0
-          # only save for future use on success
-          test_remote "mv $DB_PATH $ORIGIN_PATH"
-      fi
+    test_remote "test -d $ORIGIN_PATH"
+    if [[ $? -ne 0 ]]; then
+      echo "Building DB..."
+      # compactall alone will not print ops or threads, which will fail update_report
+      run_db_bench "fillseq,compactall" $NUM_KEYS 1 0 0
+      # only save for future use on success
+      test_remote "mv $DB_PATH $ORIGIN_PATH"
+    fi
   fi
   if [ $TEST_MODE -ge 1 ]; then
-      build_checkpoint
-      # run_db_bench benchmark_name NUM_OPS NUM_THREADS USED_EXISTING_DB UPDATE_REPORT ASYNC_IO
-      run_db_bench "seekrandom_asyncio" $NUM_OPS $NUM_THREADS  1 1 true
-      run_db_bench "multireadrandom_asyncio" $NUM_OPS $NUM_THREADS  1 1 true
-      run_db_bench "readrandom"
-      run_db_bench "readwhilewriting"
-      run_db_bench "deleterandom"
-      run_db_bench "seekrandom"
-      run_db_bench "seekrandomwhilewriting"
-      run_db_bench "multireadrandom"
+    build_checkpoint
+    # run_db_bench benchmark_name NUM_OPS NUM_THREADS USED_EXISTING_DB UPDATE_REPORT ASYNC_IO
+    run_db_bench "seekrandom_asyncio" $NUM_OPS $NUM_THREADS 1 1 true
+    run_db_bench "multireadrandom_asyncio" $NUM_OPS $NUM_THREADS 1 1 true
+    run_db_bench "readrandom"
+    run_db_bench "readwhilewriting"
+    run_db_bench "deleterandom"
+    run_db_bench "seekrandom"
+    run_db_bench "seekrandomwhilewriting"
+    run_db_bench "multireadrandom"
   fi
 
   cleanup_test_directory $TEST_ROOT_DIR
@@ -162,7 +162,7 @@ function init_arguments {
 
   current_time=$(date +"%F-%H:%M:%S")
   RESULT_PATH=${RESULT_PATH:-"$1/results/$current_time"}
-  COMMIT_ID=`hg id -i 2>/dev/null || git rev-parse HEAD 2>/dev/null || echo 'unknown'`
+  COMMIT_ID=$(hg id -i 2>/dev/null || git rev-parse HEAD 2>/dev/null || echo 'unknown')
   SUMMARY_FILE="$RESULT_PATH/SUMMARY.csv"
 
   DB_PATH=${3:-"$1/db"}
@@ -179,7 +179,7 @@ function init_arguments {
   SCP=${SCP:-"scp"}
   SSH=${SSH:-"ssh"}
   NUM_THREADS=${NUM_THREADS:-16}
-  NUM_KEYS=${NUM_KEYS:-$((1 * G))}  # key range
+  NUM_KEYS=${NUM_KEYS:-$((1 * G))} # key range
   NUM_OPS=${NUM_OPS:-$(($NUM_KEYS / $NUM_THREADS))}
   KEY_SIZE=${KEY_SIZE:-100}
   VALUE_SIZE=${VALUE_SIZE:-900}
@@ -196,7 +196,7 @@ function init_arguments {
   NUM_LOW_PRI_THREADS=${NUM_LOW_PRI_THREADS:-16}
   DELETE_TEST_PATH=${DELETE_TEST_PATH:-0}
   SEEK_NEXTS=${SEEK_NEXTS:-10}
-  SEED=${SEED:-$( date +%s )}
+  SEED=${SEED:-$(date +%s)}
   MULTIREAD_BATCH_SIZE=${MULTIREAD_BATCH_SIZE:-128}
   MULTIREAD_STRIDE=${MULTIREAD_STRIDE:-12}
   PERF_LEVEL=${PERF_LEVEL:-1}
@@ -247,7 +247,6 @@ function run_db_bench {
       seek_nexts=$SEEK_NEXTS_ASYNC_IO
     fi
   fi
-
 
   echo ""
   echo "======================================================================="
@@ -332,27 +331,27 @@ function set_async_io_parameters {
 }
 
 function build_checkpoint {
-    cmd_prefix=""
-    if ! [ -z "$REMOTE_USER_AT_HOST" ]; then
-        cmd_prefix="$SSH $REMOTE_USER_AT_HOST "
-    fi
-    if [ $NUM_MULTI_DB -gt 1 ]; then
-        dirs=$($cmd_prefix find $ORIGIN_PATH -type d -links 2)
-        for dir in $dirs; do
-            db_index=$(basename $dir)
-            echo "Building checkpoints: $ORIGIN_PATH/$db_index -> $DB_PATH/$db_index ..."
-            $cmd_prefix $DB_BENCH_DIR/ldb checkpoint --checkpoint_dir=$DB_PATH/$db_index \
-                        --db=$ORIGIN_PATH/$db_index --try_load_options 2>&1
-            exit_on_error $?
-        done
-    else
-        # checkpoint cannot build in directory already exists
-        $cmd_prefix rm -rf $DB_PATH
-        echo "Building checkpoint: $ORIGIN_PATH -> $DB_PATH ..."
-        $cmd_prefix $DB_BENCH_DIR/ldb checkpoint --checkpoint_dir=$DB_PATH \
-                    --db=$ORIGIN_PATH --try_load_options 2>&1
-        exit_on_error $?
-    fi
+  cmd_prefix=""
+  if ! [ -z "$REMOTE_USER_AT_HOST" ]; then
+    cmd_prefix="$SSH $REMOTE_USER_AT_HOST "
+  fi
+  if [ $NUM_MULTI_DB -gt 1 ]; then
+    dirs=$($cmd_prefix find $ORIGIN_PATH -type d -links 2)
+    for dir in $dirs; do
+      db_index=$(basename $dir)
+      echo "Building checkpoints: $ORIGIN_PATH/$db_index -> $DB_PATH/$db_index ..."
+      $cmd_prefix $DB_BENCH_DIR/ldb checkpoint --checkpoint_dir=$DB_PATH/$db_index \
+        --db=$ORIGIN_PATH/$db_index --try_load_options 2>&1
+      exit_on_error $?
+    done
+  else
+    # checkpoint cannot build in directory already exists
+    $cmd_prefix rm -rf $DB_PATH
+    echo "Building checkpoint: $ORIGIN_PATH -> $DB_PATH ..."
+    $cmd_prefix $DB_BENCH_DIR/ldb checkpoint --checkpoint_dir=$DB_PATH \
+      --db=$ORIGIN_PATH --try_load_options 2>&1
+    exit_on_error $?
+  fi
 }
 
 function multiply {
@@ -365,9 +364,9 @@ function update_report {
   # In case of async_io, benchmark is benchmark_asyncio
   db_bench_type=${1%%_*}
 
-  main_result=`cat $2 | grep $db_bench_type`
+  main_result=$(cat $2 | grep $db_bench_type)
   exit_on_error $?
-  perc_statement=`cat $2 | grep Percentile`
+  perc_statement=$(cat $2 | grep Percentile)
   exit_on_error $?
 
   # Obtain micros / op
@@ -377,33 +376,33 @@ function update_report {
 
   # Obtain percentile information
   [[ $perc_statement =~ $PERC_PATTERN ]]
-  perc[0]=${BASH_REMATCH[1]}  # p50
-  perc[1]=${BASH_REMATCH[2]}  # p75
-  perc[2]=${BASH_REMATCH[3]}  # p99
-  perc[3]=${BASH_REMATCH[4]}  # p99.9
-  perc[4]=${BASH_REMATCH[5]}  # p99.99
+  perc[0]=${BASH_REMATCH[1]} # p50
+  perc[1]=${BASH_REMATCH[2]} # p75
+  perc[2]=${BASH_REMATCH[3]} # p99
+  perc[3]=${BASH_REMATCH[4]} # p99.9
+  perc[4]=${BASH_REMATCH[5]} # p99.99
 
   # Parse the output of the time command
-  real_sec=`tail -3 $2 | grep real | awk '{print $2}'`
-  user_sec=`tail -3 $2 | grep user | awk '{print $2}'`
-  sys_sec=`tail -3 $2 | grep sys | awk '{print $2}'`
+  real_sec=$(tail -3 $2 | grep real | awk '{print $2}')
+  user_sec=$(tail -3 $2 | grep user | awk '{print $2}')
+  sys_sec=$(tail -3 $2 | grep sys | awk '{print $2}')
 
   (printf "$DATA_FORMAT" \
     $COMMIT_ID $1 $REMOTE_USER_AT_HOST $NUM_MULTI_DB $NUM_KEYS $KEY_SIZE $VALUE_SIZE \
-       $(multiply $COMPRESSION_RATIO 100) \
-       $3 $4 $CACHE_SIZE \
-       $MAX_BACKGROUND_FLUSHES $MAX_BACKGROUND_COMPACTIONS \
-       $ops_per_s \
-       $(multiply ${perc[0]} 1000) \
-       $(multiply ${perc[1]} 1000) \
-       $(multiply ${perc[2]} 1000) \
-       $(multiply ${perc[3]} 1000) \
-       $(multiply ${perc[4]} 1000) \
-       $DEBUG \
-       $real_sec \
-       $user_sec \
-       $sys_sec \
-       >> $SUMMARY_FILE)
+    $(multiply $COMPRESSION_RATIO 100) \
+    $3 $4 $CACHE_SIZE \
+    $MAX_BACKGROUND_FLUSHES $MAX_BACKGROUND_COMPACTIONS \
+    $ops_per_s \
+    $(multiply ${perc[0]} 1000) \
+    $(multiply ${perc[1]} 1000) \
+    $(multiply ${perc[2]} 1000) \
+    $(multiply ${perc[3]} 1000) \
+    $(multiply ${perc[4]} 1000) \
+    $DEBUG \
+    $real_sec \
+    $user_sec \
+    $sys_sec \
+    >>$SUMMARY_FILE)
   exit_on_error $?
 }
 
@@ -415,7 +414,7 @@ function exit_on_error {
       echo "Failure command: $2"
     fi
     echo "Partial results are output to $RESULT_PATH"
-    echo "ERROR" >> $SUMMARY_FILE
+    echo "ERROR" >>$SUMMARY_FILE
     exit $1
   fi
 }
@@ -437,9 +436,9 @@ function run_remote {
 
 function test_remote {
   if ! [ -z "$REMOTE_USER_AT_HOST" ]; then
-      cmd="$SSH $REMOTE_USER_AT_HOST '$1'"
+    cmd="$SSH $REMOTE_USER_AT_HOST '$1'"
   else
-      cmd="$1"
+    cmd="$1"
   fi
   eval "$cmd"
 }
@@ -450,7 +449,7 @@ function run_local {
 }
 
 function setup_options_file {
- if ! [ -z "$OPTIONS_FILE" ]; then
+  if ! [ -z "$OPTIONS_FILE" ]; then
     if ! [ -z "$REMOTE_USER_AT_HOST" ]; then
       options_file="$DB_BENCH_DIR/OPTIONS_FILE"
       run_local "$SCP $OPTIONS_FILE $REMOTE_USER_AT_HOST:$options_file"
@@ -486,20 +485,20 @@ function setup_test_directory {
   run_remote "ls -l $DB_BENCH_DIR"
 
   if ! [ -z "$REMOTE_USER_AT_HOST" ]; then
-      shopt -s nullglob # allow missing librocksdb*.so* for static lib build
-      run_local "tar cz db_bench ldb librocksdb*.so* | $SSH $REMOTE_USER_AT_HOST 'cd $DB_BENCH_DIR/ && tar xzv'"
-      shopt -u nullglob
+    shopt -s nullglob # allow missing librocksdb*.so* for static lib build
+    run_local "tar cz db_bench ldb librocksdb*.so* | $SSH $REMOTE_USER_AT_HOST 'cd $DB_BENCH_DIR/ && tar xzv'"
+    shopt -u nullglob
   fi
 
   run_local "mkdir -p $RESULT_PATH"
 
   (printf $TITLE_FORMAT \
-      "commit id" "benchmark" "user@host" "num-dbs" "key-range" "key-size" \
-      "value-size" "compress-rate" "ops-per-thread" "num-threads" "cache-size" \
-      "flushes" "compactions" \
-      "ops-per-s" "p50" "p75" "p99" "p99.9" "p99.99" "debug" \
-      "real-sec" "user-sec" "sys-sec" \
-      >> $SUMMARY_FILE)
+    "commit id" "benchmark" "user@host" "num-dbs" "key-range" "key-size" \
+    "value-size" "compress-rate" "ops-per-thread" "num-threads" "cache-size" \
+    "flushes" "compactions" \
+    "ops-per-s" "p50" "p75" "p99" "p99.9" "p99.99" "debug" \
+    "real-sec" "user-sec" "sys-sec" \
+    >>$SUMMARY_FILE)
   exit_on_error $?
 }
 

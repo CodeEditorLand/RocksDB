@@ -32,7 +32,7 @@ fi
 syncval="1"
 if [ ! -z $DB_BENCH_NO_SYNC ]; then
   echo "Turning sync off for all multithreaded tests"
-  syncval="0";
+  syncval="0"
 fi
 
 num_threads=${NUM_THREADS:-16}
@@ -68,14 +68,14 @@ function summarize_result {
   bench_name=$3
   nthr=$4
 
-  usecs_op=$( grep ^${bench_name} $test_out | awk '{ printf "%.1f", $3 }' )
-  mb_sec=$( grep ^${bench_name} $test_out | awk '{ printf "%.1f", $5 }' )
-  ops=$( grep "^Count:" $test_out | awk '{ print $2 }' )
-  ops_sec=$( echo "scale=0; (1000000.0 * $nthr) / $usecs_op" | bc )
-  avg=$( grep "^Count:" $test_out | awk '{ printf "%.1f", $4 }' )
-  p50=$( grep "^Min:" $test_out | awk '{ printf "%.1f", $4 }' )
+  usecs_op=$(grep ^${bench_name} $test_out | awk '{ printf "%.1f", $3 }')
+  mb_sec=$(grep ^${bench_name} $test_out | awk '{ printf "%.1f", $5 }')
+  ops=$(grep "^Count:" $test_out | awk '{ print $2 }')
+  ops_sec=$(echo "scale=0; (1000000.0 * $nthr) / $usecs_op" | bc)
+  avg=$(grep "^Count:" $test_out | awk '{ printf "%.1f", $4 }')
+  p50=$(grep "^Min:" $test_out | awk '{ printf "%.1f", $4 }')
   echo -e "$ops_sec\t$mb_sec\t$usecs_op\t$avg\t$p50\t$test_name" \
-    >> $output_dir/report.txt
+    >>$output_dir/report.txt
 }
 
 function run_fillseq {
@@ -87,7 +87,7 @@ function run_fillseq {
        --sync=0 \
        $params_w \
        --threads=1 \
-       --seed=$( date +%s ) \
+       --seed=$(date +%s) \
        2>&1 | tee -a $output_dir/benchmark_fillseq.v${value_size}.log"
   echo $cmd | tee $output_dir/benchmark_fillseq.v${value_size}.log
   eval $cmd
@@ -103,7 +103,7 @@ function run_change {
        --sync=$syncval \
        $params_w \
        --threads=$num_threads \
-       --seed=$( date +%s ) \
+       --seed=$(date +%s) \
        2>&1 | tee -a $output_dir/${out_name}"
   echo $cmd | tee $output_dir/${out_name}
   eval $cmd
@@ -117,7 +117,7 @@ function run_readrandom {
        --use_existing_db=1 \
        $params_w \
        --threads=$num_threads \
-       --seed=$( date +%s ) \
+       --seed=$(date +%s) \
        2>&1 | tee -a $output_dir/${out_name}"
   echo $cmd | tee $output_dir/${out_name}
   eval $cmd
@@ -134,7 +134,7 @@ function run_readwhile {
        $params_w \
        --threads=$num_threads \
        --writes_per_second=$writes_per_second \
-       --seed=$( date +%s ) \
+       --seed=$(date +%s) \
        2>&1 | tee -a $output_dir/${out_name}"
   echo $cmd | tee $output_dir/${out_name}
   eval $cmd
@@ -142,7 +142,7 @@ function run_readwhile {
 }
 
 function now() {
-  echo `date +"%s"`
+  echo $(date +"%s")
 }
 
 report="$output_dir/report.txt"
@@ -151,12 +151,12 @@ schedule="$output_dir/schedule.txt"
 echo "===== Benchmark ====="
 
 # Run!!!
-IFS=',' read -a jobs <<< $1
+IFS=',' read -a jobs <<<$1
 # shellcheck disable=SC2068
 for job in ${jobs[@]}; do
 
   if [ $job != debug ]; then
-    echo "Start $job at `date`" | tee -a $schedule
+    echo "Start $job at $(date)" | tee -a $schedule
   fi
 
   start=$(now)
@@ -169,7 +169,7 @@ for job in ${jobs[@]}; do
   elif [ $job = readwhilewriting ]; then
     run_readwhile writing
   elif [ $job = debug ]; then
-    num_keys=1000; # debug
+    num_keys=1000 # debug
     echo "Setting num_keys to $num_keys"
   else
     echo "unknown job $job"
@@ -178,7 +178,7 @@ for job in ${jobs[@]}; do
   end=$(now)
 
   if [ $job != debug ]; then
-    echo "Complete $job in $((end-start)) seconds" | tee -a $schedule
+    echo "Complete $job in $((end - start)) seconds" | tee -a $schedule
   fi
 
   echo -e "ops/sec\tmb/sec\tusec/op\tavg\tp50\tTest"

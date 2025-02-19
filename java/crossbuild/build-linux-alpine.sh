@@ -4,8 +4,8 @@
 set -e
 
 # update Alpine with latest versions
-echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
-echo '@community http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >>/etc/apk/repositories
+echo '@community http://nl.alpinelinux.org/alpine/edge/community' >>/etc/apk/repositories
 apk update
 apk upgrade
 
@@ -42,10 +42,10 @@ apk add \
   jemalloc jemalloc-dev
 
 # install OpenJDK7
-apk add openjdk7 \
-  && apk add java-cacerts \
-  && rm /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts \
-  && ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts
+apk add openjdk7 &&
+  apk add java-cacerts &&
+  rm /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts &&
+  ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts
 
 # cleanup
 rm -rf /var/cache/apk/*
@@ -55,12 +55,11 @@ export JAVA_HOME=/usr/lib/jvm/java-1.7-openjdk
 export PATH=/usr/lib/jvm/java-1.7-openjdk/bin:$PATH
 
 # gflags from source
-cd /tmp &&\
-  git clone -b v2.0 --single-branch https://github.com/gflags/gflags.git &&\
-  cd gflags &&\
-  ./configure --prefix=/usr && make && make install &&\
+cd /tmp &&
+  git clone -b v2.0 --single-branch https://github.com/gflags/gflags.git &&
+  cd gflags &&
+  ./configure --prefix=/usr && make && make install &&
   rm -rf /tmp/*
-
 
 # build rocksdb
 cd /rocksdb

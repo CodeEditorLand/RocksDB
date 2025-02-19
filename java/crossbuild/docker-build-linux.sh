@@ -32,7 +32,7 @@ if hash scl 2>/dev/null; then
     scl enable devtoolset-2 "PORTABLE=1 J=$J make -j$J rocksdbjavastatic"
   else
     echo "Could not find devtoolset"
-    exit 1;
+    exit 1
   fi
 else
   make clean-not-downloaded
@@ -40,4 +40,3 @@ else
 fi
 
 cp java/target/librocksdbjni-linux*.so java/target/rocksdbjni-*-linux*.jar java/target/rocksdbjni-*-linux*.jar.sha1 /rocksdb-java-target
-

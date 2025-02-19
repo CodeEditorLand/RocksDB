@@ -1,12 +1,11 @@
 # shellcheck disable=SC2148
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 PLATFORM=64
-if [ `getconf LONG_BIT` != "64" ]
-then
+if [ $(getconf LONG_BIT) != "64" ]; then
   PLATFORM=32
 fi
 
-ROCKS_JAR=`find target -name rocksdbjni*.jar`
+ROCKS_JAR=$(find target -name rocksdbjni*.jar)
 
 echo "Running benchmark in $PLATFORM-Bit mode."
 # shellcheck disable=SC2068

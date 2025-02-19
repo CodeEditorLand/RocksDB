@@ -5,9 +5,9 @@ TMP_DIR="${TMPDIR:-/tmp}/rocksdb-sanity-test"
 if [ "$#" -lt 2 ]; then
   echo "usage: ./auto_sanity_test.sh [new_commit] [old_commit]"
   echo "Missing either [new_commit] or [old_commit], perform sanity check with the latest and 10th latest commits."
-  recent_commits=`git log | grep -e "^commit [a-z0-9]\+$"| head -n10 | sed -e 's/commit //g'`
-  commit_new=`echo "$recent_commits" | head -n1`
-  commit_old=`echo "$recent_commits" | tail -n1`
+  recent_commits=$(git log | grep -e "^commit [a-z0-9]\+$" | head -n10 | sed -e 's/commit //g')
+  commit_new=$(echo "$recent_commits" | head -n1)
+  commit_old=$(echo "$recent_commits" | tail -n1)
   echo "the most recent commits are:"
   echo "$recent_commits"
 else
@@ -23,9 +23,9 @@ dir_old="${TMP_DIR}/${commit_old}"
 
 function makestuff() {
   echo "make clean"
-  make clean > /dev/null
+  make clean >/dev/null
   echo "make db_sanity_test -j32"
-  make db_sanity_test -j32 > /dev/null
+  make db_sanity_test -j32 >/dev/null
   if [ $? -ne 0 ]; then
     echo "[ERROR] Failed to perform 'make db_sanity_test'"
     exit 1
