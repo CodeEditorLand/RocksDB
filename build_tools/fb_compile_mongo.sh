@@ -21,8 +21,8 @@ fi
 # we need to force mongo to use static library, not shared
 STATIC_LIB_DEP_DIR='build/static_library_dependencies'
 test -d $STATIC_LIB_DEP_DIR || mkdir $STATIC_LIB_DEP_DIR
-test -h $STATIC_LIB_DEP_DIR/`basename $SNAPPY_LIBS` || ln -s $SNAPPY_LIBS $STATIC_LIB_DEP_DIR
-test -h $STATIC_LIB_DEP_DIR/`basename $LZ4_LIBS` || ln -s $LZ4_LIBS $STATIC_LIB_DEP_DIR
+test -h $STATIC_LIB_DEP_DIR/$(basename $SNAPPY_LIBS) || ln -s $SNAPPY_LIBS $STATIC_LIB_DEP_DIR
+test -h $STATIC_LIB_DEP_DIR/$(basename $LZ4_LIBS) || ln -s $LZ4_LIBS $STATIC_LIB_DEP_DIR
 
 EXTRA_LDFLAGS+=" -L $STATIC_LIB_DEP_DIR"
 
@@ -35,8 +35,8 @@ if ! test -e version.json; then
     --variant-dir=linux2/norm
     --cxx=${CXX} \
     --cc=${CC} \
-    --use-system-zlib"  # add this line back to normal code path
-                        # when https://jira.mongodb.org/browse/SERVER-19123 is resolved
+    --use-system-zlib" # add this line back to normal code path
+  # when https://jira.mongodb.org/browse/SERVER-19123 is resolved
 fi
 
 scons \

@@ -14,7 +14,7 @@ function fatal() {
 }
 
 function platform() {
-  local  __resultvar=$1
+  local __resultvar=$1
   if [[ -f "/etc/yum.conf" ]]; then
     eval $__resultvar="centos"
   elif [[ -f "/etc/dpkg/dpkg.cfg" ]]; then
@@ -105,7 +105,7 @@ function main() {
   make static_lib
   LIBDIR=/usr/lib
   if [[ $FPM_OUTPUT = "rpm" ]]; then
-      LIBDIR=$(rpm --eval '%_libdir')
+    LIBDIR=$(rpm --eval '%_libdir')
   fi
 
   rm -rf package

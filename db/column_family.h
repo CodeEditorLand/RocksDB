@@ -384,10 +384,10 @@ class ColumnFamilyData {
   Version* dummy_versions() { return dummy_versions_; }
   Version* current() { return current_; }  // REQUIRE: DB mutex held
   void SetCurrent(Version* _current);      // REQUIRE: DB mutex held
-  uint64_t GetNumLiveVersions() const;    // REQUIRE: DB mutex held
-  uint64_t GetTotalSstFilesSize() const;  // REQUIRE: DB mutex held
-  uint64_t GetLiveSstFilesSize() const;   // REQUIRE: DB mutex held
-  uint64_t GetTotalBlobFileSize() const;  // REQUIRE: DB mutex held
+  uint64_t GetNumLiveVersions() const;     // REQUIRE: DB mutex held
+  uint64_t GetTotalSstFilesSize() const;   // REQUIRE: DB mutex held
+  uint64_t GetLiveSstFilesSize() const;    // REQUIRE: DB mutex held
+  uint64_t GetTotalBlobFileSize() const;   // REQUIRE: DB mutex held
   // REQUIRE: DB mutex held
   void SetMemtable(MemTable* new_mem) {
     AssignMemtableID(new_mem);

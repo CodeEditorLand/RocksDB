@@ -168,7 +168,8 @@ Status CheckConcurrentWritesSupported(const ColumnFamilyOptions& cf_options) {
   }
   if (!cf_options.memtable_factory->IsInsertConcurrentlySupported()) {
     return Status::InvalidArgument(
-        "Memtable doesn't allow concurrent writes (allow_concurrent_memtable_write)");
+        "Memtable doesn't allow concurrent writes "
+        "(allow_concurrent_memtable_write)");
   }
   return Status::OK();
 }
@@ -202,9 +203,9 @@ const uint64_t kDefaultPeriodicCompSecs = 0xfffffffffffffffe;
 ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
                                     const ColumnFamilyOptions& src) {
   ColumnFamilyOptions result = src;
-  size_t clamp_max = std::conditional<
-      sizeof(size_t) == 4, std::integral_constant<size_t, 0xffffffff>,
-      std::integral_constant<uint64_t, 64ull << 30>>::type::value;
+  size_t clamp_max = std::conditional < sizeof(size_t) == 4,
+         std::integral_constant<size_t, 0xffffffff>,
+         std::integral_constant < uint64_t, 64ull << 30 >> ::type::value;
   ClipToRange(&result.write_buffer_size, (static_cast<size_t>(64)) << 10,
               clamp_max);
   // if user sets arena_block_size, we trust user to use this value. Otherwise,

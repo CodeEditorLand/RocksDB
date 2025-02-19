@@ -7,8 +7,7 @@
 # Environment variables that change the behavior of this script:
 # PIC_BUILD -- if true, it will only take pic versions of libraries from fbcode. libraries that don't have pic variant will not be included
 
-
-BASEDIR=`dirname $BASH_SOURCE`
+BASEDIR=$(dirname $BASH_SOURCE)
 source "$BASEDIR/dependencies_platform010.sh"
 
 # Disallow using libraries from default locations as they might not be compatible with platform010 libraries.

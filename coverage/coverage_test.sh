@@ -24,29 +24,30 @@ mkdir -p $COVERAGE_DIR
 
 # Find all gcno files to generate the coverage report
 
-PYTHON=${1:-`which python3`}
+PYTHON=${1:-$(which python3)}
 echo -e "Using $PYTHON"
-GCNO_FILES=`find $ROOT -name "*.gcno"`
+GCNO_FILES=$(find $ROOT -name "*.gcno")
 $GCOV --preserve-paths --relative-only --no-output $GCNO_FILES 2>/dev/null |
   # Parse the raw gcov report to more human readable form.
   $PYTHON $ROOT/coverage/parse_gcov_output.py |
   # Write the output to both stdout and report file.
   tee $COVERAGE_DIR/coverage_report_all.txt &&
-echo -e "Generated coverage report for all files: $COVERAGE_DIR/coverage_report_all.txt\n"
+  echo -e "Generated coverage report for all files: $COVERAGE_DIR/coverage_report_all.txt\n"
 
 # TODO: we also need to get the files of the latest commits.
 # Get the most recently committed files.
-LATEST_FILES=`
+LATEST_FILES=$(
   git show --pretty="format:" --name-only HEAD |
-  grep -v "^$" |
-  paste -s -d,`
+    grep -v "^$" |
+    paste -s -d,
+)
 RECENT_REPORT=$COVERAGE_DIR/coverage_report_recent.txt
 
-echo -e "Recently updated files: $LATEST_FILES\n" > $RECENT_REPORT
+echo -e "Recently updated files: $LATEST_FILES\n" >$RECENT_REPORT
 $GCOV --preserve-paths --relative-only --no-output $GCNO_FILES 2>/dev/null |
   $PYTHON $ROOT/coverage/parse_gcov_output.py -interested-files $LATEST_FILES |
   tee -a $RECENT_REPORT &&
-echo -e "Generated coverage report for recently updated files: $RECENT_REPORT\n"
+  echo -e "Generated coverage report for recently updated files: $RECENT_REPORT\n"
 
 # Unless otherwise specified, we'll not generate html report by default
 if [ -z "$HTML" ]; then
@@ -58,24 +59,25 @@ fi
 echo "Generating the html coverage report..."
 
 LCOV=$(which lcov || true 2>/dev/null)
-if [ -z $LCOV ]
-then
+if [ -z $LCOV ]; then
   echo "Skip: Cannot find lcov to generate the html report."
   exit 0
 fi
 
 LCOV_VERSION=$(lcov -v | grep 1.1 || true)
-if [ $LCOV_VERSION ]
-then
+if [ $LCOV_VERSION ]; then
   echo "Not supported lcov version. Expect lcov 1.1."
   exit 0
 fi
 
-(cd $ROOT; lcov --no-external \
-     --capture  \
-     --directory $PWD \
-     --gcov-tool $GCOV \
-     --output-file $COVERAGE_DIR/coverage.info)
+(
+  cd $ROOT
+  lcov --no-external \
+    --capture \
+    --directory $PWD \
+    --gcov-tool $GCOV \
+    --output-file $COVERAGE_DIR/coverage.info
+)
 
 genhtml $COVERAGE_DIR/coverage.info -o $COVERAGE_DIR
 
