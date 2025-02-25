@@ -107,15 +107,6 @@
 
 - `BaseDeltaIterator` now honors the read option `allow_unprepared_value`.
 
-<<<<<<< HEAD
-### Fix
-* `BaseDeltaIterator` now calls `PrepareValue` on the base iterator in case it has been created with the `allow_unprepared_value` read option set. Earlier, such base iterators could lead to incorrect values being exposed from `BaseDeltaIterator`.
-* Fix a leak of obsolete blob files left open until DB::Close(). This bug was introduced in version 9.4.0.
-* Fix missing cases of corruption retry during DB open and read API processing.
-* Fix a bug for transaction db with 2pc where an old WAL may be retained longer than needed (#13127).
-* Fix leaks of some open SST files (until `DB::Close()`) that are written but never become live due to various failures. (We now have a check for such leaks with no outstanding issues.)
-* Fix a bug for replaying WALs for WriteCommitted transaction DB when its user-defined timestamps setting is toggled on/off between DB sessions.
-=======
 ### Bug Fixes
 
 - `BaseDeltaIterator` now calls `PrepareValue` on the base iterator in case it
@@ -132,7 +123,6 @@
   with no outstanding issues.)
 - Fix a bug for replaying WALs for WriteCommitted transaction DB when its
   user-defined timestamps setting is toggled on/off between DB sessions.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -180,15 +170,6 @@
   compaction and leveled compaction. The old behavior tends to assign files to
   L0 while the new behavior will assign the files to the lowest level possible.
 
-<<<<<<< HEAD
-### Fix
-* Fix a longstanding race condition in SetOptions for `block_based_table_factory` options. The fix has some subtle behavior changes because of copying and replacing the TableFactory on a change with SetOptions, including requiring an Iterator::Refresh() for an existing Iterator to use the latest options.
-* Fix under counting of allocated memory in the compressed secondary cache due to looking at the compressed block size rather than the actual memory allocated, which could be larger due to internal fragmentation.
-* `GetApproximateMemTableStats()` could return disastrously bad estimates 5-25% of the time. The function has been re-engineered to return much better estimates with similar CPU cost.
-* Skip insertion of compressed blocks in the secondary cache if the lowest_used_cache_tier DB option is kVolatileTier.
-* Fix an issue in level compaction where a small CF with small compaction debt can cause the DB to allow parallel compactions. (#13054)
-* Several DB option settings could be lost through `GetOptionsFromString()`, possibly elsewhere as well. Affected options, now fixed:`background_close_inactive_wals`, `write_dbid_to_manifest`, `write_identity_file`, `prefix_seek_opt_in_only`
-=======
 ### Bug Fixes
 
 - Fix a longstanding race condition in SetOptions for
@@ -210,7 +191,6 @@
   possibly elsewhere as well. Affected options, now
   fixed:`background_close_inactive_wals`, `write_dbid_to_manifest`,
   `write_identity_file`, `prefix_seek_opt_in_only`
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 9.7.0 (09/20/2024)
 
