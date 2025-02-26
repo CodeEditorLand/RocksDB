@@ -28,74 +28,74 @@ G=$((1024 * M))
 T=$((1024 * G))
 
 function display_usage() {
-  echo "usage: run_blob_bench.sh [--help]"
-  echo ""
-  echo "Runs the following sequence of BlobDB benchmark tests using tools/benchmark.sh:"
-  echo -e "\tPhase 1: write-only tests: bulkload+compact, overwrite+waitforcompaction"
-  echo -e "\tPhase 2: read-write tests: readwhilewriting, fwdrangewhilewriting"
-  echo -e "\tPhase 3: read-only tests: readrandom, fwdrange"
-  echo ""
-  echo "Environment Variables:"
-  echo -e "\tJOB_ID\t\t\t\tIdentifier for the benchmark job, will appear in the results (default: empty)"
-  echo -e "\tDB_DIR\t\t\t\tPath for the RocksDB data directory (mandatory)"
-  echo -e "\tWAL_DIR\t\t\t\tPath for the RocksDB WAL directory (mandatory)"
-  echo -e "\tOUTPUT_DIR\t\t\tPath for the benchmark results (mandatory)"
-  echo -e "\tNUM_THREADS\t\t\tNumber of threads (default: 16)"
-  echo -e "\tCOMPRESSION_TYPE\t\tCompression type for the SST files (default: lz4)"
-  echo -e "\tDB_SIZE\t\t\t\tRaw (uncompressed) database size (default: 1 TB)"
-  echo -e "\tVALUE_SIZE\t\t\tValue size (default: 1 KB)"
-  echo -e "\tNUM_KEYS\t\t\tNumber of keys (default: raw database size divided by value size)"
-  echo -e "\tDURATION\t\t\tIndividual duration for read-write/read-only tests in seconds (default: 1800)"
-  echo -e "\tWRITE_BUFFER_SIZE\t\tWrite buffer (memtable) size (default: 1 GB)"
-  echo -e "\tENABLE_BLOB_FILES\t\tEnable blob files (default: 1)"
-  echo -e "\tMIN_BLOB_SIZE\t\t\tSize threshold for storing values in blob files (default: 0)"
-  echo -e "\tBLOB_FILE_SIZE\t\t\tBlob file size (default: same as write buffer size)"
-  echo -e "\tBLOB_COMPRESSION_TYPE\t\tCompression type for the blob files (default: lz4)"
-  echo -e "\tENABLE_BLOB_GC\t\t\tEnable blob garbage collection (default: 1)"
-  echo -e "\tBLOB_GC_AGE_CUTOFF\t\tBlob garbage collection age cutoff (default: 0.25)"
-  echo -e "\tBLOB_GC_FORCE_THRESHOLD\t\tThreshold for forcing garbage collection of the oldest blob files (default: 1.0)"
-  echo -e "\tBLOB_COMPACTION_READAHEAD_SIZE\tBlob compaction readahead size (default: 0)"
-  echo -e "\tBLOB_FILE_STARTING_LEVEL\t\tBlob file starting level (default: 0)"
-  echo -e "\tUSE_BLOB_CACHE\t\t\tEnable blob cache. (default: 1)"
-  echo -e "\tUSE_SHARED_BLOCK_AND_BLOB_CACHE\t\t\tUse the same backing cache for block cache and blob cache. (default: 1)"
-  echo -e "\tBLOB_CACHE_SIZE\t\t\tSize of the blob cache (default: 16GB)"
-  echo -e "\tBLOB_CACHE_NUMSHARDBITS\t\t\tNumber of shards for the blob cache is 2 ** blob_cache_numshardbits (default: 6)"
-  echo -e "\tPREPOPULATE_BLOB_CACHE\t\t\tPre-populate hot/warm blobs in blob cache (default: 0)"
-  echo -e "\tTARGET_FILE_SIZE_BASE\t\tTarget SST file size for compactions (default: write buffer size, scaled down if blob files are enabled)"
-  echo -e "\tMAX_BYTES_FOR_LEVEL_BASE\tMaximum size for the base level (default: 8 * target SST file size)"
+	echo "usage: run_blob_bench.sh [--help]"
+	echo ""
+	echo "Runs the following sequence of BlobDB benchmark tests using tools/benchmark.sh:"
+	echo -e "\tPhase 1: write-only tests: bulkload+compact, overwrite+waitforcompaction"
+	echo -e "\tPhase 2: read-write tests: readwhilewriting, fwdrangewhilewriting"
+	echo -e "\tPhase 3: read-only tests: readrandom, fwdrange"
+	echo ""
+	echo "Environment Variables:"
+	echo -e "\tJOB_ID\t\t\t\tIdentifier for the benchmark job, will appear in the results (default: empty)"
+	echo -e "\tDB_DIR\t\t\t\tPath for the RocksDB data directory (mandatory)"
+	echo -e "\tWAL_DIR\t\t\t\tPath for the RocksDB WAL directory (mandatory)"
+	echo -e "\tOUTPUT_DIR\t\t\tPath for the benchmark results (mandatory)"
+	echo -e "\tNUM_THREADS\t\t\tNumber of threads (default: 16)"
+	echo -e "\tCOMPRESSION_TYPE\t\tCompression type for the SST files (default: lz4)"
+	echo -e "\tDB_SIZE\t\t\t\tRaw (uncompressed) database size (default: 1 TB)"
+	echo -e "\tVALUE_SIZE\t\t\tValue size (default: 1 KB)"
+	echo -e "\tNUM_KEYS\t\t\tNumber of keys (default: raw database size divided by value size)"
+	echo -e "\tDURATION\t\t\tIndividual duration for read-write/read-only tests in seconds (default: 1800)"
+	echo -e "\tWRITE_BUFFER_SIZE\t\tWrite buffer (memtable) size (default: 1 GB)"
+	echo -e "\tENABLE_BLOB_FILES\t\tEnable blob files (default: 1)"
+	echo -e "\tMIN_BLOB_SIZE\t\t\tSize threshold for storing values in blob files (default: 0)"
+	echo -e "\tBLOB_FILE_SIZE\t\t\tBlob file size (default: same as write buffer size)"
+	echo -e "\tBLOB_COMPRESSION_TYPE\t\tCompression type for the blob files (default: lz4)"
+	echo -e "\tENABLE_BLOB_GC\t\t\tEnable blob garbage collection (default: 1)"
+	echo -e "\tBLOB_GC_AGE_CUTOFF\t\tBlob garbage collection age cutoff (default: 0.25)"
+	echo -e "\tBLOB_GC_FORCE_THRESHOLD\t\tThreshold for forcing garbage collection of the oldest blob files (default: 1.0)"
+	echo -e "\tBLOB_COMPACTION_READAHEAD_SIZE\tBlob compaction readahead size (default: 0)"
+	echo -e "\tBLOB_FILE_STARTING_LEVEL\t\tBlob file starting level (default: 0)"
+	echo -e "\tUSE_BLOB_CACHE\t\t\tEnable blob cache. (default: 1)"
+	echo -e "\tUSE_SHARED_BLOCK_AND_BLOB_CACHE\t\t\tUse the same backing cache for block cache and blob cache. (default: 1)"
+	echo -e "\tBLOB_CACHE_SIZE\t\t\tSize of the blob cache (default: 16GB)"
+	echo -e "\tBLOB_CACHE_NUMSHARDBITS\t\t\tNumber of shards for the blob cache is 2 ** blob_cache_numshardbits (default: 6)"
+	echo -e "\tPREPOPULATE_BLOB_CACHE\t\t\tPre-populate hot/warm blobs in blob cache (default: 0)"
+	echo -e "\tTARGET_FILE_SIZE_BASE\t\tTarget SST file size for compactions (default: write buffer size, scaled down if blob files are enabled)"
+	echo -e "\tMAX_BYTES_FOR_LEVEL_BASE\tMaximum size for the base level (default: 8 * target SST file size)"
 }
 
 if [ $# -ge 1 ]; then
-  display_usage
+	display_usage
 
-  if [ "$1" == "--help" ]; then
-    exit
-  else
-    exit $EXIT_INVALID_ARGS
-  fi
+	if [ "$1" == "--help" ]; then
+		exit
+	else
+		exit $EXIT_INVALID_ARGS
+	fi
 fi
 
 if [ ! -f tools/benchmark.sh ]; then
-  echo "tools/benchmark.sh not found"
-  exit $EXIT_INVALID_PATH
+	echo "tools/benchmark.sh not found"
+	exit $EXIT_INVALID_PATH
 fi
 
 # shellcheck disable=SC2153
 if [ -z "$DB_DIR" ]; then
-  echo "DB_DIR is not defined"
-  exit $EXIT_INVALID_ARGS
+	echo "DB_DIR is not defined"
+	exit $EXIT_INVALID_ARGS
 fi
 
 # shellcheck disable=SC2153
 if [ -z "$WAL_DIR" ]; then
-  echo "WAL_DIR is not defined"
-  exit $EXIT_INVALID_ARGS
+	echo "WAL_DIR is not defined"
+	exit $EXIT_INVALID_ARGS
 fi
 
 # shellcheck disable=SC2153
 if [ -z "$OUTPUT_DIR" ]; then
-  echo "OUTPUT_DIR is not defined"
-  exit $EXIT_INVALID_ARGS
+	echo "OUTPUT_DIR is not defined"
+	exit $EXIT_INVALID_ARGS
 fi
 
 # shellcheck disable=SC2153
@@ -133,9 +133,9 @@ blob_cache_numshardbits=${BLOB_CACHE_NUMSHARDBITS:-6}
 prepopulate_blob_cache=${PREPOPULATE_BLOB_CACHE:-0}
 
 if [ "$enable_blob_files" == "1" ]; then
-  target_file_size_base=${TARGET_FILE_SIZE_BASE:-$((32 * write_buffer_size / value_size))}
+	target_file_size_base=${TARGET_FILE_SIZE_BASE:-$((32 * write_buffer_size / value_size))}
 else
-  target_file_size_base=${TARGET_FILE_SIZE_BASE:-$write_buffer_size}
+	target_file_size_base=${TARGET_FILE_SIZE_BASE:-$write_buffer_size}
 fi
 
 max_bytes_for_level_base=${MAX_BYTES_FOR_LEVEL_BASE:-$((8 * target_file_size_base))}

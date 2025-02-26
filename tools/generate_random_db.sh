@@ -7,8 +7,8 @@
 # Usage: <SCRIPT> <input_data_path> <DB Path>
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: $BASH_SOURCE <input_data_path> <DB Path>"
-  exit 1
+	echo "usage: $BASH_SOURCE <input_data_path> <DB Path>"
+	exit 1
 fi
 
 input_data_dir=$1
@@ -24,7 +24,7 @@ set -e
 n=0
 
 for f in $(ls -1 $input_data_dir); do
-  echo == Loading $f with compression ${compression_opts[n % 4]}
-  ./ldb load --db=$db_dir --compression_type=${compression_opts[n % 4]} --bloom_bits=10 --auto_compaction=false --create_if_missing <$input_data_dir/$f
-  let "n = n + 1"
+	echo == Loading $f with compression ${compression_opts[n % 4]}
+	./ldb load --db=$db_dir --compression_type=${compression_opts[n % 4]} --bloom_bits=10 --auto_compaction=false --create_if_missing < $input_data_dir/$f
+	let "n = n + 1"
 done

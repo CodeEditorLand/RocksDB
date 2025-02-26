@@ -57,13 +57,13 @@ bs=${BLOCK_LENGTH:-4096}
 
 # If no command line arguments then run for 24 threads.
 if [[ $# -eq 0 ]]; then
-  nthreads=(24)
+	nthreads=(24)
 else
-  nthreads=("$@")
+	nthreads=("$@")
 fi
 
 for num_thr in "${nthreads[@]}"; do
-  echo Will run for $num_thr threads
+	echo Will run for $num_thr threads
 done
 
 # Update these parameters before execution !!!
@@ -84,7 +84,7 @@ CACHE_SIZE=$cs"
 
 mkdir -p $output_dir
 echo -e "ops/sec\tmb/sec\tusec/op\tavg\tp50\tTest" \
-  >$output_dir/report.txt
+	> $output_dir/report.txt
 
 # Notes on test sequence:
 #   step 1) Setup database via sequential fill followed by overwrite to fragment it.
@@ -95,81 +95,81 @@ echo -e "ops/sec\tmb/sec\tusec/op\tavg\tp50\tTest" \
 ###### Setup the database
 
 if [[ $do_setup != 0 ]]; then
-  echo Doing setup
+	echo Doing setup
 
-  # Test 2a: sequential fill with large values to get peak ingest
-  #          adjust NUM_KEYS given the use of larger values
-  env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
-    ./tools/benchmark_leveldb.sh fillseq
+	# Test 2a: sequential fill with large values to get peak ingest
+	#          adjust NUM_KEYS given the use of larger values
+	env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
+		./tools/benchmark_leveldb.sh fillseq
 
-  # Test 2b: sequential fill with the configured value size
-  env $ARGS ./tools/benchmark_leveldb.sh fillseq
+	# Test 2b: sequential fill with the configured value size
+	env $ARGS ./tools/benchmark_leveldb.sh fillseq
 
-  # Test 3: single-threaded overwrite
-  env $ARGS NUM_THREADS=1 DB_BENCH_NO_SYNC=1 ./tools/benchmark_leveldb.sh overwrite
+	# Test 3: single-threaded overwrite
+	env $ARGS NUM_THREADS=1 DB_BENCH_NO_SYNC=1 ./tools/benchmark_leveldb.sh overwrite
 
 else
-  echo Restoring from backup
+	echo Restoring from backup
 
-  rm -rf $db_dir
+	rm -rf $db_dir
 
-  if [ ! -d ${db_dir}.bak ]; then
-    echo Database backup does not exist at ${db_dir}.bak
-    exit -1
-  fi
+	if [ ! -d ${db_dir}.bak ]; then
+		echo Database backup does not exist at ${db_dir}.bak
+		exit -1
+	fi
 
-  echo Restore database from ${db_dir}.bak
-  cp -p -r ${db_dir}.bak $db_dir
+	echo Restore database from ${db_dir}.bak
+	cp -p -r ${db_dir}.bak $db_dir
 fi
 
 if [[ $save_setup != 0 ]]; then
-  echo Save database to ${db_dir}.bak
-  cp -p -r $db_dir ${db_dir}.bak
+	echo Save database to ${db_dir}.bak
+	cp -p -r $db_dir ${db_dir}.bak
 fi
 
 ###### Read-only tests
 
 for num_thr in "${nthreads[@]}"; do
-  # Test 4: random read
-  env $ARGS NUM_THREADS=$num_thr ./tools/benchmark_leveldb.sh readrandom
+	# Test 4: random read
+	env $ARGS NUM_THREADS=$num_thr ./tools/benchmark_leveldb.sh readrandom
 
 done
 
 ###### Non read-only tests
 
 for num_thr in "${nthreads[@]}"; do
-  # Test 7: overwrite with sync=0
-  env $ARGS NUM_THREADS=$num_thr DB_BENCH_NO_SYNC=1 \
-    ./tools/benchmark_leveldb.sh overwrite
+	# Test 7: overwrite with sync=0
+	env $ARGS NUM_THREADS=$num_thr DB_BENCH_NO_SYNC=1 \
+		./tools/benchmark_leveldb.sh overwrite
 
-  # Test 8: overwrite with sync=1
-  # Not run for now because LevelDB db_bench doesn't have an option to limit the
-  # test run to X seconds and doing sync-per-commit for --num can take too long.
-  # env $ARGS NUM_THREADS=$num_thr ./tools/benchmark_leveldb.sh overwrite
+	# Test 8: overwrite with sync=1
+	# Not run for now because LevelDB db_bench doesn't have an option to limit the
+	# test run to X seconds and doing sync-per-commit for --num can take too long.
+	# env $ARGS NUM_THREADS=$num_thr ./tools/benchmark_leveldb.sh overwrite
 
-  # Test 11: random read while writing
-  env $ARGS NUM_THREADS=$num_thr WRITES_PER_SECOND=$wps \
-    ./tools/benchmark_leveldb.sh readwhilewriting
+	# Test 11: random read while writing
+	env $ARGS NUM_THREADS=$num_thr WRITES_PER_SECOND=$wps \
+		./tools/benchmark_leveldb.sh readwhilewriting
 
 done
 
-echo bulkload >$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep bulkload $output_dir/report.txt >>$output_dir/report2.txt
-echo fillseq >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep fillseq $output_dir/report.txt >>$output_dir/report2.txt
-echo overwrite sync=0 >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep overwrite $output_dir/report.txt | grep \.s0 >>$output_dir/report2.txt
-echo overwrite sync=1 >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep overwrite $output_dir/report.txt | grep \.s1 >>$output_dir/report2.txt
-echo readrandom >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep readrandom $output_dir/report.txt >>$output_dir/report2.txt
-echo readwhile >>$output_dir/report2.txt >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep readwhilewriting $output_dir/report.txt >>$output_dir/report2.txt
+echo bulkload > $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep bulkload $output_dir/report.txt >> $output_dir/report2.txt
+echo fillseq >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep fillseq $output_dir/report.txt >> $output_dir/report2.txt
+echo overwrite sync=0 >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep overwrite $output_dir/report.txt | grep \.s0 >> $output_dir/report2.txt
+echo overwrite sync=1 >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep overwrite $output_dir/report.txt | grep \.s1 >> $output_dir/report2.txt
+echo readrandom >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep readrandom $output_dir/report.txt >> $output_dir/report2.txt
+echo readwhile >> $output_dir/report2.txt >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep readwhilewriting $output_dir/report.txt >> $output_dir/report2.txt
 
 cat $output_dir/report2.txt

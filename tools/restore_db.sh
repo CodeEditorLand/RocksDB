@@ -4,8 +4,8 @@
 #
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: ${BASH_SOURCE[0]} <Backup Dir> <DB Path>"
-  exit 1
+	echo "usage: ${BASH_SOURCE[0]} <Backup Dir> <DB Path>"
+	exit 1
 fi
 
 backup_dir="$1"

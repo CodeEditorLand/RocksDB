@@ -79,13 +79,13 @@ bs=${BLOCK_LENGTH:-8192}
 
 # If no command line arguments then run for 24 threads.
 if [[ $# -eq 0 ]]; then
-  nthreads=(24)
+	nthreads=(24)
 else
-  nthreads=("$@")
+	nthreads=("$@")
 fi
 
 for num_thr in "${nthreads[@]}"; do
-  echo Will run for $num_thr threads
+	echo Will run for $num_thr threads
 done
 
 # Update these parameters before execution !!!
@@ -100,7 +100,7 @@ save_setup=${SAVE_SETUP:-0}
 skip_low_pri_tests=${SKIP_LOW_PRI_TESTS:-0}
 
 if [[ $skip_low_pri_tests == 1 ]]; then
-  echo "Skipping some non-critical tests because SKIP_LOW_PRI_TESTS is set."
+	echo "Skipping some non-critical tests because SKIP_LOW_PRI_TESTS is set."
 fi
 
 output_dir="${TMPDIR:-/tmp}/output"
@@ -116,7 +116,7 @@ CACHE_SIZE=$cs"
 
 mkdir -p $output_dir
 echo -e "ops/sec\tmb/sec\tSize-GB\tL0_GB\tSum_GB\tW-Amp\tW-MB/s\tusec/op\tp50\tp75\tp99\tp99.9\tp99.99\tUptime\tStall-time\tStall%\tTest" \
-  >$output_dir/report.txt
+	> $output_dir/report.txt
 
 # Notes on test sequence:
 #   step 1) Setup database via sequential fill followed by overwrite to fragment it.
@@ -128,141 +128,141 @@ echo -e "ops/sec\tmb/sec\tSize-GB\tL0_GB\tSum_GB\tW-Amp\tW-MB/s\tusec/op\tp50\tp
 ###### Setup the database
 
 if [[ $do_setup != 0 ]]; then
-  echo Doing setup
+	echo Doing setup
 
-  if [[ $skip_low_pri_tests != 1 ]]; then
-    # Test 1: bulk load
-    env $ARGS ./tools/benchmark.sh bulkload
-  fi
+	if [[ $skip_low_pri_tests != 1 ]]; then
+		# Test 1: bulk load
+		env $ARGS ./tools/benchmark.sh bulkload
+	fi
 
-  # Test 2a: sequential fill with large values to get peak ingest
-  #          adjust NUM_KEYS given the use of larger values
-  env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
-    ./tools/benchmark.sh fillseq_disable_wal
+	# Test 2a: sequential fill with large values to get peak ingest
+	#          adjust NUM_KEYS given the use of larger values
+	env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
+		./tools/benchmark.sh fillseq_disable_wal
 
-  # Test 2b: sequential fill with the configured value size
-  env $ARGS ./tools/benchmark.sh fillseq_disable_wal
+	# Test 2b: sequential fill with the configured value size
+	env $ARGS ./tools/benchmark.sh fillseq_disable_wal
 
-  # Test 2c: same as 2a, but with WAL being enabled.
-  env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
-    ./tools/benchmark.sh fillseq_enable_wal
+	# Test 2c: same as 2a, but with WAL being enabled.
+	env $ARGS BLOCK_SIZE=$((1 * M)) VALUE_SIZE=$((32 * K)) NUM_KEYS=$((num_keys / 64)) \
+		./tools/benchmark.sh fillseq_enable_wal
 
-  # Test 2d: same as 2b, but with WAL being enabled.
-  env $ARGS ./tools/benchmark.sh fillseq_enable_wal
+	# Test 2d: same as 2b, but with WAL being enabled.
+	env $ARGS ./tools/benchmark.sh fillseq_enable_wal
 
-  # Test 3: single-threaded overwrite
-  env $ARGS NUM_THREADS=1 DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh overwrite
+	# Test 3: single-threaded overwrite
+	env $ARGS NUM_THREADS=1 DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh overwrite
 
 else
-  echo Restoring from backup
+	echo Restoring from backup
 
-  rm -rf $db_dir
+	rm -rf $db_dir
 
-  if [ ! -d ${db_dir}.bak ]; then
-    echo Database backup does not exist at ${db_dir}.bak
-    exit -1
-  fi
+	if [ ! -d ${db_dir}.bak ]; then
+		echo Database backup does not exist at ${db_dir}.bak
+		exit -1
+	fi
 
-  echo Restore database from ${db_dir}.bak
-  cp -p -r ${db_dir}.bak $db_dir
+	echo Restore database from ${db_dir}.bak
+	cp -p -r ${db_dir}.bak $db_dir
 
-  if [[ $db_dir != $wal_dir ]]; then
-    rm -rf $wal_dir
+	if [[ $db_dir != $wal_dir ]]; then
+		rm -rf $wal_dir
 
-    if [ ! -d ${wal_dir}.bak ]; then
-      echo WAL backup does not exist at ${wal_dir}.bak
-      exit -1
-    fi
+		if [ ! -d ${wal_dir}.bak ]; then
+			echo WAL backup does not exist at ${wal_dir}.bak
+			exit -1
+		fi
 
-    echo Restore WAL from ${wal_dir}.bak
-    cp -p -r ${wal_dir}.bak $wal_dir
-  fi
+		echo Restore WAL from ${wal_dir}.bak
+		cp -p -r ${wal_dir}.bak $wal_dir
+	fi
 fi
 
 if [[ $save_setup != 0 ]]; then
-  echo Save database to ${db_dir}.bak
-  cp -p -r $db_dir ${db_dir}.bak
+	echo Save database to ${db_dir}.bak
+	cp -p -r $db_dir ${db_dir}.bak
 
-  if [[ $db_dir != $wal_dir ]]; then
-    echo Save WAL to ${wal_dir}.bak
-    cp -p -r $wal_dir ${wal_dir}.bak
-  fi
+	if [[ $db_dir != $wal_dir ]]; then
+		echo Save WAL to ${wal_dir}.bak
+		cp -p -r $wal_dir ${wal_dir}.bak
+	fi
 fi
 
 ###### Read-only tests
 
 for num_thr in "${nthreads[@]}"; do
-  # Test 4: random read
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr ./tools/benchmark.sh readrandom
+	# Test 4: random read
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr ./tools/benchmark.sh readrandom
 
-  # Test 5: random range scans
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr NUM_NEXTS_PER_SEEK=$nps \
-    ./tools/benchmark.sh fwdrange
+	# Test 5: random range scans
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr NUM_NEXTS_PER_SEEK=$nps \
+		./tools/benchmark.sh fwdrange
 
-  # Test 6: random reverse range scans
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr NUM_NEXTS_PER_SEEK=$nps \
-    ./tools/benchmark.sh revrange
+	# Test 6: random reverse range scans
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr NUM_NEXTS_PER_SEEK=$nps \
+		./tools/benchmark.sh revrange
 done
 
 ###### Non read-only tests
 
 for num_thr in "${nthreads[@]}"; do
-  # Test 7: overwrite with sync=0
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
-    DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh overwrite
+	# Test 7: overwrite with sync=0
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
+		DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh overwrite
 
-  if [[ $skip_low_pri_tests != 1 ]]; then
-    # Test 8: overwrite with sync=1
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
-      ./tools/benchmark.sh overwrite
-  fi
+	if [[ $skip_low_pri_tests != 1 ]]; then
+		# Test 8: overwrite with sync=1
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
+			./tools/benchmark.sh overwrite
+	fi
 
-  # Test 9: random update with sync=0
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr DB_BENCH_NO_SYNC=1 \
-    ./tools/benchmark.sh updaterandom
+	# Test 9: random update with sync=0
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr DB_BENCH_NO_SYNC=1 \
+		./tools/benchmark.sh updaterandom
 
-  if [[ $skip_low_pri_tests != 1 ]]; then
-    # Test 10: random update with sync=1
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr ./tools/benchmark.sh updaterandom
-  fi
+	if [[ $skip_low_pri_tests != 1 ]]; then
+		# Test 10: random update with sync=1
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr ./tools/benchmark.sh updaterandom
+	fi
 
-  # Test 11: random read while writing
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-    DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh readwhilewriting
+	# Test 11: random read while writing
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+		DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh readwhilewriting
 
-  # Test 12: range scan while writing
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-    DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh fwdrangewhilewriting
+	# Test 12: range scan while writing
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+		DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh fwdrangewhilewriting
 
-  # Test 13: reverse range scan while writing
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-    DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh revrangewhilewriting
+	# Test 13: reverse range scan while writing
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+		DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh revrangewhilewriting
 done
 
 ###### Merge tests
 
 for num_thr in "${nthreads[@]}"; do
-  # Test 14: random merge with sync=0
-  env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
-    DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh mergerandom
+	# Test 14: random merge with sync=0
+	env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
+		DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh mergerandom
 
-  if [[ $skip_low_pri_tests != 1 ]]; then
-    # Test 15: random merge with sync=1
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
-      ./tools/benchmark.sh mergerandom
+	if [[ $skip_low_pri_tests != 1 ]]; then
+		# Test 15: random merge with sync=1
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$fg_mbwps \
+			./tools/benchmark.sh mergerandom
 
-    # Test 16: random read while merging
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-      DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh readwhilemerging
+		# Test 16: random read while merging
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+			DB_BENCH_NO_SYNC=1 ./tools/benchmark.sh readwhilemerging
 
-    # Test 17: range scan while merging
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-      DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh fwdrangewhilemerging
+		# Test 17: range scan while merging
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+			DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh fwdrangewhilemerging
 
-    # Test 18: reverse range scan while merging
-    env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
-      DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh revrangewhilemerging
-  fi
+		# Test 18: reverse range scan while merging
+		env $ARGS DURATION=$duration NUM_THREADS=$num_thr MB_WRITE_PER_SEC=$bg_mbwps \
+			DB_BENCH_NO_SYNC=1 NUM_NEXTS_PER_SEEK=$nps ./tools/benchmark.sh revrangewhilemerging
+	fi
 done
 
 ###### Universal compaction tests.
@@ -271,89 +271,89 @@ done
 env $ARGS COMPACTION_TEST=1 NUM_THREADS=1 ./tools/benchmark.sh universal_compaction
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo bulkload >$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep bulkload $output_dir/report.txt >>$output_dir/report2.txt
+	echo bulkload > $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep bulkload $output_dir/report.txt >> $output_dir/report2.txt
 fi
 
-echo fillseq_wal_disabled >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep fillseq.wal_disabled $output_dir/report.txt >>$output_dir/report2.txt
+echo fillseq_wal_disabled >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep fillseq.wal_disabled $output_dir/report.txt >> $output_dir/report2.txt
 
-echo fillseq_wal_enabled >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep fillseq.wal_enabled $output_dir/report.txt >>$output_dir/report2.txt
+echo fillseq_wal_enabled >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep fillseq.wal_enabled $output_dir/report.txt >> $output_dir/report2.txt
 
-echo overwrite sync=0 >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep overwrite $output_dir/report.txt | grep \.s0 >>$output_dir/report2.txt
+echo overwrite sync=0 >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep overwrite $output_dir/report.txt | grep \.s0 >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo overwrite sync=1 >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep overwrite $output_dir/report.txt | grep \.s1 >>$output_dir/report2.txt
+	echo overwrite sync=1 >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep overwrite $output_dir/report.txt | grep \.s1 >> $output_dir/report2.txt
 fi
 
-echo updaterandom sync=0 >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep updaterandom $output_dir/report.txt | grep \.s0 >>$output_dir/report2.txt
+echo updaterandom sync=0 >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep updaterandom $output_dir/report.txt | grep \.s0 >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo updaterandom sync=1 >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep updaterandom $output_dir/report.txt | grep \.s1 >>$output_dir/report2.txt
+	echo updaterandom sync=1 >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep updaterandom $output_dir/report.txt | grep \.s1 >> $output_dir/report2.txt
 fi
 
-echo mergerandom sync=0 >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep mergerandom $output_dir/report.txt | grep \.s0 >>$output_dir/report2.txt
+echo mergerandom sync=0 >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep mergerandom $output_dir/report.txt | grep \.s0 >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo mergerandom sync=1 >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep mergerandom $output_dir/report.txt | grep \.s1 >>$output_dir/report2.txt
+	echo mergerandom sync=1 >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep mergerandom $output_dir/report.txt | grep \.s1 >> $output_dir/report2.txt
 fi
 
-echo readrandom >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep readrandom $output_dir/report.txt >>$output_dir/report2.txt
+echo readrandom >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep readrandom $output_dir/report.txt >> $output_dir/report2.txt
 
-echo fwdrange >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep fwdrange\.t $output_dir/report.txt >>$output_dir/report2.txt
+echo fwdrange >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep fwdrange\.t $output_dir/report.txt >> $output_dir/report2.txt
 
-echo revrange >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep revrange\.t $output_dir/report.txt >>$output_dir/report2.txt
+echo revrange >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep revrange\.t $output_dir/report.txt >> $output_dir/report2.txt
 
-echo readwhile >>$output_dir/report2.txt >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep readwhilewriting $output_dir/report.txt >>$output_dir/report2.txt
+echo readwhile >> $output_dir/report2.txt >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep readwhilewriting $output_dir/report.txt >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo readwhile >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep readwhilemerging $output_dir/report.txt >>$output_dir/report2.txt
+	echo readwhile >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep readwhilemerging $output_dir/report.txt >> $output_dir/report2.txt
 fi
 
-echo fwdreadwhilewriting >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep fwdrangewhilewriting $output_dir/report.txt >>$output_dir/report2.txt
+echo fwdreadwhilewriting >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep fwdrangewhilewriting $output_dir/report.txt >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo fwdreadwhilemerging >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep fwdrangewhilemerg $output_dir/report.txt >>$output_dir/report2.txt
+	echo fwdreadwhilemerging >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep fwdrangewhilemerg $output_dir/report.txt >> $output_dir/report2.txt
 fi
 
-echo revreadwhilewriting >>$output_dir/report2.txt
-head -1 $output_dir/report.txt >>$output_dir/report2.txt
-grep revrangewhilewriting $output_dir/report.txt >>$output_dir/report2.txt
+echo revreadwhilewriting >> $output_dir/report2.txt
+head -1 $output_dir/report.txt >> $output_dir/report2.txt
+grep revrangewhilewriting $output_dir/report.txt >> $output_dir/report2.txt
 
 if [[ $skip_low_pri_tests != 1 ]]; then
-  echo revreadwhilemerging >>$output_dir/report2.txt
-  head -1 $output_dir/report.txt >>$output_dir/report2.txt
-  grep revrangewhilemerg $output_dir/report.txt >>$output_dir/report2.txt
+	echo revreadwhilemerging >> $output_dir/report2.txt
+	head -1 $output_dir/report.txt >> $output_dir/report2.txt
+	grep revrangewhilemerg $output_dir/report.txt >> $output_dir/report2.txt
 fi
 
 cat $output_dir/report2.txt

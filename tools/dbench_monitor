@@ -21,13 +21,13 @@
 #  will usually cleanly exit.
 #
 #
-DIR=`dirname $0`
-LOG=/tmp/`basename $0`.$$
-DB_BENCH="$DIR/../db_bench";
+DIR=$(dirname $0)
+LOG=/tmp/$(basename $0).$$
+DB_BENCH="$DIR/../db_bench"
 PFLAG=${DIR}/pflag
 
 usage() {
-    cat <<HELP; exit
+	cat << HELP
 
 Usage: $0  [-h]
 
@@ -52,44 +52,44 @@ variables:
 See the code for more info
 
 HELP
+	exit
 
 }
 
-[ ! -x ${DB_BENCH} ] && echo "WARNING: ${DB_BENCH} doesn't exist, abort!" && exit -1;
+[ ! -x ${DB_BENCH} ] && echo "WARNING: ${DB_BENCH} doesn't exist, abort!" && exit -1
 
-[ "x$1" = "x-h" ] && usage;
+[ "x$1" = "x-h" ] && usage
 
 trap 'rm -f ${LOG}; kill ${PID}; echo "Interrupted, exiting";' 1 2 3 15
 
-touch $LOG;
+touch $LOG
 
 : ${bs:=16384}
 : ${ztype:=zlib}
 : ${benches:=readwhilewriting}
-: ${reads:=$((1*1024*1024))};
+: ${reads:=$((1 * 1024 * 1024))}
 : ${threads:=8}
 : ${vsize:=2000}
 : ${comp:=0.5}
 : ${num:=10000}
-: ${cs:=$((1*1024*1024*1024))};
+: ${cs:=$((1 * 1024 * 1024 * 1024))}
 
-DEBUG=1    #Set to 0 to remove chattiness 
-
+DEBUG=1 #Set to 0 to remove chattiness
 
 if [ "x$DEBUG" != "x" ]; then
-  #
-  #NOTE: under some circumstances, --use_existing_db may leave LOCK files under ${TMPDIR}/rocksdb/*
-  #cleanup the dir and re-run
-  #
-  echo DEBUG: Will run $DB_BENCH --block_size=$bs --compression_type=$ztype --benchmarks="$benches" --reads="$reads" --threads="$threads" --cache_size=$cs  --value_size=$vsize --compression_ratio=$comp --num=$num --use_existing_db 
+	#
+	#NOTE: under some circumstances, --use_existing_db may leave LOCK files under ${TMPDIR}/rocksdb/*
+	#cleanup the dir and re-run
+	#
+	echo DEBUG: Will run $DB_BENCH --block_size=$bs --compression_type=$ztype --benchmarks="$benches" --reads="$reads" --threads="$threads" --cache_size=$cs --value_size=$vsize --compression_ratio=$comp --num=$num --use_existing_db
 
 fi
 
-$DB_BENCH --block_size=$bs --compression_type=$ztype --benchmarks="$benches" --reads="$reads" --threads="$threads" --cache_size=$cs  --value_size=$vsize --compression_ratio=$comp --num=$num --use_existing_db >$LOG 2>&1 &
+$DB_BENCH --block_size=$bs --compression_type=$ztype --benchmarks="$benches" --reads="$reads" --threads="$threads" --cache_size=$cs --value_size=$vsize --compression_ratio=$comp --num=$num --use_existing_db > $LOG 2>&1 &
 
 if [ $? -ne 0 ]; then
-  warn "WARNING: ${DB_BENCH} did not launch successfully! Abort!";
-  exit;
+	warn "WARNING: ${DB_BENCH} did not launch successfully! Abort!"
+	exit
 fi
 PID=$!
 
@@ -99,4 +99,4 @@ PID=$!
 #
 ${PFLAG} -p $PID -v
 
-rm -f $LOG;
+rm -f $LOG

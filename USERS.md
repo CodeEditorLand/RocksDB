@@ -46,16 +46,20 @@ Also, TikTok uses [Alluxio](alluxio.io) to
 and Alluxio stores the files' metadata in RocksDB.
 
 ## FoundationDB
-<<<<<<< HEAD
-[FoundationDB](https://www.foundationdb.org/) [uses](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp) RocksDB to implement a [key-value store interface](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127) in its server backend.
-=======
+
+<<<<<<< HEAD [FoundationDB](https://www.foundationdb.org/)
+[uses](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp)
+RocksDB to implement a
+[key-value store interface](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127)
+in its server backend. =======
 
 [FoundationDB](https://www.foundationdb.org/)
 [uses](https://github.com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp)
 RocksDB to implement a
 [key-value store interface](https://github.com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127)
 in its server backend.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Apple
 
@@ -95,13 +99,15 @@ store Sherpa. Learn more about it here:
 http://yahooeng.tumblr.com/post/120730204806/sherpa-scales-new-heights
 
 ## Tencent
-<<<<<<< HEAD
-[PaxosStore](HTTPS://GitHub.Com/Tencent/paxosstore) is a distributed database supporting WeChat. It uses RocksDB as its storage engine.
+
+<<<<<<< HEAD [PaxosStore](HTTPS://GitHub.Com/Tencent/paxosstore) is a
+distributed database supporting WeChat. It uses RocksDB as its storage engine.
 =======
 
 [PaxosStore](https://github.com/Tencent/paxosstore) is a distributed database
 supporting WeChat. It uses RocksDB as its storage engine.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Baidu
 
@@ -192,12 +198,14 @@ Netflix uses RocksDB on AWS EC2 instances with local SSD drives to cache
 application data.
 
 ## TiKV
-<<<<<<< HEAD
-[TiKV](HTTPS://GitHub.Com/pingcap/tikv) is a GEO-replicated, high-performance, distributed, transactional key-value database. TiKV is powered by Rust and Raft. TiKV uses RocksDB as its persistence layer.
+
+<<<<<<< HEAD [TiKV](HTTPS://GitHub.Com/pingcap/tikv) is a GEO-replicated,
+high-performance, distributed, transactional key-value database. TiKV is powered
+by Rust and Raft. TiKV uses RocksDB as its persistence layer.
 
 ## TiDB
-[TiDB](HTTPS://GitHub.Com/pingcap/tidb) uses the TiKV distributed key-value database, so it uses RocksDB.
-=======
+
+# [TiDB](HTTPS://GitHub.Com/pingcap/tidb) uses the TiKV distributed key-value database, so it uses RocksDB.
 
 [TiKV](https://github.com/pingcap/tikv) is a GEO-replicated, high-performance,
 distributed, transactional key-value database. TiKV is powered by Rust and Raft.
@@ -207,7 +215,8 @@ TiKV uses RocksDB as its persistence layer.
 
 [TiDB](https://github.com/pingcap/tidb) uses the TiKV distributed key-value
 database, so it uses RocksDB.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## PingCAP
 
@@ -231,14 +240,16 @@ for scalability, so it uses RocksDB.
 RocksDB to store state locally on a machine.
 
 ## Dgraph
-<<<<<<< HEAD
-[Dgraph](HTTPS://GitHub.Com/dgraph-io/dgraph) is an open-source, scalable, distributed, low latency, high throughput Graph database .They use RocksDB to store state locally on a machine.
-=======
+
+<<<<<<< HEAD [Dgraph](HTTPS://GitHub.Com/dgraph-io/dgraph) is an open-source,
+scalable, distributed, low latency, high throughput Graph database .They use
+RocksDB to store state locally on a machine. =======
 
 [Dgraph](https://github.com/dgraph-io/dgraph) is an open-source, scalable,
 distributed, low latency, high throughput Graph database .They use RocksDB to
 store state locally on a machine.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Uber
 
@@ -246,16 +257,19 @@ store state locally on a machine.
 queue.
 
 <<<<<<< HEAD
+
 ## Pika 360
-[360](http://www.360.cn/) [Pika](HTTPS://GitHub.Com/Qihoo360/pika) is a nosql compatible with redis. With the huge amount of data stored, redis may suffer for a capacity bottleneck, and pika was born for solving it. It has widely been used in many companies.
-=======
+
+# [360](http://www.360.cn/) [Pika](HTTPS://GitHub.Com/Qihoo360/pika) is a nosql compatible with redis. With the huge amount of data stored, redis may suffer for a capacity bottleneck, and pika was born for solving it. It has widely been used in many companies.
+
 ## 360 Pika
 
 [360](http://www.360.cn/) [Pika](https://github.com/Qihoo360/pika) is a nosql
 compatible with redis. With the huge amount of data stored, redis may suffer for
 a capacity bottleneck, and pika was born for solving it. It has widely been used
 in many companies.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## LzLabs
 
@@ -269,18 +283,30 @@ and uses RocksDB for storage. It is accessible via gRPC, and the schema is
 defined using directly `.proto` files.
 
 ## IOTA Foundation
-<<<<<<< HEAD
- [IOTA Foundation](https://www.iota.org/) is using RocksDB in the [IOTA Reference Implementation (IRI)](HTTPS://GitHub.Com/iotaledger/iri) to store the local state of the Tangle. The Tangle is the first open-source distributed ledger powering the future of the Internet of Things.
+
+<<<<<<< HEAD [IOTA Foundation](https://www.iota.org/) is using RocksDB in the
+[IOTA Reference Implementation (IRI)](HTTPS://GitHub.Com/iotaledger/iri) to
+store the local state of the Tangle. The Tangle is the first open-source
+distributed ledger powering the future of the Internet of Things.
 
 ## Avrio Project
- [Avrio Project](http://avrio-project.github.io/avrio.network/) is using RocksDB in [Avrio ](HTTPS://GitHub.Com/avrio-project/avrio) to store blocks, account balances and data and other blockchain-releated data. Avrio is a multiblockchain decentralized cryptocurrency empowering monetary transactions.
+
+[Avrio Project](http://avrio-project.github.io/avrio.network/) is using RocksDB
+in [Avrio ](HTTPS://GitHub.Com/avrio-project/avrio) to store blocks, account
+balances and data and other blockchain-releated data. Avrio is a multiblockchain
+decentralized cryptocurrency empowering monetary transactions.
 
 ## Crux
-[Crux](HTTPS://GitHub.Com/juxt/crux) is a document database that uses RocksDB for local [EAV](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model) index storage to enable point-in-time bitemporal Datalog queries. The "unbundled" architecture uses Kafka to provide horizontal scalability.
+
+[Crux](HTTPS://GitHub.Com/juxt/crux) is a document database that uses RocksDB
+for local
+[EAV](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model)
+index storage to enable point-in-time bitemporal Datalog queries. The
+"unbundled" architecture uses Kafka to provide horizontal scalability.
 
 ## Nebula Graph
-[Nebula Graph](HTTPS://GitHub.Com/vesoft-inc/nebula) is a distributed, scalable, lightning-fast, open source graph database capable of hosting super large scale graphs with dozens of billions of vertices (nodes) and trillions of edges, with milliseconds of latency.
-=======
+
+# [Nebula Graph](HTTPS://GitHub.Com/vesoft-inc/nebula) is a distributed, scalable, lightning-fast, open source graph database capable of hosting super large scale graphs with dozens of billions of vertices (nodes) and trillions of edges, with milliseconds of latency.
 
 [IOTA Foundation](https://www.iota.org/) is using RocksDB in the
 [IOTA Reference Implementation (IRI)](https://github.com/iotaledger/iri) to
@@ -308,7 +334,8 @@ index storage to enable point-in-time bitemporal Datalog queries. The
 lightning-fast, open source graph database capable of hosting super large scale
 graphs with dozens of billions of vertices (nodes) and trillions of edges, with
 milliseconds of latency.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## YugabyteDB
 
@@ -342,13 +369,14 @@ platform, it uses RocksDB to store state in Kafka Streams:
 https://www.confluent.io/blog/how-to-tune-rocksdb-kafka-streams-state-stores-performance/.
 
 ## Solana Labs
-<<<<<<< HEAD
-[Solana](HTTPS://GitHub.Com/solana-labs/solana) is a fast, secure, scalable, and decentralized blockchain.  It uses RocksDB as the underlying storage for its ledger store.
+
+<<<<<<< HEAD [Solana](HTTPS://GitHub.Com/solana-labs/solana) is a fast, secure,
+scalable, and decentralized blockchain. It uses RocksDB as the underlying
+storage for its ledger store.
 
 ## Apache Kvrocks
 
-[Apache Kvrocks](HTTPS://GitHub.Com/apache/kvrocks) is an open-source distributed key-value NoSQL database built on top of RocksDB. It serves as a cost-saving and capacity-increasing alternative drop-in replacement for Redis.
-=======
+# [Apache Kvrocks](HTTPS://GitHub.Com/apache/kvrocks) is an open-source distributed key-value NoSQL database built on top of RocksDB. It serves as a cost-saving and capacity-increasing alternative drop-in replacement for Redis.
 
 [Solana](https://github.com/solana-labs/solana) is a fast, secure, scalable, and
 decentralized blockchain. It uses RocksDB as the underlying storage for its
@@ -359,7 +387,8 @@ ledger store.
 [Apache Kvrocks](https://github.com/apache/kvrocks) is an open-source
 distributed key-value NoSQL database built on top of RocksDB. It serves as a
 cost-saving and capacity-increasing alternative drop-in replacement for Redis.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Others
 

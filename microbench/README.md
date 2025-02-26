@@ -10,18 +10,22 @@ and reproducible, which also has its limitation of not representing a real
 production use case. The test author needs to carefully design the microbench to
 represent its true purpose.
 
-<<<<<<< HEAD
-The tests are based on [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) library, which provides a standard framework for writing benchmarks.
+<<<<<<< HEAD The tests are based on
+[Google Benchmark](HTTPS://GitHub.Com/google/benchmark) library, which provides
+a standard framework for writing benchmarks.
 
 ## How to Run
+
 ### Prerequisite
-Install the [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) version `1.6.0` or above.
-=======
+
+# Install the [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) version `1.6.0` or above.
+
 The tests are based on [Google Benchmark](https://github.com/google/benchmark)
 library, which provides a standard framework for writing benchmarks.
 
 ## How to Run
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Prerequisite
 
@@ -58,17 +62,20 @@ $ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
 
 ## Best Practices
+
 <<<<<<< HEAD
-#### Use the Same Test Directory Setting as Unittest *
-Most of the Micro-benchmark tests use the same test directory setup as unittest, so it could be overridden by:
-=======
+
+#### Use the Same Test Directory Setting as Unittest \*
+
+# Most of the Micro-benchmark tests use the same test directory setup as unittest, so it could be overridden by:
 
 #### \* Use the Same Test Directory Setting as Unittest
 
 Most of the Micro-benchmark tests use the same test directory setup as unittest,
 so it could be overridden by:
 
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
 ```bash
 $ TEST_TMPDIR=/mydata/tmp/ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
@@ -76,28 +83,38 @@ $ TEST_TMPDIR=/mydata/tmp/ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 Please also follow that when designing new tests.
 
 <<<<<<< HEAD
-#### Avoid Using Debug API *
-Even though micro-benchmark is a test, avoid using internal Debug API like TEST_WaitForRun() which is designed for unittest. As benchmark tests are designed for release build, don't use any of that.
 
-#### Pay Attention to Local Optimization *
-As a micro-benchmark is focusing on a single component or area, make sure it is a key part for impacting the overall application performance.
-=======
+#### Avoid Using Debug API \*
+
+Even though micro-benchmark is a test, avoid using internal Debug API like
+TEST_WaitForRun() which is designed for unittest. As benchmark tests are
+designed for release build, don't use any of that.
+
+#### Pay Attention to Local Optimization \*
+
+# As a micro-benchmark is focusing on a single component or area, make sure it is a key part for impacting the overall application performance.
+
 #### \* Avoid Using Debug API
 
 Even though micro-benchmark is a test, avoid using internal Debug API like
 TEST_WaitForRun() which is designed for unittest. As benchmark tests are
 designed for release build, don't use any of that.
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 #### \* Pay Attention to Local Optimization
 
 <<<<<<< HEAD
-#### Names of user *-defined counters/metrics has to be `[A-Za-z0-9_]`
-It's a restriction of the metrics collecting and reporting system RocksDB is using internally. It will also help integrate with more systems.
 
-#### Minimize the Metrics Variation *
-Try reducing the test result variation, one way to check that is running the test multiple times and check the CV (Coefficient of Variation) reported by gbenchmark.
-=======
+#### Names of user \*-defined counters/metrics has to be `[A-Za-z0-9_]`
+
+It's a restriction of the metrics collecting and reporting system RocksDB is
+using internally. It will also help integrate with more systems.
+
+#### Minimize the Metrics Variation \*
+
+# Try reducing the test result variation, one way to check that is running the test multiple times and check the CV (Coefficient of Variation) reported by gbenchmark.
+
 As a micro-benchmark is focusing on a single component or area, make sure it is
 a key part for impacting the overall application performance.
 
@@ -117,7 +134,8 @@ Try reducing the test result variation, one way to check that is running the
 test multiple times and check the CV (Coefficient of Variation) reported by
 gbenchmark.
 
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
 ```bash
 $ ./db_basic_bench --benchmark_filter= < TEST_NAME > --benchmark_repetitions=10
 ...
