@@ -6,10 +6,10 @@ set -e
 NUM=10000000
 
 if [ $# -eq 1 ]; then
-    DATA_DIR=$1
+	DATA_DIR=$1
 elif [ $# -eq 2 ]; then
-    DATA_DIR=$1
-    STAT_FILE=$2
+	DATA_DIR=$1
+	STAT_FILE=$2
 fi
 
 # On the production build servers, set data and stat
@@ -19,8 +19,8 @@ DATA_DIR=${DATA_DIR:-$(mktemp -t -d rocksdb_XXXX)}
 STAT_FILE=${STAT_FILE:-$(mktemp -t -u rocksdb_test_stats_XXXX)}
 
 function cleanup {
-    rm -rf $DATA_DIR
-    rm -f $STAT_FILE.*
+	rm -rf $DATA_DIR
+	rm -f $STAT_FILE.*
 }
 
 trap cleanup EXIT
@@ -29,225 +29,225 @@ make release
 
 # measure fillseq + fill up the DB for overwrite benchmark
 ./db_bench \
-    --benchmarks=fillseq \
-    --db=$DATA_DIR \
-    --use_existing_db=0 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --writes=$NUM \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 >${STAT_FILE}.fillseq
+	--benchmarks=fillseq \
+	--db=$DATA_DIR \
+	--use_existing_db=0 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--writes=$NUM \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 > ${STAT_FILE}.fillseq
 
 # measure overwrite performance
 ./db_bench \
-    --benchmarks=overwrite \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --writes=$((NUM / 10)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=8 >${STAT_FILE}.overwrite
+	--benchmarks=overwrite \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--writes=$((NUM / 10)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=8 > ${STAT_FILE}.overwrite
 
 # fill up the db for readrandom benchmark (1GB total size)
 ./db_bench \
-    --benchmarks=fillseq \
-    --db=$DATA_DIR \
-    --use_existing_db=0 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --writes=$NUM \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=1 >/dev/null
+	--benchmarks=fillseq \
+	--db=$DATA_DIR \
+	--use_existing_db=0 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--writes=$NUM \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=1 > /dev/null
 
 # measure readrandom with 6GB block cache
 ./db_bench \
-    --benchmarks=readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --reads=$((NUM / 5)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readrandom
+	--benchmarks=readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--reads=$((NUM / 5)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readrandom
 
 # measure readrandom with 6GB block cache and tailing iterator
 ./db_bench \
-    --benchmarks=readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --reads=$((NUM / 5)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --use_tailing_iterator=1 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readrandomtailing
+	--benchmarks=readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--reads=$((NUM / 5)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--use_tailing_iterator=1 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readrandomtailing
 
 # measure readrandom with 100MB block cache
 ./db_bench \
-    --benchmarks=readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --reads=$((NUM / 5)) \
-    --cache_size=104857600 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readrandomsmallblockcache
+	--benchmarks=readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--reads=$((NUM / 5)) \
+	--cache_size=104857600 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readrandomsmallblockcache
 
 # measure readrandom with 8k data in memtable
 ./db_bench \
-    --benchmarks=overwrite,readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$NUM \
-    --reads=$((NUM / 5)) \
-    --writes=512 \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --write_buffer_size=1000000000 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readrandom_mem_sst
+	--benchmarks=overwrite,readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$NUM \
+	--reads=$((NUM / 5)) \
+	--writes=512 \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--write_buffer_size=1000000000 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readrandom_mem_sst
 
 # fill up the db for readrandom benchmark with filluniquerandom (1GB total size)
 ./db_bench \
-    --benchmarks=filluniquerandom \
-    --db=$DATA_DIR \
-    --use_existing_db=0 \
-    --bloom_bits=10 \
-    --num=$((NUM / 4)) \
-    --writes=$((NUM / 4)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=1 >/dev/null
+	--benchmarks=filluniquerandom \
+	--db=$DATA_DIR \
+	--use_existing_db=0 \
+	--bloom_bits=10 \
+	--num=$((NUM / 4)) \
+	--writes=$((NUM / 4)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=1 > /dev/null
 
 # dummy test just to compact the data
 ./db_bench \
-    --benchmarks=readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$((NUM / 1000)) \
-    --reads=$((NUM / 1000)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >/dev/null
+	--benchmarks=readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$((NUM / 1000)) \
+	--reads=$((NUM / 1000)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > /dev/null
 
 # measure readrandom after load with filluniquerandom with 6GB block cache
 ./db_bench \
-    --benchmarks=readrandom \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$((NUM / 4)) \
-    --reads=$((NUM / 4)) \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --disable_auto_compactions=1 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readrandom_filluniquerandom
+	--benchmarks=readrandom \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$((NUM / 4)) \
+	--reads=$((NUM / 4)) \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--disable_auto_compactions=1 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readrandom_filluniquerandom
 
 # measure readwhilewriting after load with filluniquerandom with 6GB block cache
 ./db_bench \
-    --benchmarks=readwhilewriting \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --bloom_bits=10 \
-    --num=$((NUM / 4)) \
-    --reads=$((NUM / 4)) \
-    --benchmark_write_rate_limit=$((110 * 1024)) \
-    --write_buffer_size=100000000 \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=16 >${STAT_FILE}.readwhilewriting
+	--benchmarks=readwhilewriting \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--bloom_bits=10 \
+	--num=$((NUM / 4)) \
+	--reads=$((NUM / 4)) \
+	--benchmark_write_rate_limit=$((110 * 1024)) \
+	--write_buffer_size=100000000 \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=16 > ${STAT_FILE}.readwhilewriting
 
 # measure memtable performance -- none of the data gets flushed to disk
 ./db_bench \
-    --benchmarks=fillrandom,readrandom, \
-    --db=$DATA_DIR \
-    --use_existing_db=0 \
-    --num=$((NUM / 10)) \
-    --reads=$NUM \
-    --cache_size=6442450944 \
-    --cache_numshardbits=6 \
-    --table_cache_numshardbits=4 \
-    --write_buffer_size=1000000000 \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --value_size=10 \
-    --threads=16 >${STAT_FILE}.memtablefillreadrandom
+	--benchmarks=fillrandom,readrandom, \
+	--db=$DATA_DIR \
+	--use_existing_db=0 \
+	--num=$((NUM / 10)) \
+	--reads=$NUM \
+	--cache_size=6442450944 \
+	--cache_numshardbits=6 \
+	--table_cache_numshardbits=4 \
+	--write_buffer_size=1000000000 \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--value_size=10 \
+	--threads=16 > ${STAT_FILE}.memtablefillreadrandom
 
 common_in_mem_args="--db=/dev/shm/rocksdb \
     --num_levels=6 \
@@ -279,103 +279,103 @@ common_in_mem_args="--db=/dev/shm/rocksdb \
 
 # prepare a in-memory DB with 50M keys, total DB size is ~6G
 ./db_bench \
-    $common_in_mem_args \
-    --statistics=0 \
-    --max_background_compactions=16 \
-    --max_background_flushes=16 \
-    --benchmarks=filluniquerandom \
-    --use_existing_db=0 \
-    --num=52428800 \
-    --threads=1 >/dev/null
+	$common_in_mem_args \
+	--statistics=0 \
+	--max_background_compactions=16 \
+	--max_background_flushes=16 \
+	--benchmarks=filluniquerandom \
+	--use_existing_db=0 \
+	--num=52428800 \
+	--threads=1 > /dev/null
 
 # Readwhilewriting
 ./db_bench \
-    $common_in_mem_args \
-    --statistics=1 \
-    --max_background_compactions=4 \
-    --max_background_flushes=0 \
-    --benchmarks=readwhilewriting --use_existing_db=1 \
-    --duration=600 \
-    --threads=32 \
-    --benchmark_write_rate_limit=9502720 >${STAT_FILE}.readwhilewriting_in_ram
+	$common_in_mem_args \
+	--statistics=1 \
+	--max_background_compactions=4 \
+	--max_background_flushes=0 \
+	--benchmarks=readwhilewriting --use_existing_db=1 \
+	--duration=600 \
+	--threads=32 \
+	--benchmark_write_rate_limit=9502720 > ${STAT_FILE}.readwhilewriting_in_ram
 
 # Seekrandomwhilewriting
 ./db_bench \
-    $common_in_mem_args \
-    --statistics=1 \
-    --max_background_compactions=4 \
-    --max_background_flushes=0 \
-    --benchmarks=seekrandomwhilewriting \
-    --use_existing_db=1 \
-    --use_tailing_iterator=1 \
-    --duration=600 \
-    --threads=32 \
-    --benchmark_write_rate_limit=9502720 >${STAT_FILE}.seekwhilewriting_in_ram
+	$common_in_mem_args \
+	--statistics=1 \
+	--max_background_compactions=4 \
+	--max_background_flushes=0 \
+	--benchmarks=seekrandomwhilewriting \
+	--use_existing_db=1 \
+	--use_tailing_iterator=1 \
+	--duration=600 \
+	--threads=32 \
+	--benchmark_write_rate_limit=9502720 > ${STAT_FILE}.seekwhilewriting_in_ram
 
 # measure fillseq with bunch of column families
 ./db_bench \
-    --benchmarks=fillseq \
-    --num_column_families=500 \
-    --write_buffer_size=1048576 \
-    --db=$DATA_DIR \
-    --use_existing_db=0 \
-    --num=$NUM \
-    --writes=$NUM \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 >${STAT_FILE}.fillseq_lots_column_families
+	--benchmarks=fillseq \
+	--num_column_families=500 \
+	--write_buffer_size=1048576 \
+	--db=$DATA_DIR \
+	--use_existing_db=0 \
+	--num=$NUM \
+	--writes=$NUM \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 > ${STAT_FILE}.fillseq_lots_column_families
 
 # measure overwrite performance with bunch of column families
 ./db_bench \
-    --benchmarks=overwrite \
-    --num_column_families=500 \
-    --write_buffer_size=1048576 \
-    --db=$DATA_DIR \
-    --use_existing_db=1 \
-    --num=$NUM \
-    --writes=$((NUM / 10)) \
-    --open_files=55000 \
-    --statistics=1 \
-    --histogram=1 \
-    --disable_wal=1 \
-    --sync=0 \
-    --threads=8 >${STAT_FILE}.overwrite_lots_column_families
+	--benchmarks=overwrite \
+	--num_column_families=500 \
+	--write_buffer_size=1048576 \
+	--db=$DATA_DIR \
+	--use_existing_db=1 \
+	--num=$NUM \
+	--writes=$((NUM / 10)) \
+	--open_files=55000 \
+	--statistics=1 \
+	--histogram=1 \
+	--disable_wal=1 \
+	--sync=0 \
+	--threads=8 > ${STAT_FILE}.overwrite_lots_column_families
 
 # send data to ods
 function send_to_ods {
-    key="$1"
-    value="$2"
+	key="$1"
+	value="$2"
 
-    if [ -z $JENKINS_HOME ]; then
-        # running on devbox, just print out the values
-        echo $1 $2
-        return
-    fi
+	if [ -z $JENKINS_HOME ]; then
+		# running on devbox, just print out the values
+		echo $1 $2
+		return
+	fi
 
-    if [ -z "$value" ]; then
-        echo >&2 "ERROR: Key $key doesn't have a value."
-        return
-    fi
-    curl --silent "https://www.facebook.com/intern/agent/ods_set.php?entity=rocksdb_build&key=$key&value=$value" \
-        --connect-timeout 60
+	if [ -z "$value" ]; then
+		echo >&2 "ERROR: Key $key doesn't have a value."
+		return
+	fi
+	curl --silent "https://www.facebook.com/intern/agent/ods_set.php?entity=rocksdb_build&key=$key&value=$value" \
+		--connect-timeout 60
 }
 
 function send_benchmark_to_ods {
-    bench="$1"
-    bench_key="$2"
-    file="$3"
+	bench="$1"
+	bench_key="$2"
+	file="$3"
 
-    QPS=$(grep $bench $file | awk '{print $5}')
-    P50_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $3}')
-    P75_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $5}')
-    P99_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $7}')
+	QPS=$(grep $bench $file | awk '{print $5}')
+	P50_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $3}')
+	P75_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $5}')
+	P99_MICROS=$(grep $bench $file -A 6 | grep "Percentiles" | awk '{print $7}')
 
-    send_to_ods rocksdb.build.$bench_key.qps $QPS
-    send_to_ods rocksdb.build.$bench_key.p50_micros $P50_MICROS
-    send_to_ods rocksdb.build.$bench_key.p75_micros $P75_MICROS
-    send_to_ods rocksdb.build.$bench_key.p99_micros $P99_MICROS
+	send_to_ods rocksdb.build.$bench_key.qps $QPS
+	send_to_ods rocksdb.build.$bench_key.p50_micros $P50_MICROS
+	send_to_ods rocksdb.build.$bench_key.p75_micros $P75_MICROS
+	send_to_ods rocksdb.build.$bench_key.p99_micros $P99_MICROS
 }
 
 send_benchmark_to_ods overwrite overwrite $STAT_FILE.overwrite

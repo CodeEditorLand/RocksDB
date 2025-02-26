@@ -10,14 +10,14 @@ echo "This script configures CentOS with everything needed to build and run Rock
 yum update -y && yum install epel-release -y
 
 yum install -y \
-  wget \
-  gcc-c++ \
-  snappy snappy-devel \
-  zlib zlib-devel \
-  bzip2 bzip2-devel \
-  lz4-devel \
-  libasan \
-  gflags
+	wget \
+	gcc-c++ \
+	snappy snappy-devel \
+	zlib zlib-devel \
+	bzip2 bzip2-devel \
+	lz4-devel \
+	libasan \
+	gflags
 
 mkdir -pv /usr/local/rocksdb-${ROCKSDB_VERSION}
 ln -sfT /usr/local/rocksdb-${ROCKSDB_VERSION} /usr/local/rocksdb

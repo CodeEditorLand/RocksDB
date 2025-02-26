@@ -23,42 +23,42 @@ GLIBC_LIBS=" -L $GLIBC_BASE/lib"
 GLIBC_LIBS+=" -B$GLIBC_BASE/lib"
 
 if test -z $PIC_BUILD; then
-  MAYBE_PIC=
+	MAYBE_PIC=
 else
-  MAYBE_PIC=_pic
+	MAYBE_PIC=_pic
 fi
 
 if ! test $ROCKSDB_DISABLE_SNAPPY; then
-  # snappy
-  SNAPPY_INCLUDE=" -I $SNAPPY_BASE/include/"
-  SNAPPY_LIBS=" $SNAPPY_BASE/lib/libsnappy${MAYBE_PIC}.a"
-  CFLAGS+=" -DSNAPPY"
+	# snappy
+	SNAPPY_INCLUDE=" -I $SNAPPY_BASE/include/"
+	SNAPPY_LIBS=" $SNAPPY_BASE/lib/libsnappy${MAYBE_PIC}.a"
+	CFLAGS+=" -DSNAPPY"
 fi
 
 if ! test $ROCKSDB_DISABLE_ZLIB; then
-  # location of zlib headers and libraries
-  ZLIB_INCLUDE=" -I $ZLIB_BASE/include/"
-  ZLIB_LIBS=" $ZLIB_BASE/lib/libz${MAYBE_PIC}.a"
-  CFLAGS+=" -DZLIB"
+	# location of zlib headers and libraries
+	ZLIB_INCLUDE=" -I $ZLIB_BASE/include/"
+	ZLIB_LIBS=" $ZLIB_BASE/lib/libz${MAYBE_PIC}.a"
+	CFLAGS+=" -DZLIB"
 fi
 
 if ! test $ROCKSDB_DISABLE_BZIP; then
-  # location of bzip headers and libraries
-  BZIP_INCLUDE=" -I $BZIP2_BASE/include/"
-  BZIP_LIBS=" $BZIP2_BASE/lib/libbz2${MAYBE_PIC}.a"
-  CFLAGS+=" -DBZIP2"
+	# location of bzip headers and libraries
+	BZIP_INCLUDE=" -I $BZIP2_BASE/include/"
+	BZIP_LIBS=" $BZIP2_BASE/lib/libbz2${MAYBE_PIC}.a"
+	CFLAGS+=" -DBZIP2"
 fi
 
 if ! test $ROCKSDB_DISABLE_LZ4; then
-  LZ4_INCLUDE=" -I $LZ4_BASE/include/"
-  LZ4_LIBS=" $LZ4_BASE/lib/liblz4${MAYBE_PIC}.a"
-  CFLAGS+=" -DLZ4"
+	LZ4_INCLUDE=" -I $LZ4_BASE/include/"
+	LZ4_LIBS=" $LZ4_BASE/lib/liblz4${MAYBE_PIC}.a"
+	CFLAGS+=" -DLZ4"
 fi
 
 if ! test $ROCKSDB_DISABLE_ZSTD; then
-  ZSTD_INCLUDE=" -I $ZSTD_BASE/include/"
-  ZSTD_LIBS=" $ZSTD_BASE/lib/libzstd${MAYBE_PIC}.a"
-  CFLAGS+=" -DZSTD -DZSTD_STATIC_LINKING_ONLY"
+	ZSTD_INCLUDE=" -I $ZSTD_BASE/include/"
+	ZSTD_LIBS=" $ZSTD_BASE/lib/libzstd${MAYBE_PIC}.a"
+	CFLAGS+=" -DZSTD -DZSTD_STATIC_LINKING_ONLY"
 fi
 
 # location of gflags headers and libraries
@@ -112,40 +112,40 @@ CLANG_ANALYZER="$CLANG_BIN/clang++"
 CLANG_SCAN_BUILD="$CLANG_BIN/scan-build"
 
 if [ -z "$USE_CLANG" ]; then
-  # gcc
-  CC="$GCC_BASE/bin/gcc"
-  CXX="$GCC_BASE/bin/g++"
-  AR="$GCC_BASE/bin/gcc-ar"
+	# gcc
+	CC="$GCC_BASE/bin/gcc"
+	CXX="$GCC_BASE/bin/g++"
+	AR="$GCC_BASE/bin/gcc-ar"
 
-  CFLAGS+=" -B$BINUTILS -nostdinc -nostdlib"
-  CFLAGS+=" -I$GCC_BASE/include"
-  CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/include"
-  CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/install-tools/include"
-  CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/include-fixed/"
-  CFLAGS+=" -isystem $LIBGCC_INCLUDE"
-  CFLAGS+=" -isystem $GLIBC_INCLUDE"
-  CFLAGS+=" -I$GLIBC_INCLUDE"
-  CFLAGS+=" -I$LIBGCC_BASE/include"
-  CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/"
-  CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/x86_64-facebook-linux/"
-  CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/backward"
-  CFLAGS+=" -isystem $GLIBC_INCLUDE -I$GLIBC_INCLUDE"
-  JEMALLOC=1
+	CFLAGS+=" -B$BINUTILS -nostdinc -nostdlib"
+	CFLAGS+=" -I$GCC_BASE/include"
+	CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/include"
+	CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/install-tools/include"
+	CFLAGS+=" -isystem $GCC_BASE/lib/gcc/x86_64-redhat-linux-gnu/11.2.1/include-fixed/"
+	CFLAGS+=" -isystem $LIBGCC_INCLUDE"
+	CFLAGS+=" -isystem $GLIBC_INCLUDE"
+	CFLAGS+=" -I$GLIBC_INCLUDE"
+	CFLAGS+=" -I$LIBGCC_BASE/include"
+	CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/"
+	CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/x86_64-facebook-linux/"
+	CFLAGS+=" -I$LIBGCC_BASE/include/c++/11.x/backward"
+	CFLAGS+=" -isystem $GLIBC_INCLUDE -I$GLIBC_INCLUDE"
+	JEMALLOC=1
 else
-  # clang
-  CLANG_INCLUDE="$CLANG_LIB/clang/stable/include"
-  CC="$CLANG_BIN/clang"
-  CXX="$CLANG_BIN/clang++"
-  AR="$CLANG_BIN/llvm-ar"
+	# clang
+	CLANG_INCLUDE="$CLANG_LIB/clang/stable/include"
+	CC="$CLANG_BIN/clang"
+	CXX="$CLANG_BIN/clang++"
+	AR="$CLANG_BIN/llvm-ar"
 
-  CFLAGS+=" -B$BINUTILS -nostdinc -nostdlib"
-  CFLAGS+=" -isystem $LIBGCC_BASE/include/c++/trunk "
-  CFLAGS+=" -isystem $LIBGCC_BASE/include/c++/trunk/x86_64-facebook-linux "
-  CFLAGS+=" -isystem $GLIBC_INCLUDE"
-  CFLAGS+=" -isystem $LIBGCC_INCLUDE"
-  CFLAGS+=" -isystem $CLANG_INCLUDE"
-  CFLAGS+=" -Wno-expansion-to-defined "
-  CXXFLAGS="-nostdinc++"
+	CFLAGS+=" -B$BINUTILS -nostdinc -nostdlib"
+	CFLAGS+=" -isystem $LIBGCC_BASE/include/c++/trunk "
+	CFLAGS+=" -isystem $LIBGCC_BASE/include/c++/trunk/x86_64-facebook-linux "
+	CFLAGS+=" -isystem $GLIBC_INCLUDE"
+	CFLAGS+=" -isystem $LIBGCC_INCLUDE"
+	CFLAGS+=" -isystem $CLANG_INCLUDE"
+	CFLAGS+=" -Wno-expansion-to-defined "
+	CXXFLAGS="-nostdinc++"
 fi
 
 KERNEL_HEADERS_INCLUDE="$KERNEL_HEADERS_BASE/include"
