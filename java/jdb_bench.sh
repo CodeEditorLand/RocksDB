@@ -2,7 +2,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 PLATFORM=64
 if [ $(getconf LONG_BIT) != "64" ]; then
-  PLATFORM=32
+	PLATFORM=32
 fi
 
 ROCKS_JAR=$(find target -name rocksdbjni*.jar)

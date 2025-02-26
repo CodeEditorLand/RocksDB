@@ -1,11 +1,11 @@
 # RocksDB Get Performance Benchmarks
 
-<<<<<<< HEAD
-Results associated with [Improve Java API `get()` performance by reducing copies](HTTPS://GitHub.Com/facebook/rocksdb/pull/10970)
-=======
-Results associated with
+<<<<<<< HEAD Results associated with
+[Improve Java API `get()` performance by reducing copies](HTTPS://GitHub.Com/facebook/rocksdb/pull/10970)
+======= Results associated with
 [Improve Java API `get()` performance by reducing copies](https://github.com/facebook/rocksdb/pull/10970)
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Build/Run
 
@@ -193,12 +193,12 @@ The performance improvement is real.
 
 # Put Performance Benchmarks
 
-<<<<<<< HEAD
-Results associated with [Java API consistency between RocksDB.put() , .merge() and Transaction.put() , .merge()](HTTPS://GitHub.Com/facebook/rocksdb/pull/11019)
-=======
-Results associated with
+<<<<<<< HEAD Results associated with
+[Java API consistency between RocksDB.put() , .merge() and Transaction.put() , .merge()](HTTPS://GitHub.Com/facebook/rocksdb/pull/11019)
+======= Results associated with
 [Java API consistency between RocksDB.put() , .merge() and Transaction.put() , .merge()](https://github.com/facebook/rocksdb/pull/11019)
->>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 This work was not designed specifically as a performance optimization, but we
 want to confirm that it has not regressed what it has changed, and to provide a

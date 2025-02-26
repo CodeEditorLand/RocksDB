@@ -4,8 +4,8 @@
 set -e
 
 # update Alpine with latest versions
-echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >>/etc/apk/repositories
-echo '@community http://nl.alpinelinux.org/alpine/edge/community' >>/etc/apk/repositories
+echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
+echo '@community http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
 apk update
 apk upgrade
 
@@ -14,38 +14,38 @@ apk add ca-certificates
 
 # install build tools
 apk add \
-  build-base \
-  coreutils \
-  file \
-  git \
-  perl \
-  automake \
-  autoconf \
-  cmake
+	build-base \
+	coreutils \
+	file \
+	git \
+	perl \
+	automake \
+	autoconf \
+	cmake
 
 # install tool dependencies for building RocksDB static library
 apk add \
-  curl \
-  bash \
-  wget \
-  tar \
-  openssl
+	curl \
+	bash \
+	wget \
+	tar \
+	openssl
 
 # install RocksDB dependencies
 apk add \
-  snappy snappy-dev \
-  zlib zlib-dev \
-  bzip2 bzip2-dev \
-  lz4 lz4-dev \
-  zstd zstd-dev \
-  linux-headers \
-  jemalloc jemalloc-dev
+	snappy snappy-dev \
+	zlib zlib-dev \
+	bzip2 bzip2-dev \
+	lz4 lz4-dev \
+	zstd zstd-dev \
+	linux-headers \
+	jemalloc jemalloc-dev
 
 # install OpenJDK7
-apk add openjdk7 &&
-  apk add java-cacerts &&
-  rm /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts &&
-  ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts
+apk add openjdk7 \
+	&& apk add java-cacerts \
+	&& rm /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts \
+	&& ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-1.7-openjdk/jre/lib/security/cacerts
 
 # cleanup
 rm -rf /var/cache/apk/*
@@ -55,11 +55,11 @@ export JAVA_HOME=/usr/lib/jvm/java-1.7-openjdk
 export PATH=/usr/lib/jvm/java-1.7-openjdk/bin:$PATH
 
 # gflags from source
-cd /tmp &&
-  git clone -b v2.0 --single-branch https://github.com/gflags/gflags.git &&
-  cd gflags &&
-  ./configure --prefix=/usr && make && make install &&
-  rm -rf /tmp/*
+cd /tmp \
+	&& git clone -b v2.0 --single-branch https://github.com/gflags/gflags.git \
+	&& cd gflags \
+	&& ./configure --prefix=/usr && make && make install \
+	&& rm -rf /tmp/*
 
 # build rocksdb
 cd /rocksdb
