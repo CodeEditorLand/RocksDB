@@ -45,20 +45,19 @@ There are few options when compiling RocksDB:
       compression.
     - [snappy](http://google.github.io/snappy/) - a library for fast data
       compression.
-    - [zstandard](http://www.zstd.net) - Fast real-time compression algorithm.
-      =======
+    - # [zstandard](http://www.zstd.net) - Fast real-time compression algorithm.
 
 * You can link RocksDB with following compression libraries:
 
     > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
-        - [zlib](http://www.zlib.net/) - a library for data compression.
-        - [bzip2](http://www.bzip.org/) - a library for data compression.
-        - [lz4](https://github.com/lz4/lz4) - a library for extremely fast data
-          compression.
-        - [snappy](http://google.github.io/snappy/) - a library for fast data
-          compression.
-        - [zstandard](http://www.zstd.net) - Fast real-time compression algorithm.
+          - [zlib](http://www.zlib.net/) - a library for data compression.
+          - [bzip2](http://www.bzip.org/) - a library for data compression.
+          - [lz4](https://github.com/lz4/lz4) - a library for extremely fast data
+            compression.
+          - [snappy](http://google.github.io/snappy/) - a library for fast data
+            compression.
+          - [zstandard](http://www.zstd.net) - Fast real-time compression algorithm.
 
 * All our tools depend on:
 
@@ -101,10 +100,10 @@ There are few options when compiling RocksDB:
     - Upgrade your gcc to version at least 7 to get C++17 support
     - Install gflags:
 
-                  git clone https://github.com/gflags/gflags.git
-                  cd gflags
-                  git checkout v2.2.0
-                  ./configure && make && sudo make install
+                    git clone https://github.com/gflags/gflags.git
+                    cd gflags
+                    git checkout v2.2.0
+                    ./configure && make && sudo make install
 
         **Notice**: Once installed, please add the include path for gflags to
         your `CPATH` environment variable and the lib path to `LIBRARY_PATH`. If
@@ -113,41 +112,41 @@ There are few options when compiling RocksDB:
 
     - Install snappy:
 
-                  sudo yum install snappy snappy-devel
+                    sudo yum install snappy snappy-devel
 
     - Install zlib:
 
-                  sudo yum install zlib zlib-devel
+                    sudo yum install zlib zlib-devel
 
     - Install bzip2:
 
-                  sudo yum install bzip2 bzip2-devel
+                    sudo yum install bzip2 bzip2-devel
 
     - Install lz4:
 
-                  sudo yum install lz4-devel
+                    sudo yum install lz4-devel
 
     - Install ASAN (optional for debugging):
 
-                  sudo yum install libasan
+                    sudo yum install libasan
 
     - Install zstandard:
 
         - With [EPEL](https://fedoraproject.org/wiki/EPEL):
 
-                  sudo yum install libzstd-devel
+                    sudo yum install libzstd-devel
 
         - With CentOS 8:
 
-                  sudo dnf install libzstd-devel
+                    sudo dnf install libzstd-devel
 
         - From source:
 
-                  wget https://github.com/facebook/zstd/archive/v1.1.3.tar.gz
-                  mv v1.1.3.tar.gz zstd-1.1.3.tar.gz
-                  tar zxvf zstd-1.1.3.tar.gz
-                  cd zstd-1.1.3
-                  make && sudo make install
+                    wget https://github.com/facebook/zstd/archive/v1.1.3.tar.gz
+                    mv v1.1.3.tar.gz zstd-1.1.3.tar.gz
+                    tar zxvf zstd-1.1.3.tar.gz
+                    cd zstd-1.1.3
+                    make && sudo make install
 
 - **OS X**:
 
@@ -240,25 +239,25 @@ There are few options when compiling RocksDB:
     - Install AIX Toolbox rpms with gcc
     - Use these environment variables:
 
-                 export PORTABLE=1
-                 export CC=gcc
-                 export AR="ar -X64"
-                 export EXTRA_ARFLAGS=-X64
-                 export EXTRA_CFLAGS=-maix64
-                 export EXTRA_CXXFLAGS=-maix64
-                 export PLATFORM_LDFLAGS="-static-libstdc++ -static-libgcc"
-                 export LIBPATH=/opt/freeware/lib
-                 export JAVA_HOME=/usr/java8_64
-                 export PATH=/opt/freeware/bin:$PATH
+                   export PORTABLE=1
+                   export CC=gcc
+                   export AR="ar -X64"
+                   export EXTRA_ARFLAGS=-X64
+                   export EXTRA_CFLAGS=-maix64
+                   export EXTRA_CXXFLAGS=-maix64
+                   export PLATFORM_LDFLAGS="-static-libstdc++ -static-libgcc"
+                   export LIBPATH=/opt/freeware/lib
+                   export JAVA_HOME=/usr/java8_64
+                   export PATH=/opt/freeware/bin:$PATH
 
 * **Solaris Sparc**
 
     - Install GCC 7 and higher.
     - Use these environment variables:
 
-                 export CC=gcc
-                 export EXTRA_CFLAGS=-m64
-                 export EXTRA_CXXFLAGS=-m64
-                 export EXTRA_LDFLAGS=-m64
-                 export PORTABLE=1
-                 export PLATFORM_LDFLAGS="-static-libstdc++ -static-libgcc"
+                   export CC=gcc
+                   export EXTRA_CFLAGS=-m64
+                   export EXTRA_CXXFLAGS=-m64
+                   export EXTRA_LDFLAGS=-m64
+                   export PORTABLE=1
+                   export PLATFORM_LDFLAGS="-static-libstdc++ -static-libgcc"
