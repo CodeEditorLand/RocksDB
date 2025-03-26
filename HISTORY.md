@@ -260,7 +260,7 @@
   may cause CFs to be inconsistent (#12995). The fix will set potential WAL
   write failure as fatal error when manual_wal_flush is true, and disables auto
   error recovery from these errors.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 9.6.0 (08/19/2024)
 
@@ -328,7 +328,7 @@
 - Fix a race condition in pessimistic transactions that could allow multiple
   transactions with the same name to be registered simultaneously, resulting in
   a crash or other unpredictable behavior.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 9.5.0 (07/19/2024)
 
@@ -375,7 +375,7 @@
 - Fixed a race between error recovery due to manifest sync or write failure and
   external SST file ingestion. Both attempt to write a new manifest file, which
   causes an assertion failure.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -444,7 +444,7 @@
 - Various read operations could ignore various ReadOptions that might be
   relevant. Fixed many such cases, which can result in behavior change but a
   better reflection of specified options.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -527,7 +527,7 @@
 - Fixed a bug causing stale memory access when using the TieredSecondaryCache
   with an NVM secondary cache, and a file system that supports return an FS
   allocated buffer for MultiRead (FSSupportedOps::kFSBuffer is set).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 9.2.0 (05/01/2024)
 
@@ -649,7 +649,7 @@
   could end up inserting stale WAL records into the memtable.
 - Fix a bug where obsolete files' deletion during DB::Open are not rate limited
   with `SstFilemManager`'s slow deletion feature even if it's configured.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 9.1.0 (03/22/2024)
 
@@ -741,7 +741,7 @@
   bug in the recovery logic. This option is incompatible with
   WriteOptions::disableWAL. A Status::InvalidArgument() will be returned if
   disableWAL is specified.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -842,7 +842,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   incorrect result for a duplicate key in a MultiGet batch.
 - Fix a bug where older data of an ingested key can be returned for read when
   universal compaction is used
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.11.0 (01/19/2024)
 
@@ -915,7 +915,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   could interfere with expected data tiering.
 - Fixed the handling of the edge case when all existing blob files become
   unreferenced. Such files are now correctly deleted.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.10.0 (12/15/2023)
 
@@ -973,7 +973,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - A lookup by MultiGet in a TieredCache that goes to the local flash cache and
   finishes with very low latency, i.e before the subsequent call to WaitAll, is
   ignored, resulting in a false negative and a memory leak.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -1076,7 +1076,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   crashing.
 - Fixed some bugs in the index builder/reader path for user-defined timestamps
   in Memtable only feature.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.8.0 (10/23/2023)
 
@@ -1148,7 +1148,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed a possible underflow when computing the compressed secondary cache share
   of memory reservations while updating the compressed secondary to total block
   cache ratio.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -1317,7 +1317,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   readahead trimming when reseek changes iterate_upper_bound dynamically.
 - Fixed a bug where `rocksdb.file.read.verify.file.checksums.micros` is not
   populated
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -1401,7 +1401,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fix a bug in FileTTLBooster that can cause users with a large number of levels
   (more than 65) to see errors like "runtime error: shift exponent .. is too
   large.." (#11673).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.5.0 (07/21/2023)
 
@@ -1440,7 +1440,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   kFSBuffer. kFSBuffer is when underlying FS pass their own buffer instead of
   using RocksDB scratch in FSReadRequest. Right now it's an experimental
   feature.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.4.0 (06/26/2023)
 
@@ -1555,7 +1555,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fix a bug where compactions that are qualified to be run as 2 subcompactions
   were only run as one subcompaction.
 - Fix a use-after-move bug in block.cc.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 8.3.0 (05/19/2023)
 
@@ -1616,7 +1616,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   number to keep
 - Delete temp OPTIONS file on DB open if there is a failure to write it out or
   rename it
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -1675,7 +1675,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   read was 2x the readahead_size.
 - In block cache tracing, fixed some cases of bad hit/miss information (and
   more) with MultiGet.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -1728,7 +1728,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   seqno less than the max seqno of this atomic flush), leading to potential data
   loss in this excluded column family when `WriteOptions::disableWAL == true`
   (#11148).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -1810,7 +1810,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed a bug in DB open/recovery from a compressed WAL that was caused due to
   incorrect handling of certain record fragments with the same offset within a
   WAL block.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Feature Removal
 
@@ -1966,7 +1966,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   5c64fb6 and 87dfc1d).
 - Fixed a bug in compaction output cutting where small output files were
   produced due to TTL file cutting states were not being updated (#11075).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -2049,7 +2049,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   getting cleared causing a regression.
 - Tiered Storage: fixed excessive keys written to penultimate level in non-debug
   builds.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -2162,7 +2162,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed some cases where `ldb update_manifest` and `ldb unsafe_remove_sst_file`
   are not usable because they were requiring the DB files to match the existing
   manifest state (before updating the manifest to match a desired state).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -2260,7 +2260,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed the rocksdb.num.sst.read.per.level,
   rocksdb.num.index.and.filter.blocks.read.per.level and
   rocksdb.num.level.read.per.multiget stats in the MultiGet coroutines
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API changes
 
@@ -2471,7 +2471,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   an incorrect value being passed to the compaction filter (see #10391).
 - Fixed a memory leak bug in stress tests caused by
   `FaultInjectionSecondaryCache`.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Behavior Change
 
@@ -2601,7 +2601,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fix a CPU and memory efficiency issue introduce by
   https://github.com/facebook/rocksdb/pull/8336 which made InternalKeyComparator
   configurable as an unintended side effect.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Behavior Change
 
@@ -2792,7 +2792,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   NUM_LEVEL_READ_PER_MULTIGET and MULTIGET_COROUTINE_COUNT stats
 - Introduced `WriteOptions::protection_bytes_per_key`, which can be used to
   enable key-value integrity protection for live updates.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -2885,7 +2885,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   token.
 - Fixed a bug which might cause process crash when I/O error happens when
   reading an index block in MultiGet().
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -2980,7 +2980,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
   cause severely degraded performance in this unusual case. (In more typical
   MultiGet cases, this fix is expected to yield a small or negligible
   performance improvement.)
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Behavior changes
 
@@ -3072,7 +3072,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed a bug in RocksDB DB::Open() which may creates and writes to two new
   MANIFEST files even before recovery succeeds. Now writes to MANIFEST are
   persisted only after recovery is successful.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -3216,7 +3216,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed a race condition when disable and re-enable manual compaction.
 - Fixed automatic error recovery failure in atomic flush.
 - Fixed a race condition when mmaping a WritableFile on POSIX.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API changes
 
@@ -3274,7 +3274,7 @@ MultiGetBenchmarks.multiGetList10 no_column_family 10000 16 100 1024 thrpt 25 76
 - Fixed NUM_INDEX_AND_FILTER_BLOCKS_READ_PER_LEVEL,
   NUM_DATA_BLOCKS_READ_PER_LEVEL, and NUM_SST_READ_PER_LEVEL stats to be
   reported once per MultiGet batch per level.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -3505,7 +3505,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   spent in SliceTransform::AsString().)
 - Fixed a race condition in SstFileManagerImpl error recovery code that can
   cause a crash during process shutdown.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -3574,7 +3574,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   environmental factors, and (c) much less likely than a CPU miscalculation
   while executing RocksDB.
 - Fixed a bug in C bindings causing iterator to return incorrect result (#9343).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Behavior Changes
 
@@ -3737,7 +3737,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fixed a bug that could, with WAL enabled, cause backups, checkpoints, and
   `GetSortedWalFiles()` to fail randomly with an error like
   `IO error: 001234.log: No such file or directory`
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Behavior Changes
 
@@ -3863,7 +3863,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   error which is mapped to a soft error (DB not stopped).
 - Fix a bug in `BackupEngine` where some internal callers of
   `GenericRateLimiter::Request()` do not honor `bytes <= GetSingleBurstBytes()`.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -4009,7 +4009,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   expected to retry on short result, returning short results is only possible
   when asking more bytes in the end of the file, which RocksDB doesn't do when
   using MultiRead(); (2) checksum is unlikely to match.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -4143,7 +4143,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   internal callback that manages addition of blob files to SSTFileManager.
 - Fixed MultiGet not updating the block_read_count and block_read_byte
   PerfContext counters.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -4264,7 +4264,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   Under this change, the wal_dir from DB::GetOptions() or LoadLatestOptions()
   may now be empty, indicating that the current DB directory is used for WALs.
   This is also a subtle API change.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -4343,7 +4343,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fixed performance bugs in background gathering of block cache entry
   statistics, that could consume a lot of CPU when there are many column
   families with a shared block cache.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -4432,7 +4432,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   exceed the user setting. On the other hand, larger manual compaction size can
   increase the subcompaction parallelism, you can tune that by setting
   `max_compaction_bytes`.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Behavior Changes
 
@@ -4573,7 +4573,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fixed a bug that allowed `DBOptions::max_open_files` to be set with a
   non-negative integer with
   `ColumnFamilyOptions::compaction_style = kCompactionStyleFIFO`.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -4639,7 +4639,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   an initial burst allowance of 1 millisecond worth of bytes. Also, beyond the
   initial burst allowance, `delayed_write_rate` is now more strictly enforced,
   especially with multiple column families.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API change
 
@@ -4792,7 +4792,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - In DB::OpenForReadOnly, if any error happens while checking Manifest file
   path, it was overridden by Status::NotFound. It has been fixed and now actual
   error is returned.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API Change
 
@@ -4846,7 +4846,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix a race condition between DB startups and shutdowns in managing the
   periodic background worker threads. One effect of this race condition could be
   the process being terminated.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API Change
 
@@ -4925,7 +4925,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   ColumnFamilyOptions for the specified column family was not loaded from the
   OPTIONS file. Fix it so its loaded from OPTIONS and then overridden with
   command line overrides.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -5059,7 +5059,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fixed a bug of encoding and parsing
   BlockBasedTableOptions::read_amp_bytes_per_bit as a 64-bit integer.
 - Fixed a bug of a recovery corner case, details in PR7621.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API Change
 
@@ -5492,7 +5492,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix incorrect results from batched MultiGet for duplicate keys, when the
   duplicate key matches the largest key of an SST file and the value type for
   the key in the file is a merge value.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API Change
 
@@ -5617,7 +5617,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Upgraded version of bzip library (1.0.6 -> 1.0.8) used with RocksJava to
   address potential vulnerabilities if an attacker can manipulate compressed
   data saved and loaded by RocksDB (not normal). See issue #6703.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Public API Change
 
@@ -5681,7 +5681,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   `PerfContext::user_key_comparison_count` for lookups in files written with
   `format_version >= 3`.
 - Fix many bloom.filter statistics not being updated in batch MultiGet.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -5751,7 +5751,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   correct to 1. The bug should not cause user visible problems.
 - Fix a bug which might crash the service when write buffer manager fails to
   insert the dummy handle to the block cache.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -5847,7 +5847,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   calling LogAndApply(..., new_descriptor_log=true). This bug can cause MANIFEST
   being overwritten during recovery if options.write_dbid_to_manifest = true and
   there are WAL file(s).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Performance Improvements
 
@@ -5951,7 +5951,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   compute the "records dropped" statistics for compactions.
 - Fix a regression bug that causes segfault when hash is used, max_open_files !=
   -1 and total order seek is used and switched back.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -6092,7 +6092,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   multiple column families, leading to a column family's log number greater than
   the first corrutped log number when the DB is being opened in PointInTime
   recovery mode during next recovery attempt (#5856).
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -6292,7 +6292,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   is in the perfix_extractor domain and extracting the prefix before looking up.
 - Fix a bug in file ingestion caused by incorrect file number allocation when
   the number of column families involved in the ingestion exceeds 2.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### New Features
 
@@ -6424,7 +6424,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   blocks.
 - Fixed an issue where using cache_index_and_filter_blocks==false affected
   partitions of partitioned indexes/filters as well.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.3.2 (2019-08-15)
 
@@ -6461,7 +6461,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 
 - Fix auto rolling bug introduced in 6.3.0, which causes segfault if log file
   creation fails.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.3.0 (2019-06-18)
 
@@ -6555,7 +6555,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   family.
 - Fix a bug caused by secondary not skipping the beginning of new MANIFEST.
 - On DB open, delete WAL trash files left behind in wal_dir
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.2.0 (2019-04-30)
 
@@ -6617,7 +6617,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix an assertion failure `IsFlushPending() == true` caused by one bg thread
   releasing the db mutex in ~ColumnFamilyData and another thread clearing
   `flush_requested_` flag.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.1.1 (2019-04-09)
 
@@ -6642,7 +6642,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   could result in losing the prepared transaction.
 - Fix a bug in Encryption Env which could cause encrypted files to be read
   beyond file boundaries.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.1.0 (2019-03-27)
 
@@ -6680,7 +6680,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix JEMALLOC_CXX_THROW macro missing from older Jemalloc versions, causing
   build failures on some platforms.
 - Fix SstFileReader not able to open file ingested with write_glbal_seqno=true.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 6.0.0 (2019-02-19)
 
@@ -6776,7 +6776,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   file that has been extended by a range tombstone.
 - Fix with pipelined write, write leaders's callback failure lead to the whole
   write group fail.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Change Default Options
 
@@ -6866,7 +6866,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - The default value of NewBloomFilterPolicy()'s argument use_block_based_builder
   is changed to false. Note that this new default may cause large temp memory
   usage when building very large SST files.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.17.0 (2018-10-05)
 
@@ -6952,7 +6952,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Remove trace_analyzer_tool from rocksdb_lib target in TARGETS file.
 - Fix RocksDB Java build and tests.
 - Remove sync point in Block destructor.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.16.0 (2018-08-21)
 
@@ -6996,7 +6996,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 
 - Fix a bug in misreporting the estimated partition index size in properties
   block.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.15.0 (2018-07-17)
 
@@ -7071,7 +7071,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   direct IO, prefetcher and no compressed block cache.
 - Fix write can stuck indefinitely if enable_pipelined_write=true. The issue
   exists since pipelined write was introduced in 5.5.0.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.14.0 (2018-05-16)
 
@@ -7153,7 +7153,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   around an issue in MyRocks. It can be enabled back by setting
   TransactionDBOptions::rollback_merge_operands to true.
 - Fix wrong results by ReverseBytewiseComparator::FindShortSuccessor()
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ### Java API Changes
 
@@ -7201,7 +7201,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   removed from the map.
 - Fix WAL corruption caused by race condition between user write thread and
   backup/checkpoint thread.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.12.0 (2018-02-14)
 
@@ -7248,7 +7248,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix Handle error return from WriteBuffer() during WAL file close and DB close.
 - Fix advance reservation of arena block addresses.
 - Fix handling of empty string as checkpoint directory.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.11.0 (2018-01-08)
 
@@ -7281,7 +7281,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix buffer overrun in backup engine for DBs with huge number of files.
 - Fix a mislabel bug for bottom-pri compaction threads.
 - Fix DB::Flush() keep waiting after flush finish under certain condition.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.10.0 (2017-12-11)
 
@@ -7320,7 +7320,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   number of SST files.
 - Fix possible corruption to LSM structure when `DeleteFilesInRange()` deletes a
   subset of files spanned by a `DeleteRange()` marker.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.9.0 (2017-11-01)
 
@@ -7404,7 +7404,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   `DB:Open()` will abort if column family inconsistency is found during PIT
   recovery.
 - Fix possible metadata corruption in databases using `DeleteRange()`.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.8.0 (2017-08-30)
 
@@ -7456,7 +7456,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   prefix bloom filter is enabled.
 - Fix potentially wrong file smallest key when range deletions separated by
   snapshot are written together.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.7.0 (2017-07-13)
 
@@ -7491,7 +7491,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 
 - Fix discarding empty compaction output files when `DeleteRange()` is used
   together with subcompactions.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.6.0 (2017-06-06)
 
@@ -7535,7 +7535,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 ### Bug Fixes
 
 - Shouldn't ignore return value of fsync() in flush.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.5.0 (2017-05-17)
 
@@ -7568,7 +7568,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 ### Bug Fixes
 
 - Fix the bug that Direct I/O uses direct reads for non-SST file
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.4.0 (2017-04-11)
 
@@ -7624,7 +7624,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 ### Bug Fixes
 
 - Fix the bug that iterator may skip keys
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.2.0 (2017-02-08)
 
@@ -7664,7 +7664,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
 - Fix wrong results in a data race case in Get()
 - Some fixes related to 2PC.
 - Fix bugs of data corruption in direct I/O
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.1.0 (2017-01-13)
 
@@ -7689,7 +7689,7 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   transactions.
 - When file copying is needed when creating checkpoints or bulk loading files,
   fsync the file after the file copying.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## 5.0.0 (2016-11-17)
 
@@ -8604,4 +8604,4 @@ https://github.com/facebook/rocksdb/issues/9390 for more info.
   while holding a mutex. --
   [c01676e4](https://github.com/facebook/rocksdb/commit/c01676e46d3be08c3c140361ef1f5884f47d3b3c)
 - Lots of efforts to move malloc, memcpy and IO outside of locks
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25

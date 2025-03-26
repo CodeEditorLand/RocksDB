@@ -47,7 +47,8 @@ and Alluxio stores the files' metadata in RocksDB.
 
 ## FoundationDB
 
-<<<<<<< HEAD [FoundationDB](https://www.foundationdb.org/)
+<<<<<<< HEAD
+[FoundationDB](https://www.foundationdb.org/)
 [uses](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp)
 RocksDB to implement a
 [key-value store interface](HTTPS://GitHub.Com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127)
@@ -59,7 +60,7 @@ RocksDB to implement a
 [key-value store interface](https://github.com/apple/foundationdb/blob/377f1f692da6ab2fe5bdac57035651db3e5fb66d/fdbserver/KeyValueStoreRocksDB.actor.cpp#L1127)
 in its server backend.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Apple
 
@@ -100,14 +101,15 @@ http://yahooeng.tumblr.com/post/120730204806/sherpa-scales-new-heights
 
 ## Tencent
 
-<<<<<<< HEAD [PaxosStore](HTTPS://GitHub.Com/Tencent/paxosstore) is a
+<<<<<<< HEAD
+[PaxosStore](HTTPS://GitHub.Com/Tencent/paxosstore) is a
 distributed database supporting WeChat. It uses RocksDB as its storage engine.
 =======
 
 [PaxosStore](https://github.com/Tencent/paxosstore) is a distributed database
 supporting WeChat. It uses RocksDB as its storage engine.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Baidu
 
@@ -199,7 +201,8 @@ application data.
 
 ## TiKV
 
-<<<<<<< HEAD [TiKV](HTTPS://GitHub.Com/pingcap/tikv) is a GEO-replicated,
+<<<<<<< HEAD
+[TiKV](HTTPS://GitHub.Com/pingcap/tikv) is a GEO-replicated,
 high-performance, distributed, transactional key-value database. TiKV is powered
 by Rust and Raft. TiKV uses RocksDB as its persistence layer.
 
@@ -216,7 +219,7 @@ TiKV uses RocksDB as its persistence layer.
 [TiDB](https://github.com/pingcap/tidb) uses the TiKV distributed key-value
 database, so it uses RocksDB.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## PingCAP
 
@@ -241,7 +244,8 @@ RocksDB to store state locally on a machine.
 
 ## Dgraph
 
-<<<<<<< HEAD [Dgraph](HTTPS://GitHub.Com/dgraph-io/dgraph) is an open-source,
+<<<<<<< HEAD
+[Dgraph](HTTPS://GitHub.Com/dgraph-io/dgraph) is an open-source,
 scalable, distributed, low latency, high throughput Graph database .They use
 RocksDB to store state locally on a machine. =======
 
@@ -249,7 +253,7 @@ RocksDB to store state locally on a machine. =======
 distributed, low latency, high throughput Graph database .They use RocksDB to
 store state locally on a machine.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Uber
 
@@ -269,7 +273,7 @@ compatible with redis. With the huge amount of data stored, redis may suffer for
 a capacity bottleneck, and pika was born for solving it. It has widely been used
 in many companies.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## LzLabs
 
@@ -284,7 +288,8 @@ defined using directly `.proto` files.
 
 ## IOTA Foundation
 
-<<<<<<< HEAD [IOTA Foundation](https://www.iota.org/) is using RocksDB in the
+<<<<<<< HEAD
+[IOTA Foundation](https://www.iota.org/) is using RocksDB in the
 [IOTA Reference Implementation (IRI)](HTTPS://GitHub.Com/iotaledger/iri) to
 store the local state of the Tangle. The Tangle is the first open-source
 distributed ledger powering the future of the Internet of Things.
@@ -335,7 +340,7 @@ lightning-fast, open source graph database capable of hosting super large scale
 graphs with dozens of billions of vertices (nodes) and trillions of edges, with
 milliseconds of latency.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## YugabyteDB
 
@@ -370,7 +375,8 @@ https://www.confluent.io/blog/how-to-tune-rocksdb-kafka-streams-state-stores-per
 
 ## Solana Labs
 
-<<<<<<< HEAD [Solana](HTTPS://GitHub.Com/solana-labs/solana) is a fast, secure,
+<<<<<<< HEAD
+[Solana](HTTPS://GitHub.Com/solana-labs/solana) is a fast, secure,
 scalable, and decentralized blockchain. It uses RocksDB as the underlying
 storage for its ledger store.
 
@@ -388,7 +394,7 @@ ledger store.
 distributed key-value NoSQL database built on top of RocksDB. It serves as a
 cost-saving and capacity-increasing alternative drop-in replacement for Redis.
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 ## Others
 

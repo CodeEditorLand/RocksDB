@@ -31,4 +31,4 @@ missing, please open a pull request to add it.
   encryption on RocksDB based on Intel optimized open source IPP-Crypto library.
 * [encfs](https://github.com/pegasus-kv/encfs): a plugin to enable encryption on
   RocksDB based on OpenSSL library.
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25

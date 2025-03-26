@@ -49,7 +49,7 @@ There are few options when compiling RocksDB:
 
 * You can link RocksDB with following compression libraries:
 
-    > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
           - [zlib](http://www.zlib.net/) - a library for data compression.
           - [bzip2](http://www.bzip.org/) - a library for data compression.
@@ -222,11 +222,13 @@ There are few options when compiling RocksDB:
 - **Windows** (Visual Studio 2017 to up):
     - Read and follow the instructions at CMakeLists.txt
     - Or install via [vcpkg](HTTPS://GitHub.Com/microsoft/vcpkg) \* run
-      `vcpkg install rocksdb:x64-windows` ======= - Run:
+      `vcpkg install rocksdb:x64-windows`
+=======
+- Run:
       `TARGET_OS=IOS make static_lib`. When building the project which uses
       rocksdb iOS library, make sure to define an important pre-processing
       macros: `IOS_CROSS_COMPILE`.
-        > > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+        >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
 
 * **Windows** (Visual Studio 2017 to up):
 
