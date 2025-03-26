@@ -3,131 +3,131 @@
     <!-- The set failing checks when spotbugs was set up were added to this file, as a baseline -->
     <!-- These exclusions should each be justified or removed and fixed AP (2023-02-09) -->
     <Match>
-        <Class name="org.rocksdb.SstFileWriter"/>
+        <Class name="org.rocksdb.SstFileWriter" />
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.AbstractTransactionNotifier"/>
+        <Class name="org.rocksdb.AbstractTransactionNotifier" />
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.Env"/>
+        <Class name="org.rocksdb.Env" />
         <Bug pattern="MS_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.BackupEngineOptions"/>
+        <Class name="org.rocksdb.BackupEngineOptions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.BackupEngineOptions"/>
+        <Class name="org.rocksdb.BackupEngineOptions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.Transaction$WaitingTransactions"/>
+        <Class name="org.rocksdb.Transaction$WaitingTransactions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.TransactionDB$KeyLockInfo"/>
+        <Class name="org.rocksdb.TransactionDB$KeyLockInfo" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.Options"/>
+        <Class name="org.rocksdb.Options" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ColumnFamilyDescriptor"/>
+        <Class name="org.rocksdb.ColumnFamilyDescriptor" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ColumnFamilyOptions"/>
+        <Class name="org.rocksdb.ColumnFamilyOptions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.DBOptions"/>
+        <Class name="org.rocksdb.DBOptions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.EnvOptions"/>
+        <Class name="org.rocksdb.EnvOptions" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.LiveFileMetaData"/>
+        <Class name="org.rocksdb.LiveFileMetaData" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.SstFileMetaData"/>
+        <Class name="org.rocksdb.SstFileMetaData" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.StatsCollectorInput"/>
+        <Class name="org.rocksdb.StatsCollectorInput" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ThreadStatus"/>
+        <Class name="org.rocksdb.ThreadStatus" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ColumnFamilyMetaData"/>
+        <Class name="org.rocksdb.ColumnFamilyMetaData" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.TransactionLogIterator$BatchResult"/>
+        <Class name="org.rocksdb.TransactionLogIterator$BatchResult" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.WBWIRocksIterator$WriteEntry"/>
+        <Class name="org.rocksdb.WBWIRocksIterator$WriteEntry" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.TableProperties"/>
+        <Class name="org.rocksdb.TableProperties" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.WBWIRocksIterator$WriteEntry"/>
+        <Class name="org.rocksdb.WBWIRocksIterator$WriteEntry" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.TransactionDB$DeadlockPath"/>
+        <Class name="org.rocksdb.TransactionDB$DeadlockPath" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.StatisticsCollector"/>
+        <Class name="org.rocksdb.StatisticsCollector" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ReadOptions"/>
+        <Class name="org.rocksdb.ReadOptions" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.Range"/>
+        <Class name="org.rocksdb.Range" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.Options"/>
+        <Class name="org.rocksdb.Options" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.StatsCollectorInput"/>
+        <Class name="org.rocksdb.StatsCollectorInput" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.EnvOptions"/>
+        <Class name="org.rocksdb.EnvOptions" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.DBOptions"/>
+        <Class name="org.rocksdb.DBOptions" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ColumnFamilyOptions"/>
+        <Class name="org.rocksdb.ColumnFamilyOptions" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.ColumnFamilyDescriptor"/>
+        <Class name="org.rocksdb.ColumnFamilyDescriptor" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.rocksdb.BackupEngineOptions"/>
+        <Class name="org.rocksdb.BackupEngineOptions" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <!-- comment out a single exclusion to test that CI reports the consequent spotbugs [Error]
