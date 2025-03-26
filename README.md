@@ -2,6 +2,7 @@
 
 [![CircleCI Status](https://circleci.com/gh/facebook/rocksdb.svg?style=svg)](https://circleci.com/gh/facebook/rocksdb)
 
+<<<<<<< HEAD
 RocksDB is developed and maintained by Facebook Database Engineering Team.
 It is built on earlier work on [LevelDB](https://github.com/google/leveldb) by Sanjay Ghemawat (sanjay@google.com)
 and Jeff Dean (jeff@google.com)
@@ -13,16 +14,50 @@ between Write-Amplification-Factor (WAF), Read-Amplification-Factor (RAF)
 and Space-Amplification-Factor (SAF). It has multi-threaded compactions,
 making it especially suitable for storing multiple terabytes of data in a
 single database.
+=======
+<<<<<<< HEAD
+RocksDB is developed and maintained by Facebook Database
+Engineering Team. It is built on earlier work on
+[LevelDB](HTTPS://GitHub.Com/google/leveldb) by Sanjay Ghemawat
+(sanjay@google.com) and Jeff Dean (jeff@google.com)
+=======
+RocksDB is developed
+and maintained by Facebook Database Engineering Team. It is built on earlier
+work on [LevelDB](https://github.com/google/leveldb) by Sanjay Ghemawat
+(sanjay@google.com) and Jeff Dean (jeff@google.com)
+
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 Start with example usage here: https://github.com/facebook/rocksdb/tree/main/examples
 
 See the [github wiki](https://github.com/facebook/rocksdb/wiki) for more explanation.
 
+<<<<<<< HEAD
 The public interface is in `include/`.  Callers should not include or
 rely on the details of any other header files in this package.  Those
 internal APIs may be changed without warning.
 
 Questions and discussions are welcome on the [RocksDB Developers Public](https://www.facebook.com/groups/rocksdb.dev/) Facebook group and [email list](https://groups.google.com/g/rocksdb) on Google Groups.
+=======
+<<<<<<< HEAD
+See the [github wiki](HTTPS://GitHub.Com/facebook/rocksdb/wiki) for
+more explanation.
+=======
+See the
+[github wiki](https://github.com/facebook/rocksdb/wiki) for more explanation.
+
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+The public interface is in `include/`. Callers should not include or rely on the
+details of any other header files in this package. Those internal APIs may be
+changed without warning.
+
+Questions and discussions are welcome on the
+[RocksDB Developers Public](https://www.facebook.com/groups/rocksdb.dev/)
+Facebook group and [email list](https://groups.google.com/g/rocksdb) on Google
+Groups.
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 ## License
 

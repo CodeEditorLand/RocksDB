@@ -2,15 +2,23 @@
 
 ## Overview
 
+<<<<<<< HEAD
 This directory contains [fuzz tests](https://en.wikipedia.org/wiki/Fuzzing) for RocksDB.
 RocksDB testing infrastructure currently includes unit tests and [stress tests](https://github.com/facebook/rocksdb/wiki/Stress-test),
 we hope fuzz testing can catch more bugs.
+=======
+This directory contains [fuzz tests](https://en.wikipedia.org/wiki/Fuzzing) for
+RocksDB. RocksDB testing infrastructure currently includes unit tests and
+[stress tests](https://github.com/facebook/rocksdb/wiki/Stress-test), we hope
+fuzz testing can catch more bugs.
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 ## Prerequisite
 
 We use [LLVM libFuzzer](http://llvm.org/docs/LibFuzzer.html) as the fuzzying engine,
 so make sure you have [clang](https://clang.llvm.org/get_started.html) as your compiler.
 
+<<<<<<< HEAD
 Some tests rely on [structure aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
 We use [protobuf](https://developers.google.com/protocol-buffers) to define structured input to the fuzzer,
 and use [libprotobuf-mutator](https://github.com/google/libprotobuf-mutator) as the custom libFuzzer mutator.
@@ -20,6 +28,22 @@ make sure protobuf3 is installed.
 
 If you do not want to install protobuf library yourself, you can rely on libprotobuf-mutator to download protobuf
 for you. For details about installation, please refer to [libprotobuf-mutator README](https://github.com/google/libprotobuf-mutator#readme)
+=======
+Some tests rely on
+[structure aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
+We use [protobuf](https://developers.google.com/protocol-buffers) to define
+structured input to the fuzzer, and use
+[libprotobuf-mutator](https://github.com/google/libprotobuf-mutator) as the
+custom libFuzzer mutator. So make sure you have protobuf and libprotobuf-mutator
+installed, and make sure `pkg-config` can find them. On some systems, there are
+both protobuf2 and protobuf3 in the package management system, make sure
+protobuf3 is installed.
+
+If you do not want to install protobuf library yourself, you can rely on
+libprotobuf-mutator to download protobuf for you. For details about
+installation, please refer to
+[libprotobuf-mutator README](https://github.com/google/libprotobuf-mutator#readme)
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 ## Example
 

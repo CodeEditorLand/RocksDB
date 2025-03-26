@@ -11,7 +11,32 @@ experts.
 
 ## Overview
 
+<<<<<<< HEAD
 Experts share their wisdom as rules comprising of conditions and suggestions in the INI format (refer
+=======
+<<<<<<< HEAD
+Experts share their wisdom as rules comprising of conditions and
+suggestions in the INI format (refer
+[rules.ini](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
+Users provide the Rocksdb configuration that they want to improve upon (as the
+familiar Rocksdb OPTIONS file —
+[example](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini))
+and the path of the file which contains Rocksdb logs and statistics. The
+[Advisor](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser_example.py)
+creates appropriate DataSource objects (for Rocksdb
+[logs](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_log_parser.py),
+[options](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_options_parser.py),
+[statistics](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py)
+etc.) and provides them to the
+[Rules Engine](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
+The Rules uses rules from experts to parse data-sources and trigger appropriate
+rules. The Advisor's output gives information about which rules were triggered,
+why they were triggered and what each of them suggests. Each suggestion provided
+by a triggered rule advises some action on a Rocksdb configuration option, for
+example, increase CFOptions.write_buffer_size, set bloom_bits to 2 etc. =======
+Experts share their wisdom as rules comprising of conditions and suggestions in
+the INI format (refer
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 [rules.ini](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
 Users provide the Rocksdb configuration that they want to improve upon (as the
 familiar Rocksdb OPTIONS file —
@@ -21,6 +46,7 @@ The [Advisor](https://github.com/facebook/rocksdb/blob/main/tools/advisor/adviso
 creates appropriate DataSource objects (for Rocksdb
 [logs](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_log_parser.py),
 [options](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_options_parser.py),
+<<<<<<< HEAD
 [statistics](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py) etc.)
 and provides them to the [Rules Engine](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
 The Rules uses rules from experts to parse data-sources and trigger appropriate rules.
@@ -29,6 +55,18 @@ why they were triggered and what each of them suggests. Each suggestion
 provided by a triggered rule advises some action on a Rocksdb
 configuration option, for example, increase CFOptions.write_buffer_size,
 set bloom_bits to 2 etc.
+=======
+[statistics](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py)
+etc.) and provides them to the
+[Rules Engine](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
+The Rules uses rules from experts to parse data-sources and trigger appropriate
+rules. The Advisor's output gives information about which rules were triggered,
+why they were triggered and what each of them suggests. Each suggestion provided
+by a triggered rule advises some action on a Rocksdb configuration option, for
+example, increase CFOptions.write_buffer_size, set bloom_bits to 2 etc.
+
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 ## Usage
 
@@ -46,6 +84,7 @@ python3 -m advisor.rule_parser_example --rules_spec=advisor/rules.ini --rocksdb_
 
 ### Command-line arguments
 
+<<<<<<< HEAD
 Most important amongst all the input that the Advisor needs, are the rules
 spec and starting Rocksdb configuration. The configuration is provided as the
 familiar Rocksdb Options file (refer [example](https://github.com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
@@ -63,6 +102,51 @@ supports 3 types of Conditions (and consequently data-sources):
 LOG, OPTIONS, TIME_SERIES. The TIME_SERIES data can be sourced from the
 Rocksdb [statistics](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
 or [perf context](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
+=======
+<<<<<<< HEAD
+Most important amongst all the input that the Advisor needs, are
+the rules spec and starting Rocksdb configuration. The configuration is provided
+as the familiar Rocksdb Options file (refer
+[example](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
+=======
+Most important amongst all the input that the Advisor needs, are the
+rules spec and starting Rocksdb configuration. The configuration is provided as
+the familiar Rocksdb Options file (refer
+[example](https://github.com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
+
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25 The Rules spec is written
+>>>>>>> in the INI format (more details in
+>>>>>>> [rules.ini](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
+
+<<<<<<< HEAD
+In brief, a Rule is made of conditions and is triggered when all
+its constituent conditions are triggered. When triggered, a Rule suggests
+changes (increase/decrease/set to a suggested value) to certain Rocksdb options
+that aim to improve Rocksdb performance. Every Condition has a 'source' i.e. the
+data source that would be checked for triggering that condition. For example, a
+log Condition (with 'source=LOG') is triggered if a particular 'regex' is found
+in the Rocksdb LOG files. As of now the Rules Engine supports 3 types of
+Conditions (and consequently data-sources): LOG, OPTIONS, TIME_SERIES. The
+TIME_SERIES data can be sourced from the Rocksdb
+[statistics](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
+or
+[perf context](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
+=======
+In brief, a Rule is made of conditions and is triggered when all its
+constituent conditions are triggered. When triggered, a Rule suggests changes
+(increase/decrease/set to a suggested value) to certain Rocksdb options that aim
+to improve Rocksdb performance. Every Condition has a 'source' i.e. the data
+source that would be checked for triggering that condition. For example, a log
+Condition (with 'source=LOG') is triggered if a particular 'regex' is found in
+the Rocksdb LOG files. As of now the Rules Engine supports 3 types of Conditions
+(and consequently data-sources): LOG, OPTIONS, TIME_SERIES. The TIME_SERIES data
+can be sourced from the Rocksdb
+[statistics](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
+or
+[perf context](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
+
+>>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
 
 For more information about the remaining command-line arguments, run:
 
