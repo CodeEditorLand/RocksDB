@@ -2,8 +2,12 @@ This is the list of all known third-party language bindings for RocksDB. If some
 
 * Java - https://github.com/facebook/rocksdb/tree/main/java
 * Python
+<<<<<<< HEAD
     * https://github.com/rocksdict/RocksDict
     * http://python-rocksdb.readthedocs.io/en/latest/ (unmaintained) 
+=======
+    * http://python-rocksdb.readthedocs.io/en/latest/
+>>>>>>> e1cbc1594d448147ea7845b68d148a552cc73167
     * http://pyrocksdb.readthedocs.org/en/latest/ (unmaintained)
 * Perl - https://metacpan.org/pod/RocksDB
 * Node.js - https://npmjs.org/package/rocksdb

@@ -33,6 +33,10 @@ most processors made since roughly 2013.
 ## Dependencies
 
 * You can link RocksDB with following compression libraries:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> e1cbc1594d448147ea7845b68d148a552cc73167
   - [zlib](http://www.zlib.net/) - a library for data compression.
   - [bzip2](http://www.bzip.org/) - a library for data compression.
   - [lz4](https://github.com/lz4/lz4) - a library for extremely fast data compression.
@@ -40,6 +44,21 @@ most processors made since roughly 2013.
       data compression.
   - [zstandard](http://www.zstd.net) - Fast real-time compression
       algorithm.
+<<<<<<< HEAD
+=======
+=======
+
+    >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+
+          - [zlib](http://www.zlib.net/) - a library for data compression.
+          - [bzip2](http://www.bzip.org/) - a library for data compression.
+          - [lz4](https://github.com/lz4/lz4) - a library for extremely fast data
+            compression.
+          - [snappy](http://google.github.io/snappy/) - a library for fast data
+            compression.
+          - [zstandard](http://www.zstd.net) - Fast real-time compression algorithm.
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
+>>>>>>> e1cbc1594d448147ea7845b68d148a552cc73167
 
 * All our tools depend on:
   - [gflags](https://gflags.github.io/gflags/) - a library that handles
@@ -189,8 +208,30 @@ most processors made since roughly 2013.
         gmake rocksdbjava SHA256_CMD='sha256 -q'
         ```
 
+<<<<<<< HEAD
 * **iOS**:
   * Run: `TARGET_OS=IOS make static_lib`. When building the project which uses rocksdb iOS library, make sure to define an important pre-processing macros: `IOS_CROSS_COMPILE`.
+=======
+<<<<<<< HEAD
+* **iOS**:
+  * Run: `TARGET_OS=IOS make static_lib`. When building the project which uses rocksdb iOS library, make sure to define an important pre-processing macros: `IOS_CROSS_COMPILE`.
+=======
+- **iOS**:
+
+<<<<<<< HEAD
+
+- **Windows** (Visual Studio 2017 to up):
+    - Read and follow the instructions at CMakeLists.txt
+    - Or install via [vcpkg](HTTPS://GitHub.Com/microsoft/vcpkg) \* run
+      `vcpkg install rocksdb:x64-windows`
+=======
+- Run:
+      `TARGET_OS=IOS make static_lib`. When building the project which uses
+      rocksdb iOS library, make sure to define an important pre-processing
+      macros: `IOS_CROSS_COMPILE`.
+        >>>>>>> 2873ea08ffd610d95750802e38b8cfd9627bdb25
+>>>>>>> 6079a3362ce1f080b4a0e0082b8a30ed36bc86b2
+>>>>>>> e1cbc1594d448147ea7845b68d148a552cc73167
 
 * **Windows** (Visual Studio 2017 to up):
   * Read and follow the instructions at CMakeLists.txt
