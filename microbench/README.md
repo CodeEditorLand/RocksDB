@@ -2,159 +2,59 @@
 
 ## Overview
 
-RocksDB micro-benchmark is a set of tests for benchmarking a single component or
-simple DB operations. The test artificially generates input data and executes
-the same operation with it to collect and report performance metrics. As it's
-focusing on testing a single, well-defined operation, the result is more precise
-and reproducible, which also has its limitation of not representing a real
-production use case. The test author needs to carefully design the microbench to
-represent its true purpose.
+RocksDB micro-benchmark is a set of tests for benchmarking a single component or simple DB operations. The test artificially generates input data and executes the same operation with it to collect and report performance metrics. As it's focusing on testing a single, well-defined operation, the result is more precise and reproducible, which also has its limitation of not representing a real production use case. The test author needs to carefully design the microbench to represent its true purpose.
 
-<<<<<<< HEAD The tests are based on
-[Google Benchmark](HTTPS://GitHub.Com/google/benchmark) library, which provides
-a standard framework for writing benchmarks.
+The tests are based on [Google Benchmark](https://github.com/google/benchmark) library, which provides a standard framework for writing benchmarks.
 
 ## How to Run
-
 ### Prerequisite
+Install the [Google Benchmark](https://github.com/google/benchmark) version `1.6.0` or above.
 
-# Install the [Google Benchmark](HTTPS://GitHub.Com/google/benchmark) version `1.6.0` or above.
-
-The tests are based on [Google Benchmark](https://github.com/google/benchmark)
-library, which provides a standard framework for writing benchmarks.
-
-## How to Run
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
-
-### Prerequisite
-
-Install the [Google Benchmark](https://github.com/google/benchmark) version
-`1.6.0` or above.
-
-_Note: Google Benchmark `1.6.x` is incompatible with previous versions like
-`1.5.x`, please make sure you're using the newer version._
+*Note: Google Benchmark `1.6.x` is incompatible with previous versions like `1.5.x`, please make sure you're using the newer version.*
 
 ### Build and Run
-
 With `Makefile`:
-
 ```bash
 $ DEBUG_LEVEL=0 make run_microbench
 ```
-
 Or with cmake:
-
 ```bash
 $ mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release -DWITH_BENCHMARK
 $ make run_microbench
 ```
 
-_Note: Please run the benchmark code in release build._
-
+*Note: Please run the benchmark code in release build.*
 ### Run Single Test
-
 Example:
-
 ```bash
 $ make db_basic_bench
 $ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
 
 ## Best Practices
-
-<<<<<<< HEAD
-
-#### Use the Same Test Directory Setting as Unittest \*
-
-# Most of the Micro-benchmark tests use the same test directory setup as unittest, so it could be overridden by:
-
-#### \* Use the Same Test Directory Setting as Unittest
-
-Most of the Micro-benchmark tests use the same test directory setup as unittest,
-so it could be overridden by:
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
-
+#### * Use the Same Test Directory Setting as Unittest
+Most of the Micro-benchmark tests use the same test directory setup as unittest, so it could be overridden by:
 ```bash
 $ TEST_TMPDIR=/mydata/tmp/ ./db_basic_bench --benchmark_filter=<TEST_NAME>
 ```
-
 Please also follow that when designing new tests.
 
-<<<<<<< HEAD
+#### * Avoid Using Debug API
+Even though micro-benchmark is a test, avoid using internal Debug API like TEST_WaitForRun() which is designed for unittest. As benchmark tests are designed for release build, don't use any of that.
 
-#### Avoid Using Debug API \*
+#### * Pay Attention to Local Optimization
+As a micro-benchmark is focusing on a single component or area, make sure it is a key part for impacting the overall application performance.
 
-Even though micro-benchmark is a test, avoid using internal Debug API like
-TEST_WaitForRun() which is designed for unittest. As benchmark tests are
-designed for release build, don't use any of that.
+The compiler might be able to optimize the code that not the same way as the whole application, and if the test data input is simple and small, it may be able to all cached in CPU memory, which is leading to a wrong metric. Take these into consideration when designing the tests.
 
-#### Pay Attention to Local Optimization \*
+#### * Names of user-defined counters/metrics has to be `[A-Za-z0-9_]`
+It's a restriction of the metrics collecting and reporting system RocksDB is using internally. It will also help integrate with more systems.
 
-# As a micro-benchmark is focusing on a single component or area, make sure it is a key part for impacting the overall application performance.
-
-#### \* Avoid Using Debug API
-
-Even though micro-benchmark is a test, avoid using internal Debug API like
-TEST_WaitForRun() which is designed for unittest. As benchmark tests are
-designed for release build, don't use any of that.
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
-
-#### \* Pay Attention to Local Optimization
-
-<<<<<<< HEAD
-
-#### Names of user \*-defined counters/metrics has to be `[A-Za-z0-9_]`
-
-It's a restriction of the metrics collecting and reporting system RocksDB is
-using internally. It will also help integrate with more systems.
-
-#### Minimize the Metrics Variation \*
-
-# Try reducing the test result variation, one way to check that is running the test multiple times and check the CV (Coefficient of Variation) reported by gbenchmark.
-
-As a micro-benchmark is focusing on a single component or area, make sure it is
-a key part for impacting the overall application performance.
-
-The compiler might be able to optimize the code that not the same way as the
-whole application, and if the test data input is simple and small, it may be
-able to all cached in CPU memory, which is leading to a wrong metric. Take these
-into consideration when designing the tests.
-
-#### \* Names of user-defined counters/metrics has to be `[A-Za-z0-9_]`
-
-It's a restriction of the metrics collecting and reporting system RocksDB is
-using internally. It will also help integrate with more systems.
-
-#### \* Minimize the Metrics Variation
-
-Try reducing the test result variation, one way to check that is running the
-test multiple times and check the CV (Coefficient of Variation) reported by
-gbenchmark.
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
-
+#### * Minimize the Metrics Variation
+Try reducing the test result variation, one way to check that is running the test multiple times and check the CV (Coefficient of Variation) reported by gbenchmark.
 ```bash
-$ ./db_basic_bench --benchmark_filter= < TEST_NAME > --benchmark_repetitions=10
+$ ./db_basic_bench --benchmark_filter=<TEST_NAME> --benchmark_repetitions=10
 ...
-3.2% < TEST_NAME > _cv
+<TEST_NAME>_cv    3.2%
 ```
-
-RocksDB has background compaction jobs which may cause the test result to vary a
-lot. If the micro-benchmark is not purposely testing the operation while
-compaction is in progress, it should wait for the compaction to finish
-(`db_impl->WaitForCompact()`) or disable auto-compaction.
-
-## Funding
-
-This project is funded through
-[NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by
-[NLnet](https://nlnet.nl) with financial support from the European Commission's
-[Next Generation Internet](https://ngi.eu) program. Learn more at the
-[NLnet project page](https://nlnet.nl/project/Land).
-
-| Land                                                                                                                                                   | PlayForm                                                                                                                                                    | NLnet                                                                                         | NGI0 Commons Fund                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [<img src="https://raw.githubusercontent.com/CodeEditorLand/Asset/refs/heads/Current/Logo/Land.svg" height="80px" alt="Land"  />](https://editor.land) | [<img src="https://raw.githubusercontent.com/PlayForm/Asset/refs/heads/Current/Logo/PlayForm.svg" height="80px" alt="PlayForm"  />](https://playform.cloud) | [<img width="240px" src="https://nlnet.nl/logo/banner.svg" alt="NLnet"  />](https://nlnet.nl) | [<img width="240px" src="https://nlnet.nl/image/logos/NGI0CommonsFund_tag_black_mono.svg" alt="NGI0 Commons Fund"  />](https://nlnet.nl/commonsfund) |
+RocksDB has background compaction jobs which may cause the test result to vary a lot. If the micro-benchmark is not purposely testing the operation while compaction is in progress, it should wait for the compaction to finish (`db_impl->WaitForCompact()`) or disable auto-compaction.

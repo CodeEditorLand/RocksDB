@@ -2,66 +2,41 @@
 
 ## Motivation
 
-The performance of Rocksdb is contingent on its tuning. However, because of the
-complexity of its underlying technology and a large number of configurable
-parameters, a good configuration is sometimes hard to obtain. The aim of the
-python command-line tool, Rocksdb Advisor, is to automate the process of
+The performance of Rocksdb is contingent on its tuning. However,
+because of the complexity of its underlying technology and a large number of
+configurable parameters, a good configuration is sometimes hard to obtain. The aim of
+the python command-line tool, Rocksdb Advisor, is to automate the process of
 suggesting improvements in the configuration based on advice from Rocksdb
 experts.
 
 ## Overview
 
-<<<<<<< HEAD Experts share their wisdom as rules comprising of conditions and
-suggestions in the INI format (refer
-[rules.ini](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
-Users provide the Rocksdb configuration that they want to improve upon (as the
-familiar Rocksdb OPTIONS file —
-[example](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini))
-and the path of the file which contains Rocksdb logs and statistics. The
-[Advisor](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser_example.py)
-creates appropriate DataSource objects (for Rocksdb
-[logs](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_log_parser.py),
-[options](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_options_parser.py),
-[statistics](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py)
-etc.) and provides them to the
-[Rules Engine](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
-The Rules uses rules from experts to parse data-sources and trigger appropriate
-rules. The Advisor's output gives information about which rules were triggered,
-why they were triggered and what each of them suggests. Each suggestion provided
-by a triggered rule advises some action on a Rocksdb configuration option, for
-example, increase CFOptions.write_buffer_size, set bloom_bits to 2 etc. =======
-Experts share their wisdom as rules comprising of conditions and suggestions in
-the INI format (refer
+Experts share their wisdom as rules comprising of conditions and suggestions in the INI format (refer
 [rules.ini](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
 Users provide the Rocksdb configuration that they want to improve upon (as the
 familiar Rocksdb OPTIONS file —
 [example](https://github.com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini))
-and the path of the file which contains Rocksdb logs and statistics. The
-[Advisor](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser_example.py)
+and the path of the file which contains Rocksdb logs and statistics.
+The [Advisor](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser_example.py)
 creates appropriate DataSource objects (for Rocksdb
 [logs](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_log_parser.py),
 [options](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_options_parser.py),
-[statistics](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py)
-etc.) and provides them to the
-[Rules Engine](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
-The Rules uses rules from experts to parse data-sources and trigger appropriate
-rules. The Advisor's output gives information about which rules were triggered,
-why they were triggered and what each of them suggests. Each suggestion provided
-by a triggered rule advises some action on a Rocksdb configuration option, for
-example, increase CFOptions.write_buffer_size, set bloom_bits to 2 etc.
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+[statistics](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/db_stats_fetcher.py) etc.)
+and provides them to the [Rules Engine](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rule_parser.py).
+The Rules uses rules from experts to parse data-sources and trigger appropriate rules.
+The Advisor's output gives information about which rules were triggered,
+why they were triggered and what each of them suggests. Each suggestion
+provided by a triggered rule advises some action on a Rocksdb
+configuration option, for example, increase CFOptions.write_buffer_size,
+set bloom_bits to 2 etc.
 
 ## Usage
 
 ### Prerequisites
-
 The tool needs the following to run:
-
-- python3
+* python3
 
 ### Running the tool
-
 An example command to run the tool:
 
 ```shell
@@ -71,45 +46,23 @@ python3 -m advisor.rule_parser_example --rules_spec=advisor/rules.ini --rocksdb_
 
 ### Command-line arguments
 
-<<<<<<< HEAD Most important amongst all the input that the Advisor needs, are
-the rules spec and starting Rocksdb configuration. The configuration is provided
-as the familiar Rocksdb Options file (refer
-[example](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
-======= Most important amongst all the input that the Advisor needs, are the
-rules spec and starting Rocksdb configuration. The configuration is provided as
-the familiar Rocksdb Options file (refer
-[example](https://github.com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
+Most important amongst all the input that the Advisor needs, are the rules
+spec and starting Rocksdb configuration. The configuration is provided as the
+familiar Rocksdb Options file (refer [example](https://github.com/facebook/rocksdb/blob/main/examples/rocksdb_option_file_example.ini)).
+The Rules spec is written in the INI format (more details in
+[rules.ini](https://github.com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
 
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25 The Rules spec is written
-> > > > > > > in the INI format (more details in
-> > > > > > > [rules.ini](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/tools/advisor/advisor/rules.ini)).
-
-<<<<<<< HEAD In brief, a Rule is made of conditions and is triggered when all
-its constituent conditions are triggered. When triggered, a Rule suggests
-changes (increase/decrease/set to a suggested value) to certain Rocksdb options
-that aim to improve Rocksdb performance. Every Condition has a 'source' i.e. the
-data source that would be checked for triggering that condition. For example, a
-log Condition (with 'source=LOG') is triggered if a particular 'regex' is found
-in the Rocksdb LOG files. As of now the Rules Engine supports 3 types of
-Conditions (and consequently data-sources): LOG, OPTIONS, TIME_SERIES. The
-TIME_SERIES data can be sourced from the Rocksdb
-[statistics](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
-or
-[perf context](HTTPS://GitHub.Com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
-======= In brief, a Rule is made of conditions and is triggered when all its
+In brief, a Rule is made of conditions and is triggered when all its
 constituent conditions are triggered. When triggered, a Rule suggests changes
-(increase/decrease/set to a suggested value) to certain Rocksdb options that aim
-to improve Rocksdb performance. Every Condition has a 'source' i.e. the data
-source that would be checked for triggering that condition. For example, a log
-Condition (with 'source=LOG') is triggered if a particular 'regex' is found in
-the Rocksdb LOG files. As of now the Rules Engine supports 3 types of Conditions
-(and consequently data-sources): LOG, OPTIONS, TIME_SERIES. The TIME_SERIES data
-can be sourced from the Rocksdb
-[statistics](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
-or
-[perf context](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
-
-> > > > > > > 2873ea08ffd610d95750802e38b8cfd9627bdb25
+(increase/decrease/set to a suggested value) to certain Rocksdb options that
+aim to improve Rocksdb performance. Every Condition has a 'source' i.e.
+the data source that would be checked for triggering that condition.
+For example, a log Condition (with 'source=LOG') is triggered if a particular
+'regex' is found in the Rocksdb LOG files. As of now the Rules Engine
+supports 3 types of Conditions (and consequently data-sources):
+LOG, OPTIONS, TIME_SERIES. The TIME_SERIES data can be sourced from the
+Rocksdb [statistics](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/statistics.h)
+or [perf context](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/perf_context.h).
 
 For more information about the remaining command-line arguments, run:
 
@@ -134,22 +87,10 @@ scope: col_fam:
 ## Running the tests
 
 Tests for the code have been added to the
-[test/](HTTPS://GitHub.Com/facebook/rocksdb/tree/main/tools/advisor/test)
+[test/](https://github.com/facebook/rocksdb/tree/main/tools/advisor/test)
 directory. For example, to run the unit tests for db_log_parser.py:
 
 ```shell
 cd rocksdb/tools/advisor
 python3 -m unittest -v test.test_db_log_parser
 ```
-
-## Funding
-
-This project is funded through
-[NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by
-[NLnet](https://nlnet.nl) with financial support from the European Commission's
-[Next Generation Internet](https://ngi.eu) program. Learn more at the
-[NLnet project page](https://nlnet.nl/project/Land).
-
-| Land                                                                                                                                                   | PlayForm                                                                                                                                                    | NLnet                                                                                         | NGI0 Commons Fund                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [<img src="https://raw.githubusercontent.com/CodeEditorLand/Asset/refs/heads/Current/Logo/Land.svg" height="80px" alt="Land"  />](https://editor.land) | [<img src="https://raw.githubusercontent.com/PlayForm/Asset/refs/heads/Current/Logo/PlayForm.svg" height="80px" alt="PlayForm"  />](https://playform.cloud) | [<img width="240px" src="https://nlnet.nl/logo/banner.svg" alt="NLnet"  />](https://nlnet.nl) | [<img width="240px" src="https://nlnet.nl/image/logos/NGI0CommonsFund_tag_black_mono.svg" alt="NGI0 Commons Fund"  />](https://nlnet.nl/commonsfund) |
