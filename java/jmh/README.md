@@ -1,14 +1,10 @@
 # JMH Benchmarks for RocksJava
 
-These are micro-benchmarks for RocksJava functionality, using
-[JMH (Java Microbenchmark Harness)](https://openjdk.java.net/projects/code-tools/jmh/).
+These are micro-benchmarks for RocksJava functionality, using [JMH (Java Microbenchmark Harness)](https://openjdk.java.net/projects/code-tools/jmh/).
 
 ## Compiling
 
-**Note**: This uses a specific build of RocksDB that is set in the `<version>`
-element of the `dependencies` section of the `pom.xml` file. If you are testing
-local changes you should build and install a SNAPSHOT version of rocksdbjni, and
-update the `pom.xml` of rocksdbjni-jmh file to test with this.
+**Note**: This uses a specific build of RocksDB that is set in the `<version>` element of the `dependencies` section of the `pom.xml` file. If you are testing local changes you should build and install a SNAPSHOT version of rocksdbjni, and update the `pom.xml` of rocksdbjni-jmh file to test with this.
 
 For instance, this is how to install the OSX jar you just built for 8.11.0
 
@@ -21,22 +17,8 @@ $ mvn package
 ```
 
 ## Running
-
 ```bash
 $ java -jar target/rocksdbjni-jmh-1.0-SNAPSHOT-benchmarks.jar
 ```
 
-NOTE: you can append `-help` to the command above to see all of the JMH runtime
-options.
-
-## Funding
-
-This project is funded through
-[NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by
-[NLnet](https://nlnet.nl) with financial support from the European Commission's
-[Next Generation Internet](https://ngi.eu) program. Learn more at the
-[NLnet project page](https://nlnet.nl/project/Land).
-
-| Land                                                                                                                                                   | PlayForm                                                                                                                                                    | NLnet                                                                                         | NGI0 Commons Fund                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [<img src="https://raw.githubusercontent.com/CodeEditorLand/Asset/refs/heads/Current/Logo/Land.svg" height="80px" alt="Land"  />](https://editor.land) | [<img src="https://raw.githubusercontent.com/PlayForm/Asset/refs/heads/Current/Logo/PlayForm.svg" height="80px" alt="PlayForm"  />](https://playform.cloud) | [<img width="240px" src="https://nlnet.nl/logo/banner.svg" alt="NLnet"  />](https://nlnet.nl) | [<img width="240px" src="https://nlnet.nl/image/logos/NGI0CommonsFund_tag_black_mono.svg" alt="NGI0 Commons Fund"  />](https://nlnet.nl/commonsfund) |
+NOTE: you can append `-help` to the command above to see all of the JMH runtime options.

@@ -2,57 +2,47 @@
 
 ## Overview
 
-This directory contains [fuzz tests](https://en.wikipedia.org/wiki/Fuzzing) for
-RocksDB. RocksDB testing infrastructure currently includes unit tests and
-[stress tests](https://github.com/facebook/rocksdb/wiki/Stress-test), we hope
-fuzz testing can catch more bugs.
+This directory contains [fuzz tests](https://en.wikipedia.org/wiki/Fuzzing) for RocksDB.
+RocksDB testing infrastructure currently includes unit tests and [stress tests](https://github.com/facebook/rocksdb/wiki/Stress-test),
+we hope fuzz testing can catch more bugs.
 
 ## Prerequisite
 
-We use [LLVM libFuzzer](http://llvm.org/docs/LibFuzzer.html) as the fuzzying
-engine, so make sure you have [clang](https://clang.llvm.org/get_started.html)
-as your compiler.
+We use [LLVM libFuzzer](http://llvm.org/docs/LibFuzzer.html) as the fuzzying engine,
+so make sure you have [clang](https://clang.llvm.org/get_started.html) as your compiler.
 
-Some tests rely on
-[structure aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
-We use [protobuf](https://developers.google.com/protocol-buffers) to define
-structured input to the fuzzer, and use
-[libprotobuf-mutator](https://github.com/google/libprotobuf-mutator) as the
-custom libFuzzer mutator. So make sure you have protobuf and libprotobuf-mutator
-installed, and make sure `pkg-config` can find them. On some systems, there are
-both protobuf2 and protobuf3 in the package management system, make sure
-protobuf3 is installed.
+Some tests rely on [structure aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md).
+We use [protobuf](https://developers.google.com/protocol-buffers) to define structured input to the fuzzer,
+and use [libprotobuf-mutator](https://github.com/google/libprotobuf-mutator) as the custom libFuzzer mutator.
+So make sure you have protobuf and libprotobuf-mutator installed, and make sure `pkg-config` can find them.
+On some systems, there are both protobuf2 and protobuf3 in the package management system,
+make sure protobuf3 is installed.
 
-If you do not want to install protobuf library yourself, you can rely on
-libprotobuf-mutator to download protobuf for you. For details about
-installation, please refer to
-[libprotobuf-mutator README](https://github.com/google/libprotobuf-mutator#readme)
+If you do not want to install protobuf library yourself, you can rely on libprotobuf-mutator to download protobuf
+for you. For details about installation, please refer to [libprotobuf-mutator README](https://github.com/google/libprotobuf-mutator#readme)
 
 ## Example
 
-This example shows you how to do structure aware fuzzing to
-`rocksdb::SstFileWriter`.
+This example shows you how to do structure aware fuzzing to `rocksdb::SstFileWriter`.
 
-After walking through the steps to create the fuzzer, we'll introduce a bug into
-`rocksdb::SstFileWriter::Put`, then show that the fuzzer can catch the bug.
+After walking through the steps to create the fuzzer, we'll introduce a bug into `rocksdb::SstFileWriter::Put`,
+then show that the fuzzer can catch the bug.
 
 ### Design the test
 
-We want the fuzzing engine to automatically generate a list of database
-operations, then we apply these operations to `SstFileWriter` in sequence,
-finally, after the SST file is generated, we use `SstFileReader` to check the
-file's checksum.
+We want the fuzzing engine to automatically generate a list of database operations,
+then we apply these operations to `SstFileWriter` in sequence,
+finally, after the SST file is generated, we use `SstFileReader` to check the file's checksum.
 
 ### Define input
 
-We define the database operations in protobuf, each operation has a type of
-operation and a key value pair, see
-[proto/db_operation.proto](proto/db_operation.proto) for details.
+We define the database operations in protobuf, each operation has a type of operation and a key value pair,
+see [proto/db_operation.proto](proto/db_operation.proto) for details.
 
 ### Define tests with the input
 
-In [sst_file_writer_fuzzer.cc](sst_file_writer_fuzzer.cc), we define the tests
-to be run on the generated input:
+In [sst_file_writer_fuzzer.cc](sst_file_writer_fuzzer.cc),
+we define the tests to be run on the generated input:
 
 ```
 DEFINE_PROTO_FUZZER(DBOperations& input) {
@@ -61,10 +51,9 @@ DEFINE_PROTO_FUZZER(DBOperations& input) {
 }
 ```
 
-`SstFileWriter` requires the keys of the operations to be unique and be in
-ascending order, but the fuzzing engine generates the input randomly, so we need
-to process the generated input before passing it to `DEFINE_PROTO_FUZZER`, this
-is accomplished by registering a post processor:
+`SstFileWriter` requires the keys of the operations to be unique and be in ascending order,
+but the fuzzing engine generates the input randomly, so we need to process the generated input before
+passing it to `DEFINE_PROTO_FUZZER`, this is accomplished by registering a post processor:
 
 ```
 protobuf_mutator::libfuzzer::PostProcessorRegistration<DBOperations>
@@ -74,9 +63,9 @@ protobuf_mutator::libfuzzer::PostProcessorRegistration<DBOperations>
 
 In the rocksdb root directory, compile rocksdb library by `make static_lib`.
 
-Go to the `fuzz` directory, run `make sst_file_writer_fuzzer` to generate the
-fuzzer, it will compile rocksdb static library, generate protobuf, then compile
-and link `sst_file_writer_fuzzer`.
+Go to the `fuzz` directory,
+run `make sst_file_writer_fuzzer` to generate the fuzzer,
+it will compile rocksdb static library, generate protobuf, then compile and link `sst_file_writer_fuzzer`.
 
 ### Introduce a bug
 
@@ -100,8 +89,7 @@ index ab1ee7c4e..c7da9ffa0 100644
  }
 ```
 
-The bug is that for `Put`, if `user_key` starts with `!` and `value` ends with
-`!`, then corrupt.
+The bug is that for `Put`, if `user_key` starts with `!` and `value` ends with `!`, then corrupt.
 
 ### Run fuzz testing to catch the bug
 
@@ -141,8 +129,7 @@ Base64: b3BlcmF0aW9ucyB7CiAga2V5OiAiISIKICB2YWx1ZTogIiEiCiAgdHlwZTogUFVUCn0Kb3Bl
 
 Within 6 seconds, it catches the bug.
 
-The input that triggers the bug is persisted in
-`./crash-a1460be302d09b548e61787178d9edaa40aea467`:
+The input that triggers the bug is persisted in `./crash-a1460be302d09b548e61787178d9edaa40aea467`:
 
 ```
 $ cat ./crash-a1460be302d09b548e61787178d9edaa40aea467
@@ -167,26 +154,12 @@ operations {
 
 ### Reproduce the crash to debug
 
-The above crash can be reproduced by
-`./sst_file_writer_fuzzer ./crash-a1460be302d09b548e61787178d9edaa40aea467`, so
-you can debug the crash.
+The above crash can be reproduced by `./sst_file_writer_fuzzer ./crash-a1460be302d09b548e61787178d9edaa40aea467`,
+so you can debug the crash.
 
 ## Future Work
 
-According to [OSS-Fuzz](HTTPS://GitHub.Com/google/oss-fuzz),
+According to [OSS-Fuzz](https://github.com/google/oss-fuzz),
 `as of June 2020, OSS-Fuzz has found over 20,000 bugs in 300 open source projects.`
 
-RocksDB can join OSS-Fuzz together with other open source projects such as
-sqlite.
-
-## Funding
-
-This project is funded through
-[NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by
-[NLnet](https://nlnet.nl) with financial support from the European Commission's
-[Next Generation Internet](https://ngi.eu) program. Learn more at the
-[NLnet project page](https://nlnet.nl/project/Land).
-
-| Land                                                                                                                                                   | PlayForm                                                                                                                                                    | NLnet                                                                                         | NGI0 Commons Fund                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [<img src="https://raw.githubusercontent.com/CodeEditorLand/Asset/refs/heads/Current/Logo/Land.svg" height="80px" alt="Land"  />](https://editor.land) | [<img src="https://raw.githubusercontent.com/PlayForm/Asset/refs/heads/Current/Logo/PlayForm.svg" height="80px" alt="PlayForm"  />](https://playform.cloud) | [<img width="240px" src="https://nlnet.nl/logo/banner.svg" alt="NLnet"  />](https://nlnet.nl) | [<img width="240px" src="https://nlnet.nl/image/logos/NGI0CommonsFund_tag_black_mono.svg" alt="NGI0 Commons Fund"  />](https://nlnet.nl/commonsfund) |
+RocksDB can join OSS-Fuzz together with other open source projects such as sqlite.
